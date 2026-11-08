@@ -1,0 +1,120 @@
+C:\DoctorPlantTest\DoctorPlantTest.BLL\bin\Debug\net8.0\DoctorPlantTest.BLL.deps.json
+C:\DoctorPlantTest\DoctorPlantTest.BLL\bin\Debug\net8.0\DoctorPlantTest.BLL.dll
+C:\DoctorPlantTest\DoctorPlantTest.BLL\bin\Debug\net8.0\DoctorPlantTest.BLL.pdb
+C:\DoctorPlantTest\DoctorPlantTest.BLL\bin\Debug\net8.0\DoctorPlantTest.DAL.dll
+C:\DoctorPlantTest\DoctorPlantTest.BLL\bin\Debug\net8.0\DoctorPlantTest.DAL.pdb
+C:\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\DoctorPlantTest.BLL.csproj.AssemblyReference.cache
+C:\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\DoctorPlantTest.BLL.GeneratedMSBuildEditorConfig.editorconfig
+C:\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\DoctorPlantTest.BLL.AssemblyInfoInputs.cache
+C:\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\DoctorPlantTest.BLL.AssemblyInfo.cs
+C:\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\DoctorPlantTest.BLL.csproj.CoreCompileInputs.cache
+C:\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\DoctorPl.BD127593.Up2Date
+C:\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\DoctorPlantTest.BLL.dll
+C:\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\refint\DoctorPlantTest.BLL.dll
+C:\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\DoctorPlantTest.BLL.pdb
+C:\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\ref\DoctorPlantTest.BLL.dll
+C:\Users\1\OneDrive\Desktop\DoctorPlantTest\DoctorPlantTest.BLL\bin\Debug\net8.0\DoctorPlantTest.BLL.deps.json
+C:\Users\1\OneDrive\Desktop\DoctorPlantTest\DoctorPlantTest.BLL\bin\Debug\net8.0\DoctorPlantTest.BLL.dll
+C:\Users\1\OneDrive\Desktop\DoctorPlantTest\DoctorPlantTest.BLL\bin\Debug\net8.0\DoctorPlantTest.BLL.pdb
+C:\Users\1\OneDrive\Desktop\DoctorPlantTest\DoctorPlantTest.BLL\bin\Debug\net8.0\DoctorPlantTest.DAL.dll
+C:\Users\1\OneDrive\Desktop\DoctorPlantTest\DoctorPlantTest.BLL\bin\Debug\net8.0\DoctorPlantTest.DAL.pdb
+C:\Users\1\OneDrive\Desktop\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\DoctorPlantTest.BLL.csproj.AssemblyReference.cache
+C:\Users\1\OneDrive\Desktop\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\DoctorPlantTest.BLL.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\1\OneDrive\Desktop\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\DoctorPlantTest.BLL.AssemblyInfoInputs.cache
+C:\Users\1\OneDrive\Desktop\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\DoctorPlantTest.BLL.AssemblyInfo.cs
+C:\Users\1\OneDrive\Desktop\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\DoctorPlantTest.BLL.csproj.CoreCompileInputs.cache
+C:\Users\1\OneDrive\Desktop\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\DoctorPl.BD127593.Up2Date
+C:\Users\1\OneDrive\Desktop\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\DoctorPlantTest.BLL.dll
+C:\Users\1\OneDrive\Desktop\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\refint\DoctorPlantTest.BLL.dll
+C:\Users\1\OneDrive\Desktop\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\DoctorPlantTest.BLL.pdb
+C:\Users\1\OneDrive\Desktop\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\ref\DoctorPlantTest.BLL.dll
+C:\Users\1\OneDrive\المستندات\DoctorPlantTest\DoctorPlantTest.BLL\bin\Debug\net8.0\DoctorPlantTest.BLL.deps.json
+C:\Users\1\OneDrive\المستندات\DoctorPlantTest\DoctorPlantTest.BLL\bin\Debug\net8.0\DoctorPlantTest.BLL.dll
+C:\Users\1\OneDrive\المستندات\DoctorPlantTest\DoctorPlantTest.BLL\bin\Debug\net8.0\DoctorPlantTest.BLL.pdb
+C:\Users\1\OneDrive\المستندات\DoctorPlantTest\DoctorPlantTest.BLL\bin\Debug\net8.0\DoctorPlantTest.DAL.dll
+C:\Users\1\OneDrive\المستندات\DoctorPlantTest\DoctorPlantTest.BLL\bin\Debug\net8.0\DoctorPlantTest.DAL.pdb
+C:\Users\1\OneDrive\المستندات\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\DoctorPlantTest.BLL.csproj.AssemblyReference.cache
+C:\Users\1\OneDrive\المستندات\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\DoctorPlantTest.BLL.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\1\OneDrive\المستندات\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\DoctorPlantTest.BLL.AssemblyInfoInputs.cache
+C:\Users\1\OneDrive\المستندات\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\DoctorPlantTest.BLL.AssemblyInfo.cs
+C:\Users\1\OneDrive\المستندات\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\DoctorPlantTest.BLL.csproj.CoreCompileInputs.cache
+C:\Users\1\OneDrive\المستندات\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\DoctorPl.BD127593.Up2Date
+C:\Users\1\OneDrive\المستندات\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\DoctorPlantTest.BLL.dll
+C:\Users\1\OneDrive\المستندات\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\refint\DoctorPlantTest.BLL.dll
+C:\Users\1\OneDrive\المستندات\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\DoctorPlantTest.BLL.pdb
+C:\Users\1\OneDrive\المستندات\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\ref\DoctorPlantTest.BLL.dll
+C:\Users\yazan\Downloads\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.BLL\bin\Debug\net8.0\DoctorPlantTest.BLL.deps.json
+C:\Users\yazan\Downloads\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.BLL\bin\Debug\net8.0\DoctorPlantTest.BLL.dll
+C:\Users\yazan\Downloads\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.BLL\bin\Debug\net8.0\DoctorPlantTest.BLL.pdb
+C:\Users\yazan\Downloads\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.BLL\bin\Debug\net8.0\DoctorPlantTest.DAL.dll
+C:\Users\yazan\Downloads\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.BLL\bin\Debug\net8.0\DoctorPlantTest.DAL.pdb
+C:\Users\yazan\Downloads\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\DoctorPlantTest.BLL.csproj.AssemblyReference.cache
+C:\Users\yazan\Downloads\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\DoctorPlantTest.BLL.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\yazan\Downloads\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\DoctorPlantTest.BLL.AssemblyInfoInputs.cache
+C:\Users\yazan\Downloads\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\DoctorPlantTest.BLL.AssemblyInfo.cs
+C:\Users\yazan\Downloads\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\DoctorPlantTest.BLL.csproj.CoreCompileInputs.cache
+C:\Users\yazan\Downloads\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\DoctorPl.BD127593.Up2Date
+C:\Users\yazan\Downloads\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\DoctorPlantTest.BLL.dll
+C:\Users\yazan\Downloads\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\refint\DoctorPlantTest.BLL.dll
+C:\Users\yazan\Downloads\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\DoctorPlantTest.BLL.pdb
+C:\Users\yazan\Downloads\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\ref\DoctorPlantTest.BLL.dll
+D:\Front + Back + AI\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.BLL\bin\Debug\net8.0\DoctorPlantTest.BLL.deps.json
+D:\Front + Back + AI\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.BLL\bin\Debug\net8.0\DoctorPlantTest.BLL.dll
+D:\Front + Back + AI\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.BLL\bin\Debug\net8.0\DoctorPlantTest.BLL.pdb
+D:\Front + Back + AI\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.BLL\bin\Debug\net8.0\DoctorPlantTest.DAL.dll
+D:\Front + Back + AI\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.BLL\bin\Debug\net8.0\DoctorPlantTest.DAL.pdb
+D:\Front + Back + AI\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\DoctorPlantTest.BLL.csproj.AssemblyReference.cache
+D:\Front + Back + AI\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\DoctorPlantTest.BLL.GeneratedMSBuildEditorConfig.editorconfig
+D:\Front + Back + AI\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\DoctorPlantTest.BLL.AssemblyInfoInputs.cache
+D:\Front + Back + AI\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\DoctorPlantTest.BLL.AssemblyInfo.cs
+D:\Front + Back + AI\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\DoctorPlantTest.BLL.csproj.CoreCompileInputs.cache
+D:\Front + Back + AI\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\DoctorPl.BD127593.Up2Date
+D:\Front + Back + AI\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\DoctorPlantTest.BLL.dll
+D:\Front + Back + AI\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\refint\DoctorPlantTest.BLL.dll
+D:\Front + Back + AI\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\DoctorPlantTest.BLL.pdb
+D:\Front + Back + AI\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\ref\DoctorPlantTest.BLL.dll
+C:\Users\1\OneDrive\Desktop\DoctorPlantTest3\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\DoctorPlantTest.BLL.csproj.AssemblyReference.cache
+C:\Users\1\OneDrive\Desktop\DoctorPlantTest3\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\DoctorPlantTest.BLL.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\1\OneDrive\Desktop\DoctorPlantTest3\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\DoctorPlantTest.BLL.AssemblyInfoInputs.cache
+C:\Users\1\OneDrive\Desktop\DoctorPlantTest3\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\DoctorPlantTest.BLL.AssemblyInfo.cs
+C:\Users\1\OneDrive\Desktop\DoctorPlantTest3\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\DoctorPlantTest.BLL.csproj.CoreCompileInputs.cache
+C:\Users\1\OneDrive\Desktop\DoctorPlantTest3\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\DoctorPlantTest.BLL.dll
+C:\Users\1\OneDrive\Desktop\DoctorPlantTest3\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\refint\DoctorPlantTest.BLL.dll
+C:\Users\1\OneDrive\Desktop\DoctorPlantTest3\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\DoctorPlantTest.BLL.pdb
+C:\Users\1\OneDrive\Desktop\DoctorPlantTest3\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.BLL\bin\Debug\net8.0\DoctorPlantTest.BLL.deps.json
+C:\Users\1\OneDrive\Desktop\DoctorPlantTest3\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.BLL\bin\Debug\net8.0\DoctorPlantTest.BLL.dll
+C:\Users\1\OneDrive\Desktop\DoctorPlantTest3\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.BLL\bin\Debug\net8.0\DoctorPlantTest.BLL.pdb
+C:\Users\1\OneDrive\Desktop\DoctorPlantTest3\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.BLL\bin\Debug\net8.0\DoctorPlantTest.DAL.dll
+C:\Users\1\OneDrive\Desktop\DoctorPlantTest3\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.BLL\bin\Debug\net8.0\DoctorPlantTest.DAL.pdb
+C:\Users\1\OneDrive\Desktop\DoctorPlantTest3\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\DoctorPl.BD127593.Up2Date
+C:\Users\1\OneDrive\Desktop\DoctorPlantTest3\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\ref\DoctorPlantTest.BLL.dll
+C:\Users\yazan\Desktop\DoctorPlantTest3\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.BLL\bin\Debug\net8.0\DoctorPlantTest.BLL.deps.json
+C:\Users\yazan\Desktop\DoctorPlantTest3\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.BLL\bin\Debug\net8.0\DoctorPlantTest.BLL.dll
+C:\Users\yazan\Desktop\DoctorPlantTest3\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.BLL\bin\Debug\net8.0\DoctorPlantTest.BLL.pdb
+C:\Users\yazan\Desktop\DoctorPlantTest3\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.BLL\bin\Debug\net8.0\DoctorPlantTest.DAL.dll
+C:\Users\yazan\Desktop\DoctorPlantTest3\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.BLL\bin\Debug\net8.0\DoctorPlantTest.DAL.pdb
+C:\Users\yazan\Desktop\DoctorPlantTest3\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\DoctorPlantTest.BLL.csproj.AssemblyReference.cache
+C:\Users\yazan\Desktop\DoctorPlantTest3\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\DoctorPlantTest.BLL.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\yazan\Desktop\DoctorPlantTest3\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\DoctorPlantTest.BLL.AssemblyInfoInputs.cache
+C:\Users\yazan\Desktop\DoctorPlantTest3\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\DoctorPlantTest.BLL.AssemblyInfo.cs
+C:\Users\yazan\Desktop\DoctorPlantTest3\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\DoctorPlantTest.BLL.csproj.CoreCompileInputs.cache
+C:\Users\yazan\Desktop\DoctorPlantTest3\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\DoctorPl.BD127593.Up2Date
+C:\Users\yazan\Desktop\DoctorPlantTest3\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\DoctorPlantTest.BLL.dll
+C:\Users\yazan\Desktop\DoctorPlantTest3\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\refint\DoctorPlantTest.BLL.dll
+C:\Users\yazan\Desktop\DoctorPlantTest3\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\DoctorPlantTest.BLL.pdb
+C:\Users\yazan\Desktop\DoctorPlantTest3\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\ref\DoctorPlantTest.BLL.dll
+D:\Front + Back + AI\DoctorPlantTest\DoctorPlantTest.BLL\bin\Debug\net8.0\DoctorPlantTest.BLL.deps.json
+D:\Front + Back + AI\DoctorPlantTest\DoctorPlantTest.BLL\bin\Debug\net8.0\DoctorPlantTest.BLL.dll
+D:\Front + Back + AI\DoctorPlantTest\DoctorPlantTest.BLL\bin\Debug\net8.0\DoctorPlantTest.BLL.pdb
+D:\Front + Back + AI\DoctorPlantTest\DoctorPlantTest.BLL\bin\Debug\net8.0\DoctorPlantTest.DAL.dll
+D:\Front + Back + AI\DoctorPlantTest\DoctorPlantTest.BLL\bin\Debug\net8.0\DoctorPlantTest.DAL.pdb
+D:\Front + Back + AI\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\DoctorPlantTest.BLL.csproj.AssemblyReference.cache
+D:\Front + Back + AI\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\DoctorPlantTest.BLL.GeneratedMSBuildEditorConfig.editorconfig
+D:\Front + Back + AI\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\DoctorPlantTest.BLL.AssemblyInfoInputs.cache
+D:\Front + Back + AI\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\DoctorPlantTest.BLL.AssemblyInfo.cs
+D:\Front + Back + AI\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\DoctorPlantTest.BLL.csproj.CoreCompileInputs.cache
+D:\Front + Back + AI\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\DoctorPl.BD127593.Up2Date
+D:\Front + Back + AI\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\DoctorPlantTest.BLL.dll
+D:\Front + Back + AI\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\refint\DoctorPlantTest.BLL.dll
+D:\Front + Back + AI\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\DoctorPlantTest.BLL.pdb
+D:\Front + Back + AI\DoctorPlantTest\DoctorPlantTest.BLL\obj\Debug\net8.0\ref\DoctorPlantTest.BLL.dll

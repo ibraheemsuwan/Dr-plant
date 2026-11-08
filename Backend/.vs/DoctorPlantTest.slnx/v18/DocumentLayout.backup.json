@@ -1,0 +1,277 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\Front \u002B Back \u002B AI\\DoctorPlantTest\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{7451E88D-FAF8-6A88-9064-80A6CC830A9D}|DoctorPlantTest.BLL\\DoctorPlantTest.BLL.csproj|d:\\front \u002B back \u002B ai\\doctorplanttest\\doctorplanttest.bll\\dtos\\auth\\authresponsedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7451E88D-FAF8-6A88-9064-80A6CC830A9D}|DoctorPlantTest.BLL\\DoctorPlantTest.BLL.csproj|solutionrelative:doctorplanttest.bll\\dtos\\auth\\authresponsedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D2485B7B-FE92-FE56-8FFF-302641576794}|DoctorPlantTest.API\\DoctorPlantTest.API.csproj|d:\\front \u002B back \u002B ai\\doctorplanttest\\doctorplanttest.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D2485B7B-FE92-FE56-8FFF-302641576794}|DoctorPlantTest.API\\DoctorPlantTest.API.csproj|solutionrelative:doctorplanttest.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7451E88D-FAF8-6A88-9064-80A6CC830A9D}|DoctorPlantTest.BLL\\DoctorPlantTest.BLL.csproj|d:\\front \u002B back \u002B ai\\doctorplanttest\\doctorplanttest.bll\\services\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7451E88D-FAF8-6A88-9064-80A6CC830A9D}|DoctorPlantTest.BLL\\DoctorPlantTest.BLL.csproj|solutionrelative:doctorplanttest.bll\\services\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7451E88D-FAF8-6A88-9064-80A6CC830A9D}|DoctorPlantTest.BLL\\DoctorPlantTest.BLL.csproj|d:\\front \u002B back \u002B ai\\doctorplanttest\\doctorplanttest.bll\\services\\postservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7451E88D-FAF8-6A88-9064-80A6CC830A9D}|DoctorPlantTest.BLL\\DoctorPlantTest.BLL.csproj|solutionrelative:doctorplanttest.bll\\services\\postservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D2485B7B-FE92-FE56-8FFF-302641576794}|DoctorPlantTest.API\\DoctorPlantTest.API.csproj|d:\\front \u002B back \u002B ai\\doctorplanttest\\doctorplanttest.api\\controllers\\notificationscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D2485B7B-FE92-FE56-8FFF-302641576794}|DoctorPlantTest.API\\DoctorPlantTest.API.csproj|solutionrelative:doctorplanttest.api\\controllers\\notificationscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7451E88D-FAF8-6A88-9064-80A6CC830A9D}|DoctorPlantTest.BLL\\DoctorPlantTest.BLL.csproj|d:\\front \u002B back \u002B ai\\doctorplanttest\\doctorplanttest.bll\\services\\commentservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7451E88D-FAF8-6A88-9064-80A6CC830A9D}|DoctorPlantTest.BLL\\DoctorPlantTest.BLL.csproj|solutionrelative:doctorplanttest.bll\\services\\commentservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7451E88D-FAF8-6A88-9064-80A6CC830A9D}|DoctorPlantTest.BLL\\DoctorPlantTest.BLL.csproj|d:\\front \u002B back \u002B ai\\doctorplanttest\\doctorplanttest.bll\\services\\likeservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7451E88D-FAF8-6A88-9064-80A6CC830A9D}|DoctorPlantTest.BLL\\DoctorPlantTest.BLL.csproj|solutionrelative:doctorplanttest.bll\\services\\likeservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7451E88D-FAF8-6A88-9064-80A6CC830A9D}|DoctorPlantTest.BLL\\DoctorPlantTest.BLL.csproj|d:\\front \u002B back \u002B ai\\doctorplanttest\\doctorplanttest.bll\\services\\notificationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7451E88D-FAF8-6A88-9064-80A6CC830A9D}|DoctorPlantTest.BLL\\DoctorPlantTest.BLL.csproj|solutionrelative:doctorplanttest.bll\\services\\notificationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7451E88D-FAF8-6A88-9064-80A6CC830A9D}|DoctorPlantTest.BLL\\DoctorPlantTest.BLL.csproj|d:\\front \u002B back \u002B ai\\doctorplanttest\\doctorplanttest.bll\\services\\inotificationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7451E88D-FAF8-6A88-9064-80A6CC830A9D}|DoctorPlantTest.BLL\\DoctorPlantTest.BLL.csproj|solutionrelative:doctorplanttest.bll\\services\\inotificationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7451E88D-FAF8-6A88-9064-80A6CC830A9D}|DoctorPlantTest.BLL\\DoctorPlantTest.BLL.csproj|d:\\front \u002B back \u002B ai\\doctorplanttest\\doctorplanttest.bll\\dtos\\notification\\notificationdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7451E88D-FAF8-6A88-9064-80A6CC830A9D}|DoctorPlantTest.BLL\\DoctorPlantTest.BLL.csproj|solutionrelative:doctorplanttest.bll\\dtos\\notification\\notificationdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E8FED123-4B86-FF33-39F6-DEDF30ABD3EA}|DoctorPlantTest.DAL\\DoctorPlantTest.DAL.csproj|d:\\front \u002B back \u002B ai\\doctorplanttest\\doctorplanttest.dal\\data\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E8FED123-4B86-FF33-39F6-DEDF30ABD3EA}|DoctorPlantTest.DAL\\DoctorPlantTest.DAL.csproj|solutionrelative:doctorplanttest.dal\\data\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E8FED123-4B86-FF33-39F6-DEDF30ABD3EA}|DoctorPlantTest.DAL\\DoctorPlantTest.DAL.csproj|d:\\front \u002B back \u002B ai\\doctorplanttest\\doctorplanttest.dal\\entities\\notification.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E8FED123-4B86-FF33-39F6-DEDF30ABD3EA}|DoctorPlantTest.DAL\\DoctorPlantTest.DAL.csproj|solutionrelative:doctorplanttest.dal\\entities\\notification.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E8FED123-4B86-FF33-39F6-DEDF30ABD3EA}|DoctorPlantTest.DAL\\DoctorPlantTest.DAL.csproj|d:\\front \u002B back \u002B ai\\doctorplanttest\\doctorplanttest.dal\\entities\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E8FED123-4B86-FF33-39F6-DEDF30ABD3EA}|DoctorPlantTest.DAL\\DoctorPlantTest.DAL.csproj|solutionrelative:doctorplanttest.dal\\entities\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E8FED123-4B86-FF33-39F6-DEDF30ABD3EA}|DoctorPlantTest.DAL\\DoctorPlantTest.DAL.csproj|d:\\front \u002B back \u002B ai\\doctorplanttest\\doctorplanttest.dal\\entities\\post.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E8FED123-4B86-FF33-39F6-DEDF30ABD3EA}|DoctorPlantTest.DAL\\DoctorPlantTest.DAL.csproj|solutionrelative:doctorplanttest.dal\\entities\\post.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7451E88D-FAF8-6A88-9064-80A6CC830A9D}|DoctorPlantTest.BLL\\DoctorPlantTest.BLL.csproj|d:\\front \u002B back \u002B ai\\doctorplanttest\\doctorplanttest.bll\\services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7451E88D-FAF8-6A88-9064-80A6CC830A9D}|DoctorPlantTest.BLL\\DoctorPlantTest.BLL.csproj|solutionrelative:doctorplanttest.bll\\services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D2485B7B-FE92-FE56-8FFF-302641576794}|DoctorPlantTest.API\\DoctorPlantTest.API.csproj|d:\\front \u002B back \u002B ai\\doctorplanttest\\doctorplanttest.api\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D2485B7B-FE92-FE56-8FFF-302641576794}|DoctorPlantTest.API\\DoctorPlantTest.API.csproj|solutionrelative:doctorplanttest.api\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 13,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "PostService.cs",
+              "DocumentMoniker": "D:\\Front \u002B Back \u002B AI\\DoctorPlantTest\\DoctorPlantTest.BLL\\Services\\PostService.cs",
+              "RelativeDocumentMoniker": "DoctorPlantTest.BLL\\Services\\PostService.cs",
+              "ToolTip": "D:\\Front \u002B Back \u002B AI\\DoctorPlantTest\\DoctorPlantTest.BLL\\Services\\PostService.cs",
+              "RelativeToolTip": "DoctorPlantTest.BLL\\Services\\PostService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-17T19:55:48.82Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "UserService.cs",
+              "DocumentMoniker": "D:\\Front \u002B Back \u002B AI\\DoctorPlantTest\\DoctorPlantTest.BLL\\Services\\UserService.cs",
+              "RelativeDocumentMoniker": "DoctorPlantTest.BLL\\Services\\UserService.cs",
+              "ToolTip": "D:\\Front \u002B Back \u002B AI\\DoctorPlantTest\\DoctorPlantTest.BLL\\Services\\UserService.cs",
+              "RelativeToolTip": "DoctorPlantTest.BLL\\Services\\UserService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-17T19:55:03.031Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "NotificationsController.cs",
+              "DocumentMoniker": "D:\\Front \u002B Back \u002B AI\\DoctorPlantTest\\DoctorPlantTest.API\\Controllers\\NotificationsController.cs",
+              "RelativeDocumentMoniker": "DoctorPlantTest.API\\Controllers\\NotificationsController.cs",
+              "ToolTip": "D:\\Front \u002B Back \u002B AI\\DoctorPlantTest\\DoctorPlantTest.API\\Controllers\\NotificationsController.cs",
+              "RelativeToolTip": "DoctorPlantTest.API\\Controllers\\NotificationsController.cs",
+              "ViewState": "AgIAABMAAAAAAAAAAAAgwAcAAAATAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-17T01:47:19.514Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "CommentService.cs",
+              "DocumentMoniker": "D:\\Front \u002B Back \u002B AI\\DoctorPlantTest\\DoctorPlantTest.BLL\\Services\\CommentService.cs",
+              "RelativeDocumentMoniker": "DoctorPlantTest.BLL\\Services\\CommentService.cs",
+              "ToolTip": "D:\\Front \u002B Back \u002B AI\\DoctorPlantTest\\DoctorPlantTest.BLL\\Services\\CommentService.cs",
+              "RelativeToolTip": "DoctorPlantTest.BLL\\Services\\CommentService.cs",
+              "ViewState": "AgIAADsAAAAAAAAAAAAswEwAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-17T01:45:18.414Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "LikeService.cs",
+              "DocumentMoniker": "D:\\Front \u002B Back \u002B AI\\DoctorPlantTest\\DoctorPlantTest.BLL\\Services\\LikeService.cs",
+              "RelativeDocumentMoniker": "DoctorPlantTest.BLL\\Services\\LikeService.cs",
+              "ToolTip": "D:\\Front \u002B Back \u002B AI\\DoctorPlantTest\\DoctorPlantTest.BLL\\Services\\LikeService.cs",
+              "RelativeToolTip": "DoctorPlantTest.BLL\\Services\\LikeService.cs",
+              "ViewState": "AgIAACAAAAAAAAAAAAAkwDcAAAAfAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-17T01:41:45.638Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Program.cs",
+              "DocumentMoniker": "D:\\Front \u002B Back \u002B AI\\DoctorPlantTest\\DoctorPlantTest.API\\Program.cs",
+              "RelativeDocumentMoniker": "DoctorPlantTest.API\\Program.cs",
+              "ToolTip": "D:\\Front \u002B Back \u002B AI\\DoctorPlantTest\\DoctorPlantTest.API\\Program.cs",
+              "RelativeToolTip": "DoctorPlantTest.API\\Program.cs",
+              "ViewState": "AgIAAC0AAAAAAAAAAAAkwDwAAAAEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-17T01:40:26.82Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "NotificationService.cs",
+              "DocumentMoniker": "D:\\Front \u002B Back \u002B AI\\DoctorPlantTest\\DoctorPlantTest.BLL\\Services\\NotificationService.cs",
+              "RelativeDocumentMoniker": "DoctorPlantTest.BLL\\Services\\NotificationService.cs",
+              "ToolTip": "D:\\Front \u002B Back \u002B AI\\DoctorPlantTest\\DoctorPlantTest.BLL\\Services\\NotificationService.cs",
+              "RelativeToolTip": "DoctorPlantTest.BLL\\Services\\NotificationService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAGEAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-17T01:39:58.604Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "INotificationService.cs",
+              "DocumentMoniker": "D:\\Front \u002B Back \u002B AI\\DoctorPlantTest\\DoctorPlantTest.BLL\\Services\\INotificationService.cs",
+              "RelativeDocumentMoniker": "DoctorPlantTest.BLL\\Services\\INotificationService.cs",
+              "ToolTip": "D:\\Front \u002B Back \u002B AI\\DoctorPlantTest\\DoctorPlantTest.BLL\\Services\\INotificationService.cs",
+              "RelativeToolTip": "DoctorPlantTest.BLL\\Services\\INotificationService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAdAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-17T01:39:32.534Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "NotificationDto.cs",
+              "DocumentMoniker": "D:\\Front \u002B Back \u002B AI\\DoctorPlantTest\\DoctorPlantTest.BLL\\DTOs\\Notification\\NotificationDto.cs",
+              "RelativeDocumentMoniker": "DoctorPlantTest.BLL\\DTOs\\Notification\\NotificationDto.cs",
+              "ToolTip": "D:\\Front \u002B Back \u002B AI\\DoctorPlantTest\\DoctorPlantTest.BLL\\DTOs\\Notification\\NotificationDto.cs",
+              "RelativeToolTip": "DoctorPlantTest.BLL\\DTOs\\Notification\\NotificationDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABoAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-17T01:39:03.18Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "Post.cs",
+              "DocumentMoniker": "D:\\Front \u002B Back \u002B AI\\DoctorPlantTest\\DoctorPlantTest.DAL\\Entities\\Post.cs",
+              "RelativeDocumentMoniker": "DoctorPlantTest.DAL\\Entities\\Post.cs",
+              "ToolTip": "D:\\Front \u002B Back \u002B AI\\DoctorPlantTest\\DoctorPlantTest.DAL\\Entities\\Post.cs",
+              "RelativeToolTip": "DoctorPlantTest.DAL\\Entities\\Post.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-17T01:27:13.823Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "AppDbContext.cs",
+              "DocumentMoniker": "D:\\Front \u002B Back \u002B AI\\DoctorPlantTest\\DoctorPlantTest.DAL\\Data\\AppDbContext.cs",
+              "RelativeDocumentMoniker": "DoctorPlantTest.DAL\\Data\\AppDbContext.cs",
+              "ToolTip": "D:\\Front \u002B Back \u002B AI\\DoctorPlantTest\\DoctorPlantTest.DAL\\Data\\AppDbContext.cs",
+              "RelativeToolTip": "DoctorPlantTest.DAL\\Data\\AppDbContext.cs",
+              "ViewState": "AgIAAHAAAAAAAAAAAAAUwHcAAAAnAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-17T01:30:33.867Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "User.cs",
+              "DocumentMoniker": "D:\\Front \u002B Back \u002B AI\\DoctorPlantTest\\DoctorPlantTest.DAL\\Entities\\User.cs",
+              "RelativeDocumentMoniker": "DoctorPlantTest.DAL\\Entities\\User.cs",
+              "ToolTip": "D:\\Front \u002B Back \u002B AI\\DoctorPlantTest\\DoctorPlantTest.DAL\\Entities\\User.cs",
+              "RelativeToolTip": "DoctorPlantTest.DAL\\Entities\\User.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAAyAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-17T00:26:34.233Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "Notification.cs",
+              "DocumentMoniker": "D:\\Front \u002B Back \u002B AI\\DoctorPlantTest\\DoctorPlantTest.DAL\\Entities\\Notification.cs",
+              "RelativeDocumentMoniker": "DoctorPlantTest.DAL\\Entities\\Notification.cs",
+              "ToolTip": "D:\\Front \u002B Back \u002B AI\\DoctorPlantTest\\DoctorPlantTest.DAL\\Entities\\Notification.cs",
+              "RelativeToolTip": "DoctorPlantTest.DAL\\Entities\\Notification.cs",
+              "ViewState": "AgIAAAwAAAAAAAAAAAA3wBwAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-17T01:19:13.505Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "AuthResponseDto.cs",
+              "DocumentMoniker": "D:\\Front \u002B Back \u002B AI\\DoctorPlantTest\\DoctorPlantTest.BLL\\DTOs\\Auth\\AuthResponseDto.cs",
+              "RelativeDocumentMoniker": "DoctorPlantTest.BLL\\DTOs\\Auth\\AuthResponseDto.cs",
+              "ToolTip": "D:\\Front \u002B Back \u002B AI\\DoctorPlantTest\\DoctorPlantTest.BLL\\DTOs\\Auth\\AuthResponseDto.cs",
+              "RelativeToolTip": "DoctorPlantTest.BLL\\DTOs\\Auth\\AuthResponseDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-17T00:35:35.887Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "AuthService.cs",
+              "DocumentMoniker": "D:\\Front \u002B Back \u002B AI\\DoctorPlantTest\\DoctorPlantTest.BLL\\Services\\AuthService.cs",
+              "RelativeDocumentMoniker": "DoctorPlantTest.BLL\\Services\\AuthService.cs",
+              "ToolTip": "D:\\Front \u002B Back \u002B AI\\DoctorPlantTest\\DoctorPlantTest.BLL\\Services\\AuthService.cs",
+              "RelativeToolTip": "DoctorPlantTest.BLL\\Services\\AuthService.cs",
+              "ViewState": "AgIAAD4AAAAAAAAAAAAwwFAAAAAMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-17T00:31:53.643Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "AuthController.cs",
+              "DocumentMoniker": "D:\\Front \u002B Back \u002B AI\\DoctorPlantTest\\DoctorPlantTest.API\\Controllers\\AuthController.cs",
+              "RelativeDocumentMoniker": "DoctorPlantTest.API\\Controllers\\AuthController.cs",
+              "ToolTip": "D:\\Front \u002B Back \u002B AI\\DoctorPlantTest\\DoctorPlantTest.API\\Controllers\\AuthController.cs",
+              "RelativeToolTip": "DoctorPlantTest.API\\Controllers\\AuthController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-17T00:27:46.16Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,120 @@
+C:\DoctorPlantTest\DoctorPlantTest.DAL\bin\Debug\net8.0\DoctorPlantTest.DAL.deps.json
+C:\DoctorPlantTest\DoctorPlantTest.DAL\bin\Debug\net8.0\DoctorPlantTest.DAL.runtimeconfig.json
+C:\DoctorPlantTest\DoctorPlantTest.DAL\bin\Debug\net8.0\DoctorPlantTest.DAL.dll
+C:\DoctorPlantTest\DoctorPlantTest.DAL\bin\Debug\net8.0\DoctorPlantTest.DAL.pdb
+C:\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\DoctorPlantTest.DAL.csproj.AssemblyReference.cache
+C:\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\DoctorPlantTest.DAL.GeneratedMSBuildEditorConfig.editorconfig
+C:\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\DoctorPlantTest.DAL.AssemblyInfoInputs.cache
+C:\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\DoctorPlantTest.DAL.AssemblyInfo.cs
+C:\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\DoctorPlantTest.DAL.csproj.CoreCompileInputs.cache
+C:\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\DoctorPlantTest.DAL.dll
+C:\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\refint\DoctorPlantTest.DAL.dll
+C:\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\DoctorPlantTest.DAL.pdb
+C:\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\DoctorPlantTest.DAL.genruntimeconfig.cache
+C:\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\ref\DoctorPlantTest.DAL.dll
+C:\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\EFCoreMySqlJsonMicrosoft.cs
+C:\Users\1\OneDrive\Desktop\DoctorPlantTest\DoctorPlantTest.DAL\bin\Debug\net8.0\DoctorPlantTest.DAL.deps.json
+C:\Users\1\OneDrive\Desktop\DoctorPlantTest\DoctorPlantTest.DAL\bin\Debug\net8.0\DoctorPlantTest.DAL.runtimeconfig.json
+C:\Users\1\OneDrive\Desktop\DoctorPlantTest\DoctorPlantTest.DAL\bin\Debug\net8.0\DoctorPlantTest.DAL.dll
+C:\Users\1\OneDrive\Desktop\DoctorPlantTest\DoctorPlantTest.DAL\bin\Debug\net8.0\DoctorPlantTest.DAL.pdb
+C:\Users\1\OneDrive\Desktop\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\DoctorPlantTest.DAL.csproj.AssemblyReference.cache
+C:\Users\1\OneDrive\Desktop\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\DoctorPlantTest.DAL.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\1\OneDrive\Desktop\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\DoctorPlantTest.DAL.AssemblyInfoInputs.cache
+C:\Users\1\OneDrive\Desktop\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\DoctorPlantTest.DAL.AssemblyInfo.cs
+C:\Users\1\OneDrive\Desktop\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\DoctorPlantTest.DAL.csproj.CoreCompileInputs.cache
+C:\Users\1\OneDrive\Desktop\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\EFCoreMySqlJsonMicrosoft.cs
+C:\Users\1\OneDrive\Desktop\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\DoctorPlantTest.DAL.dll
+C:\Users\1\OneDrive\Desktop\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\refint\DoctorPlantTest.DAL.dll
+C:\Users\1\OneDrive\Desktop\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\DoctorPlantTest.DAL.pdb
+C:\Users\1\OneDrive\Desktop\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\DoctorPlantTest.DAL.genruntimeconfig.cache
+C:\Users\1\OneDrive\Desktop\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\ref\DoctorPlantTest.DAL.dll
+C:\Users\1\OneDrive\المستندات\DoctorPlantTest\DoctorPlantTest.DAL\bin\Debug\net8.0\DoctorPlantTest.DAL.deps.json
+C:\Users\1\OneDrive\المستندات\DoctorPlantTest\DoctorPlantTest.DAL\bin\Debug\net8.0\DoctorPlantTest.DAL.runtimeconfig.json
+C:\Users\1\OneDrive\المستندات\DoctorPlantTest\DoctorPlantTest.DAL\bin\Debug\net8.0\DoctorPlantTest.DAL.dll
+C:\Users\1\OneDrive\المستندات\DoctorPlantTest\DoctorPlantTest.DAL\bin\Debug\net8.0\DoctorPlantTest.DAL.pdb
+C:\Users\1\OneDrive\المستندات\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\DoctorPlantTest.DAL.csproj.AssemblyReference.cache
+C:\Users\1\OneDrive\المستندات\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\DoctorPlantTest.DAL.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\1\OneDrive\المستندات\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\DoctorPlantTest.DAL.AssemblyInfoInputs.cache
+C:\Users\1\OneDrive\المستندات\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\DoctorPlantTest.DAL.AssemblyInfo.cs
+C:\Users\1\OneDrive\المستندات\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\DoctorPlantTest.DAL.csproj.CoreCompileInputs.cache
+C:\Users\1\OneDrive\المستندات\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\EFCoreMySqlJsonMicrosoft.cs
+C:\Users\1\OneDrive\المستندات\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\DoctorPlantTest.DAL.dll
+C:\Users\1\OneDrive\المستندات\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\refint\DoctorPlantTest.DAL.dll
+C:\Users\1\OneDrive\المستندات\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\DoctorPlantTest.DAL.pdb
+C:\Users\1\OneDrive\المستندات\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\DoctorPlantTest.DAL.genruntimeconfig.cache
+C:\Users\1\OneDrive\المستندات\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\ref\DoctorPlantTest.DAL.dll
+C:\Users\yazan\Downloads\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.DAL\bin\Debug\net8.0\DoctorPlantTest.DAL.deps.json
+C:\Users\yazan\Downloads\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.DAL\bin\Debug\net8.0\DoctorPlantTest.DAL.runtimeconfig.json
+C:\Users\yazan\Downloads\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.DAL\bin\Debug\net8.0\DoctorPlantTest.DAL.dll
+C:\Users\yazan\Downloads\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.DAL\bin\Debug\net8.0\DoctorPlantTest.DAL.pdb
+C:\Users\yazan\Downloads\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\DoctorPlantTest.DAL.csproj.AssemblyReference.cache
+C:\Users\yazan\Downloads\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\DoctorPlantTest.DAL.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\yazan\Downloads\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\DoctorPlantTest.DAL.AssemblyInfoInputs.cache
+C:\Users\yazan\Downloads\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\DoctorPlantTest.DAL.AssemblyInfo.cs
+C:\Users\yazan\Downloads\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\DoctorPlantTest.DAL.csproj.CoreCompileInputs.cache
+C:\Users\yazan\Downloads\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\EFCoreMySqlJsonMicrosoft.cs
+C:\Users\yazan\Downloads\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\DoctorPlantTest.DAL.dll
+C:\Users\yazan\Downloads\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\refint\DoctorPlantTest.DAL.dll
+C:\Users\yazan\Downloads\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\DoctorPlantTest.DAL.pdb
+C:\Users\yazan\Downloads\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\DoctorPlantTest.DAL.genruntimeconfig.cache
+C:\Users\yazan\Downloads\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\ref\DoctorPlantTest.DAL.dll
+D:\Front + Back + AI\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.DAL\bin\Debug\net8.0\DoctorPlantTest.DAL.deps.json
+D:\Front + Back + AI\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.DAL\bin\Debug\net8.0\DoctorPlantTest.DAL.runtimeconfig.json
+D:\Front + Back + AI\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.DAL\bin\Debug\net8.0\DoctorPlantTest.DAL.dll
+D:\Front + Back + AI\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.DAL\bin\Debug\net8.0\DoctorPlantTest.DAL.pdb
+D:\Front + Back + AI\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\DoctorPlantTest.DAL.csproj.AssemblyReference.cache
+D:\Front + Back + AI\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\DoctorPlantTest.DAL.GeneratedMSBuildEditorConfig.editorconfig
+D:\Front + Back + AI\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\DoctorPlantTest.DAL.AssemblyInfoInputs.cache
+D:\Front + Back + AI\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\DoctorPlantTest.DAL.AssemblyInfo.cs
+D:\Front + Back + AI\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\DoctorPlantTest.DAL.csproj.CoreCompileInputs.cache
+D:\Front + Back + AI\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\EFCoreMySqlJsonMicrosoft.cs
+D:\Front + Back + AI\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\DoctorPlantTest.DAL.dll
+D:\Front + Back + AI\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\refint\DoctorPlantTest.DAL.dll
+D:\Front + Back + AI\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\DoctorPlantTest.DAL.pdb
+D:\Front + Back + AI\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\DoctorPlantTest.DAL.genruntimeconfig.cache
+D:\Front + Back + AI\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\ref\DoctorPlantTest.DAL.dll
+C:\Users\1\OneDrive\Desktop\DoctorPlantTest3\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.DAL\bin\Debug\net8.0\DoctorPlantTest.DAL.deps.json
+C:\Users\1\OneDrive\Desktop\DoctorPlantTest3\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.DAL\bin\Debug\net8.0\DoctorPlantTest.DAL.runtimeconfig.json
+C:\Users\1\OneDrive\Desktop\DoctorPlantTest3\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.DAL\bin\Debug\net8.0\DoctorPlantTest.DAL.dll
+C:\Users\1\OneDrive\Desktop\DoctorPlantTest3\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.DAL\bin\Debug\net8.0\DoctorPlantTest.DAL.pdb
+C:\Users\1\OneDrive\Desktop\DoctorPlantTest3\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\DoctorPlantTest.DAL.csproj.AssemblyReference.cache
+C:\Users\1\OneDrive\Desktop\DoctorPlantTest3\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\DoctorPlantTest.DAL.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\1\OneDrive\Desktop\DoctorPlantTest3\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\DoctorPlantTest.DAL.AssemblyInfoInputs.cache
+C:\Users\1\OneDrive\Desktop\DoctorPlantTest3\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\DoctorPlantTest.DAL.AssemblyInfo.cs
+C:\Users\1\OneDrive\Desktop\DoctorPlantTest3\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\DoctorPlantTest.DAL.csproj.CoreCompileInputs.cache
+C:\Users\1\OneDrive\Desktop\DoctorPlantTest3\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\EFCoreMySqlJsonMicrosoft.cs
+C:\Users\1\OneDrive\Desktop\DoctorPlantTest3\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\DoctorPlantTest.DAL.dll
+C:\Users\1\OneDrive\Desktop\DoctorPlantTest3\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\refint\DoctorPlantTest.DAL.dll
+C:\Users\1\OneDrive\Desktop\DoctorPlantTest3\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\DoctorPlantTest.DAL.pdb
+C:\Users\1\OneDrive\Desktop\DoctorPlantTest3\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\DoctorPlantTest.DAL.genruntimeconfig.cache
+C:\Users\1\OneDrive\Desktop\DoctorPlantTest3\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\ref\DoctorPlantTest.DAL.dll
+C:\Users\yazan\Desktop\DoctorPlantTest3\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.DAL\bin\Debug\net8.0\DoctorPlantTest.DAL.deps.json
+C:\Users\yazan\Desktop\DoctorPlantTest3\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.DAL\bin\Debug\net8.0\DoctorPlantTest.DAL.runtimeconfig.json
+C:\Users\yazan\Desktop\DoctorPlantTest3\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.DAL\bin\Debug\net8.0\DoctorPlantTest.DAL.dll
+C:\Users\yazan\Desktop\DoctorPlantTest3\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.DAL\bin\Debug\net8.0\DoctorPlantTest.DAL.pdb
+C:\Users\yazan\Desktop\DoctorPlantTest3\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\DoctorPlantTest.DAL.csproj.AssemblyReference.cache
+C:\Users\yazan\Desktop\DoctorPlantTest3\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\DoctorPlantTest.DAL.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\yazan\Desktop\DoctorPlantTest3\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\DoctorPlantTest.DAL.AssemblyInfoInputs.cache
+C:\Users\yazan\Desktop\DoctorPlantTest3\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\DoctorPlantTest.DAL.AssemblyInfo.cs
+C:\Users\yazan\Desktop\DoctorPlantTest3\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\DoctorPlantTest.DAL.csproj.CoreCompileInputs.cache
+C:\Users\yazan\Desktop\DoctorPlantTest3\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\EFCoreMySqlJsonMicrosoft.cs
+C:\Users\yazan\Desktop\DoctorPlantTest3\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\DoctorPlantTest.DAL.dll
+C:\Users\yazan\Desktop\DoctorPlantTest3\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\refint\DoctorPlantTest.DAL.dll
+C:\Users\yazan\Desktop\DoctorPlantTest3\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\DoctorPlantTest.DAL.pdb
+C:\Users\yazan\Desktop\DoctorPlantTest3\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\DoctorPlantTest.DAL.genruntimeconfig.cache
+C:\Users\yazan\Desktop\DoctorPlantTest3\DoctorPlantTest\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\ref\DoctorPlantTest.DAL.dll
+D:\Front + Back + AI\DoctorPlantTest\DoctorPlantTest.DAL\bin\Debug\net8.0\DoctorPlantTest.DAL.deps.json
+D:\Front + Back + AI\DoctorPlantTest\DoctorPlantTest.DAL\bin\Debug\net8.0\DoctorPlantTest.DAL.runtimeconfig.json
+D:\Front + Back + AI\DoctorPlantTest\DoctorPlantTest.DAL\bin\Debug\net8.0\DoctorPlantTest.DAL.dll
+D:\Front + Back + AI\DoctorPlantTest\DoctorPlantTest.DAL\bin\Debug\net8.0\DoctorPlantTest.DAL.pdb
+D:\Front + Back + AI\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\DoctorPlantTest.DAL.csproj.AssemblyReference.cache
+D:\Front + Back + AI\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\DoctorPlantTest.DAL.GeneratedMSBuildEditorConfig.editorconfig
+D:\Front + Back + AI\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\DoctorPlantTest.DAL.AssemblyInfoInputs.cache
+D:\Front + Back + AI\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\DoctorPlantTest.DAL.AssemblyInfo.cs
+D:\Front + Back + AI\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\DoctorPlantTest.DAL.csproj.CoreCompileInputs.cache
+D:\Front + Back + AI\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\EFCoreMySqlJsonMicrosoft.cs
+D:\Front + Back + AI\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\DoctorPlantTest.DAL.dll
+D:\Front + Back + AI\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\refint\DoctorPlantTest.DAL.dll
+D:\Front + Back + AI\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\DoctorPlantTest.DAL.pdb
+D:\Front + Back + AI\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\DoctorPlantTest.DAL.genruntimeconfig.cache
+D:\Front + Back + AI\DoctorPlantTest\DoctorPlantTest.DAL\obj\Debug\net8.0\ref\DoctorPlantTest.DAL.dll

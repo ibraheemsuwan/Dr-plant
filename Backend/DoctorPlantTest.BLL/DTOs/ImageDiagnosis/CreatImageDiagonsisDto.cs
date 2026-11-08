@@ -1,0 +1,14 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace DoctorPlantTest.BLL.DTOs.ImageDiagnosis
+{
+    public class CreateImageDiagnosisDto
+    {
+        public string? ImageUrl { get; set; }
+        public long DiseaseId { get; set; }
+        public decimal ConfidencePercent { get; set; }
+        public string Status { get; set; } = string.Empty;
+    }
+}

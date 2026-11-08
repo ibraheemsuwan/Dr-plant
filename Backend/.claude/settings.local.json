@@ -1,0 +1,35 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(xargs grep *)",
+      "Bash(mv /c/Users/1/OneDrive/Desktop/DoctorPlantTest3/DoctorPlantTest/DoctorPlantTest/DoctorPlantTest.BLL/DTOs/User/CreatUserDto.cs /c/Users/1/OneDrive/Desktop/DoctorPlantTest3/DoctorPlantTest/DoctorPlantTest/DoctorPlantTest.BLL/DTOs/User/CreateUserDto.cs)",
+      "Bash(mv /c/Users/1/OneDrive/Desktop/DoctorPlantTest3/DoctorPlantTest/DoctorPlantTest/DoctorPlantTest.BLL/DTOs/Comment/CreatCommentDto.cs /c/Users/1/OneDrive/Desktop/DoctorPlantTest3/DoctorPlantTest/DoctorPlantTest/DoctorPlantTest.BLL/DTOs/Comment/CreateCommentDto.cs)",
+      "Bash(mv /c/Users/1/OneDrive/Desktop/DoctorPlantTest3/DoctorPlantTest/DoctorPlantTest/DoctorPlantTest.BLL/DTOs/Crop/CreatCropDto.cs /c/Users/1/OneDrive/Desktop/DoctorPlantTest3/DoctorPlantTest/DoctorPlantTest/DoctorPlantTest.BLL/DTOs/Crop/CreateCropDto.cs)",
+      "Bash(mv /c/Users/1/OneDrive/Desktop/DoctorPlantTest3/DoctorPlantTest/DoctorPlantTest/DoctorPlantTest.BLL/DTOs/Disease/CreatDiseaseDto.cs /c/Users/1/OneDrive/Desktop/DoctorPlantTest3/DoctorPlantTest/DoctorPlantTest/DoctorPlantTest.BLL/DTOs/Disease/CreateDiseaseDto.cs)",
+      "Bash(mv /c/Users/1/OneDrive/Desktop/DoctorPlantTest3/DoctorPlantTest/DoctorPlantTest/DoctorPlantTest.BLL/DTOs/Like/CreatLikeDto.cs /c/Users/1/OneDrive/Desktop/DoctorPlantTest3/DoctorPlantTest/DoctorPlantTest/DoctorPlantTest.BLL/DTOs/Like/CreateLikeDto.cs)",
+      "Bash(dotnet restore *)",
+      "Bash(dotnet build *)",
+      "Bash(dotnet ef *)",
+      "Bash(mysql --version)",
+      "Read(//c/Program Files/**)",
+      "Read(//c/Program Files \\(x86\\)/**)",
+      "Bash(find /c -name \"mysql.exe\")",
+      "Bash(/c/xampp/mysql/bin/mysql.exe *)",
+      "Bash(dotnet add *)",
+      "Bash(dotnet run *)",
+      "Bash(dotnet remove *)",
+      "Read(//c/Users/1/.nuget/packages/swashbuckle.aspnetcore/10.1.7/**)",
+      "Read(//c/Users/1/.nuget/packages/swashbuckle.aspnetcore.swaggergen//**)",
+      "Bash(unzip -p \"/c/Users/1/.nuget/packages/swashbuckle.aspnetcore.swaggergen/10.1.7/swashbuckle.aspnetcore.swaggergen.10.1.7.nupkg\" \"*.nuspec\")",
+      "Bash(unzip -p \"/c/Users/1/.nuget/packages/swashbuckle.aspnetcore.swagger/10.1.7/swashbuckle.aspnetcore.swagger.10.1.7.nupkg\" \"*.nuspec\")",
+      "Bash(dotnet list *)",
+      "Bash(dotnet-script)",
+      "Bash(powershell.exe -Command '[System.Reflection.Assembly]::LoadFile\\('\\\\''C:\\\\Users\\\\1\\\\.nuget\\\\packages\\\\microsoft.openapi\\\\2.4.1\\\\lib\\\\net8.0\\\\Microsoft.OpenApi.dll'\\\\''\\).GetTypes\\(\\) | Where-Object { $_.Namespace -like '\\\\''*Models*'\\\\'' } | Select-Object -First 10 -ExpandProperty FullName')",
+      "Bash(unzip -l \"/c/Users/1/.nuget/packages/microsoft.openapi/2.4.1/microsoft.openapi.2.4.1.nupkg\")",
+      "Bash(unzip -p \"/c/Users/1/.nuget/packages/microsoft.openapi/2.4.1/microsoft.openapi.2.4.1.nupkg\" \"*.nuspec\")",
+      "Bash(unzip -p \"/c/Users/1/.nuget/packages/microsoft.openapi/2.4.1/microsoft.openapi.2.4.1.nupkg\" \"lib/net8.0/Microsoft.OpenApi.xml\")",
+      "Bash(unzip -p \"/c/Users/1/.nuget/packages/swashbuckle.aspnetcore.swaggergen/10.1.7/swashbuckle.aspnetcore.swaggergen.10.1.7.nupkg\" \"lib/net8.0/Swashbuckle.AspNetCore.SwaggerGen.xml\")",
+      "Bash(taskkill /PID 41500 /F)"
+    ]
+  }
+}
