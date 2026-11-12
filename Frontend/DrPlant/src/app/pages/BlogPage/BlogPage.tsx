@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router";
 import {
   Calendar,
@@ -14,10 +14,7 @@ import {
 import { useLanguage } from "../../contexts/LanguageContext";
 import { useUser } from "../../contexts/UserContext";
 import { getErrorMessage } from "../../api/errors";
-import {
-  buildLikeLookup,
-  fetchBlogPostsMerged,
-} from "../../api/services/blogAggregate";
+import { buildLikeLookup, fetchBlogFeed } from "../../api/services/blogAggregate";
 import * as commentsService from "../../api/services/commentsService";
 import * as likesService from "../../api/services/likesService";
 import * as postsService from "../../api/services/postsService";
@@ -59,7 +56,7 @@ type MediaType = "image" | "video";
 
 export type { BlogPost };
 
-const POSTS_PER_PAGE = 5;
+const POSTS_PER_PAGE = 6;
 
 /** عنوان العرض: من post.title أو أول سطر من الوصف (منشورات قديمة بدون ترميز). */
 function headingOrFirstLine(post: BlogPost): string {
@@ -99,6 +96,9 @@ export function BlogPage() {
   const [submitting, setSubmitting] = useState(false);
   const [mediaFile, setMediaFile] = useState<File | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  /** number of posts in each tab, independent of the category filter */
+  const [sectionCounts, setSectionCounts] = useState({ my: 0, community: 0 });
   const [showNewPostForm, setShowNewPostForm] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [formData, setFormData] = useState({
@@ -115,16 +115,43 @@ export function BlogPage() {
   const [commentText, setCommentText] = useState("");
   const [editingPostId, setEditingPostId] = useState<number | null>(null);
 
+  // The latest page/filters, readable from handlers without stale closures
+  const queryRef = useRef({ page: 1, category: "All", section: "community" as "my" | "community", userId: 0 });
+  queryRef.current = {
+    page: currentPage,
+    category: selectedCategory,
+    section: postSection,
+    userId: loggedInAuthor ? Number(loggedInAuthor.id) : 0,
+  };
+
   const loadBlog = useCallback(async () => {
+    const { page, category, section, userId } = queryRef.current;
     setBlogLoading(true);
     setBlogError(null);
     try {
-      const [merged, likesRaw] = await Promise.all([
-        fetchBlogPostsMerged(),
-        likesService.listLikesRaw(),
+      const [feed, mine, community] = await Promise.all([
+        fetchBlogFeed({
+          page,
+          pageSize: POSTS_PER_PAGE,
+          category,
+          userId: section === "my" && userId > 0 ? userId : undefined,
+          excludeUserId: section === "community" && userId > 0 ? userId : undefined,
+        }),
+        // one-post pages: only their totals are used, for the tab counters
+        userId > 0 ? fetchBlogFeed({ page: 1, pageSize: 1, userId }) : Promise.resolve(null),
+        fetchBlogFeed({ page: 1, pageSize: 1, excludeUserId: userId > 0 ? userId : undefined }),
       ]);
-      setPosts(merged);
-      setLikeLookup(buildLikeLookup(likesRaw));
+
+      // The current page no longer exists (e.g. its last post was deleted): go back, the effect reloads
+      if (feed.posts.length === 0 && page > 1 && feed.totalPages > 0) {
+        setCurrentPage(feed.totalPages);
+        return;
+      }
+
+      setPosts(feed.posts);
+      setTotalPages(Math.max(1, feed.totalPages));
+      setLikeLookup(feed.likeLookup);
+      setSectionCounts({ my: mine?.total ?? 0, community: community.total });
     } catch (e) {
       setBlogError(getErrorMessage(e));
       setPosts([]);
@@ -133,9 +160,10 @@ export function BlogPage() {
     }
   }, []);
 
+  // Reload whenever the page, the category, the tab or the signed-in user changes
   useEffect(() => {
     void loadBlog();
-  }, [loadBlog]);
+  }, [loadBlog, currentPage, selectedCategory, postSection, loggedInAuthor?.id]);
 
   useEffect(() => {
     const sync = () => void loadBlog();
@@ -186,8 +214,9 @@ export function BlogPage() {
       setMediaFile(null);
       setShowNewPostForm(false);
       setEditingPostId(null);
-      setCurrentPage(1);
-      await loadBlog();
+      // new posts appear on page 1: change page (the effect reloads) or reload in place
+      if (currentPage !== 1) setCurrentPage(1);
+      else await loadBlog();
     } catch (err) {
       alert(getErrorMessage(err));
     } finally {
@@ -263,7 +292,7 @@ export function BlogPage() {
       if (liked) {
         let likeId = likeLookup.get(key);
         if (likeId == null || likeId <= 0) {
-          const raw = await likesService.listLikesRaw();
+          const raw = await likesService.listLikesRaw(post.id);
           const m = buildLikeLookup(raw);
           setLikeLookup(m);
           likeId = m.get(key);
@@ -360,28 +389,16 @@ export function BlogPage() {
       post.likes.includes(String(loggedInAuthor.id)),
     );
 
-  const allCategories = ["All", ...new Set(posts.map((p) => p.category))];
+  // Categories offered in the filter: the standard ones, plus the selected one if it is a custom category
+  const allCategories = [
+    "All",
+    ...new Set<string>([...BLOG_CATEGORIES, ...(selectedCategory !== "All" ? [selectedCategory] : [])]),
+  ];
 
-  const myPosts = loggedInAuthor
-    ? posts.filter((p) => String(p.userId) === String(loggedInAuthor.id))
-    : [];
-  const communityPosts = loggedInAuthor
-    ? posts.filter((p) => String(p.userId) !== String(loggedInAuthor.id))
-    : posts;
-
-  const sectionPosts = postSection === "my" ? myPosts : communityPosts;
-
-  const filteredPosts =
-    selectedCategory === "All"
-      ? sectionPosts
-      : sectionPosts.filter((p) => p.category === selectedCategory);
-
-  const totalPages = Math.ceil(filteredPosts.length / POSTS_PER_PAGE) || 1;
-  const startIdx = (currentPage - 1) * POSTS_PER_PAGE;
-  const paginatedPosts = filteredPosts.slice(
-    startIdx,
-    startIdx + POSTS_PER_PAGE,
-  );
+  // The server already filtered, sorted and cut the list to this page
+  const paginatedPosts = posts;
+  const myPostsCount = sectionCounts.my;
+  const communityPostsCount = sectionCounts.community;
 
   const modalPost = modalPostId
     ? posts.find((p) => p.id === modalPostId)
@@ -436,7 +453,7 @@ export function BlogPage() {
           </p>
         ) : null}
 
-        {(loggedInAuthor && myPosts.length > 0) || communityPosts.length > 0 ? (
+        {(loggedInAuthor && myPostsCount > 0) || communityPostsCount > 0 ? (
           <div
             className="flex flex-wrap gap-2 justify-center mb-8"
             role="tablist"
@@ -457,7 +474,7 @@ export function BlogPage() {
                   setCurrentPage(1);
                 }}
               >
-                {t("myPosts")} ({myPosts.length})
+                {t("myPosts")} ({myPostsCount})
               </button>
             ) : null}
             <button
@@ -475,7 +492,7 @@ export function BlogPage() {
                 setCurrentPage(1);
               }}
             >
-              {t("communityPosts")} ({communityPosts.length})
+              {t("communityPosts")} ({communityPostsCount})
             </button>
           </div>
         ) : null}
@@ -791,7 +808,7 @@ export function BlogPage() {
           ))}
         </div>
 
-        {!blogLoading && filteredPosts.length === 0 ? (
+        {!blogLoading && posts.length === 0 ? (
           <p className="text-center text-muted-foreground py-16 rounded-3xl border border-dashed border-border">
             {language === "ar"
               ? "لا توجد منشورات في هذا القسم."

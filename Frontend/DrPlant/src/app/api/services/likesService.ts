@@ -1,8 +1,9 @@
 import { apiDelete, apiGet, apiPost } from "../http";
 import { asArray } from "../utils";
 
-export async function listLikesRaw(): Promise<Record<string, unknown>[]> {
-  const data = await apiGet<unknown>("/Likes");
+/** All likes, or just those of one post (use the post filter: the unfiltered list grows without limit). */
+export async function listLikesRaw(postId?: number): Promise<Record<string, unknown>[]> {
+  const data = await apiGet<unknown>(postId ? `/Likes?postId=${postId}` : "/Likes");
   return asArray<Record<string, unknown>>(data);
 }
 

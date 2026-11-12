@@ -50,6 +50,21 @@ namespace DoctorPlantTest.BLL.Services
             };
         }
 
+        public async Task<DoctorPlantTest.BLL.DTOs.Common.PagedResult<ImageDiagnosisDto>> GetPagedByUserAsync(long userId, int page, int pageSize)
+        {
+            var (p, size) = DoctorPlantTest.BLL.DTOs.Common.Paging.Normalize(page, pageSize, defaultSize: 20);
+            var total = await _diagnosisRepository.CountAsync(d => d.UserId == userId);
+            var rows = await _diagnosisRepository.PageAsync(
+                d => d.UserId == userId, o => o.OrderByDescending(d => d.CreatedAt).ThenByDescending(d => d.DiagnosisId), (p - 1) * size, size);
+
+            var items = rows.Select(d => new ImageDiagnosisDto
+            {
+                DiagnosisId = d.DiagnosisId, UserId = d.UserId, ImageUrl = d.ImageUrl, DiseaseId = d.DiseaseId,
+                ConfidencePercent = d.ConfidencePercent, Status = d.Status, CreatedAt = d.CreatedAt,
+            }).ToList();
+            return DoctorPlantTest.BLL.DTOs.Common.PagedResult<ImageDiagnosisDto>.Create(items, p, size, total);
+        }
+
         public async Task<IEnumerable<ImageDiagnosisDto>> GetByUserAsync(long userId)
         {
             var diagnoses = await _diagnosisRepository.FindAsync(d => d.UserId == userId);

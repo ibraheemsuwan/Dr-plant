@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using DoctorPlantTest.BLL.DTOs.Like;
@@ -23,16 +23,18 @@ namespace DoctorPlantTest.BLL.Services
             _notificationService = notificationService;
         }
 
-        public async Task<IEnumerable<LikeDto>> GetAllAsync()
+        public async Task<IEnumerable<LikeDto>> GetAllAsync(long? postId = null, int limit = 2000)
         {
-            var likes = await _likeRepository.GetAllAsync();
+            System.Linq.Expressions.Expression<Func<Like, bool>>? filter = postId == null ? null : l => l.PostId == postId;
+            var likes = await _likeRepository.PageAsync(
+                filter, o => o.OrderByDescending(l => l.CreatedAt).ThenByDescending(l => l.LikeId), 0, Math.Clamp(limit, 1, 5000));
             return likes.Select(l => new LikeDto
             {
                 LikeId = l.LikeId,
                 PostId = l.PostId,
                 UserId = l.UserId,
                 CreatedAt = l.CreatedAt
-            });
+            }).ToList();
         }
 
         public async Task<LikeDto?> GetByIdAsync(long id)

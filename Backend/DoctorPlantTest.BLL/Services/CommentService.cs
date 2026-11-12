@@ -26,14 +26,16 @@ namespace DoctorPlantTest.BLL.Services
             _notificationService = notificationService;
         }
 
-        public async Task<IEnumerable<CommentDto>> GetAllAsync()
+        public async Task<IEnumerable<CommentDto>> GetAllAsync(long? postId = null, int limit = 500)
         {
-            var comments = (await _commentRepository.GetAllAsync()).ToList();
+            System.Linq.Expressions.Expression<Func<Comment, bool>>? filter = postId == null ? null : c => c.PostId == postId;
+            var comments = await _commentRepository.PageAsync(
+                filter, o => o.OrderByDescending(c => c.CreatedAt).ThenByDescending(c => c.CommentId), 0, Math.Clamp(limit, 1, 2000));
             var ids = comments.Select(c => c.UserId).Distinct().ToList();
             var names = (await _userRepository.FindAsync(u => ids.Contains(u.UserId)))
                 .ToDictionary(u => u.UserId, u => u.Name);
 
-            return comments.Select(c => new CommentDto
+            return comments.OrderBy(c => c.CreatedAt).ThenBy(c => c.CommentId).Select(c => new CommentDto
             {
                 CommentId = c.CommentId,
                 PostId = c.PostId,
@@ -41,7 +43,7 @@ namespace DoctorPlantTest.BLL.Services
                 AuthorName = names.TryGetValue(c.UserId, out var name) ? name : string.Empty,
                 Text = c.Text,
                 CreatedAt = c.CreatedAt
-            });
+            }).ToList();
         }
 
         public async Task<CommentDto?> GetByIdAsync(long id)

@@ -37,32 +37,29 @@ namespace DoctorPlantTest.BLL.Services
             await _notificationRepository.AddAsync(notification);
         }
 
-        public async Task<List<NotificationDto>> GetMyNotificationsAsync(long userId)
+        public async Task<List<NotificationDto>> GetMyNotificationsAsync(long userId, int limit = 50)
         {
-            var notifications = await _notificationRepository.GetAllAsync();
+            var rows = await _notificationRepository.PageAsync(
+                n => n.ReceiverUserId == userId,
+                o => o.OrderByDescending(n => n.CreatedAt).ThenByDescending(n => n.NotificationId),
+                0, Math.Clamp(limit, 1, 200));
 
-            return notifications
-                .Where(n => n.ReceiverUserId == userId)
-                .OrderByDescending(n => n.CreatedAt)
-                .Select(n => new NotificationDto
-                {
-                    NotificationId = n.NotificationId,
-                    ReceiverUserId = n.ReceiverUserId,
-                    ActorUserId = n.ActorUserId,
-                    PostId = n.PostId,
-                    Type = n.Type,
-                    Message = n.Message,
-                    IsRead = n.IsRead,
-                    CreatedAt = n.CreatedAt
-                })
-                .ToList();
+            return rows.Select(n => new NotificationDto
+            {
+                NotificationId = n.NotificationId,
+                ReceiverUserId = n.ReceiverUserId,
+                ActorUserId = n.ActorUserId,
+                PostId = n.PostId,
+                Type = n.Type,
+                Message = n.Message,
+                IsRead = n.IsRead,
+                CreatedAt = n.CreatedAt
+            }).ToList();
         }
 
         public async Task<int> GetUnreadCountAsync(long userId)
         {
-            var notifications = await _notificationRepository.GetAllAsync();
-
-            return notifications.Count(n => n.ReceiverUserId == userId && !n.IsRead);
+            return await _notificationRepository.CountAsync(n => n.ReceiverUserId == userId && !n.IsRead);
         }
 
         public async Task MarkAsReadAsync(long notificationId, long userId)
@@ -89,13 +86,8 @@ namespace DoctorPlantTest.BLL.Services
 
         public async Task MarkAllAsReadAsync(long userId)
         {
-            var notifications = await _notificationRepository.GetAllAsync();
-
-            var myNotifications = notifications
-                .Where(n => n.ReceiverUserId == userId && !n.IsRead)
-                .ToList();
-
-            foreach (var notification in myNotifications)
+            var unread = await _notificationRepository.FindAsync(n => n.ReceiverUserId == userId && !n.IsRead);
+            foreach (var notification in unread)
             {
                 notification.IsRead = true;
                 await _notificationRepository.UpdateAsync(notification);

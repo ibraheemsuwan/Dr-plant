@@ -18,9 +18,9 @@ namespace DoctorPlantTest.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] long? postId, [FromQuery] int limit = 2000)
         {
-            var likes = await _likeService.GetAllAsync();
+            var likes = await _likeService.GetAllAsync(postId, limit);
             return Ok(likes);
         }
 

@@ -110,13 +110,12 @@ namespace DoctorPlantTest.API.Controllers
         /// <summary>The signed-in user's diagnosis history, newest first.</summary>
         [HttpGet("mine")]
         [Authorize]
-        public async Task<IActionResult> GetMine()
+        public async Task<IActionResult> GetMine([FromQuery] int page = 1, [FromQuery] int pageSize = 20)
         {
             var userId = User.GetUserId();
             if (userId == null) return Unauthorized(new { message = "Invalid token." });
 
-            var all = await _history.GetByUserAsync(userId.Value);
-            return Ok(all);
+            return Ok(await _history.GetPagedByUserAsync(userId.Value, page, pageSize));
         }
 
         [HttpGet]

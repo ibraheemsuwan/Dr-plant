@@ -4,7 +4,51 @@ import {
   apiPost,
   apiPut,
 } from "../http";
-import { asArray } from "../utils";
+import { asArray, pickNum } from "../utils";
+
+export type PostFeedParams = {
+  page?: number;
+  pageSize?: number;
+  /** "All" or empty = every category */
+  category?: string;
+  /** only this user's posts ("my posts") */
+  userId?: number;
+  /** everything except this user's posts ("community") */
+  excludeUserId?: number;
+  search?: string;
+};
+
+export type PostFeedRaw = {
+  items: Record<string, unknown>[];
+  page: number;
+  pageSize: number;
+  total: number;
+  totalPages: number;
+};
+
+/** GET /Posts/feed: one page of posts, each with its likes and comments. */
+export async function fetchPostFeedRaw(params: PostFeedParams = {}): Promise<PostFeedRaw> {
+  const qs = new URLSearchParams();
+  if (params.page) qs.set("page", String(params.page));
+  if (params.pageSize) qs.set("pageSize", String(params.pageSize));
+  if (params.category && params.category !== "All") qs.set("category", params.category);
+  if (params.userId) qs.set("userId", String(params.userId));
+  if (params.excludeUserId) qs.set("excludeUserId", String(params.excludeUserId));
+  if (params.search?.trim()) qs.set("search", params.search.trim());
+
+  const data = await apiGet<Record<string, unknown>>(`/Posts/feed?${qs.toString()}`);
+  const num = (key: string, fallback: number) => {
+    const n = pickNum(data, key);
+    return Number.isFinite(n) ? Math.trunc(n) : fallback;
+  };
+  return {
+    items: asArray<Record<string, unknown>>(data.items),
+    page: num("page", 1),
+    pageSize: num("pageSize", 10),
+    total: num("total", 0),
+    totalPages: num("totalPages", 0),
+  };
+}
 
 export async function listPostsRaw(): Promise<Record<string, unknown>[]> {
   const data = await apiGet<unknown>("/Posts");

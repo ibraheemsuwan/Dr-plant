@@ -370,7 +370,7 @@ namespace DoctorPlantTest.Tests
             Assert.Equal(1, row.DiseaseId);
 
             var mine = await user.Client.GetFromJsonAsync<JsonElement>("/api/Diagnoses/mine");
-            Assert.Equal(1, mine.GetArrayLength());
+            Assert.Equal(1, mine.GetProperty("items").GetArrayLength());
         }
     }
 }

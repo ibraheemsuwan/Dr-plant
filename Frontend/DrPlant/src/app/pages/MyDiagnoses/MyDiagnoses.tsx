@@ -8,6 +8,8 @@ import { getErrorMessage } from "../../api/errors";
 import * as diseasesService from "../../api/services/diseasesService";
 import { asArray, pickNum, pickStr } from "../../api/utils";
 
+const PAGE_SIZE = 12;
+
 type Row = {
   id: number;
   imageUrl: string;
@@ -42,20 +44,45 @@ export function MyDiagnoses() {
   const isAr = language === "ar";
 
   const [rows, setRows] = useState<Row[] | null>(null);
+  const [total, setTotal] = useState(0);
+  const [page, setPage] = useState(1);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [diseaseNames, setDiseaseNames] = useState<Map<number, string>>(new Map());
 
+  // Pages of diagnoses. Only the page number and login drive this, so changing the language never re-adds a page.
   useEffect(() => {
     if (!isLoggedIn) return;
     let cancelled = false;
     (async () => {
       try {
-        const [mine, diseases] = await Promise.all([
-          apiGet<unknown>("/Diagnoses/mine"),
-          diseasesService.listDiseases().catch(() => []),
-        ]);
+        const mine = await apiGet<Record<string, unknown>>(`/Diagnoses/mine?page=${page}&pageSize=${PAGE_SIZE}`);
         if (cancelled) return;
-        setRows(asArray<Record<string, unknown>>(mine).map(mapRow));
+        const fresh = asArray<Record<string, unknown>>(mine.items).map(mapRow);
+        // page 1 replaces the list; later pages are appended
+        setRows((prev) => (page === 1 || prev === null ? fresh : [...prev, ...fresh]));
+        const totalNum = pickNum(mine, "total");
+        setTotal(Number.isFinite(totalNum) ? Math.trunc(totalNum) : fresh.length);
+      } catch (e) {
+        if (!cancelled) setError(getErrorMessage(e));
+      } finally {
+        if (!cancelled) setLoadingMore(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [isLoggedIn, page]);
+
+  // Disease names (English or Arabic) for the labels; reloaded when the language changes
+  useEffect(() => {
+    if (!isLoggedIn) return;
+    let cancelled = false;
+    diseasesService
+      .listDiseases()
+      .catch(() => [])
+      .then((diseases) => {
+        if (cancelled) return;
         const names = new Map<number, string>();
         for (const d of diseases) {
           const id = pickNum(d, "diseaseId", "DiseaseId");
@@ -64,10 +91,7 @@ export function MyDiagnoses() {
           if (Number.isFinite(id)) names.set(Math.trunc(id), isAr && ar ? ar : en);
         }
         setDiseaseNames(names);
-      } catch (e) {
-        if (!cancelled) setError(getErrorMessage(e));
-      }
-    })();
+      });
     return () => {
       cancelled = true;
     };
@@ -170,6 +194,24 @@ export function MyDiagnoses() {
             </li>
           ))}
         </ul>
+
+        {rows && rows.length < total ? (
+          <div className="mt-8 text-center">
+            <button
+              type="button"
+              disabled={loadingMore}
+              onClick={() => {
+                setLoadingMore(true);
+                setPage((p) => p + 1);
+              }}
+              className="rounded-full border border-border px-6 py-2.5 text-sm font-medium transition-colors hover:border-primary hover:text-primary disabled:opacity-60"
+            >
+              {loadingMore
+                ? isAr ? "جارٍ التحميل..." : "Loading..."
+                : isAr ? `عرض المزيد (${total - rows.length})` : `Show more (${total - rows.length})`}
+            </button>
+          </div>
+        ) : null}
       </div>
     </div>
   );

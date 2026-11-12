@@ -18,9 +18,9 @@ namespace DoctorPlantTest.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] long? postId, [FromQuery] int limit = 500)
         {
-            var comments = await _commentService.GetAllAsync();
+            var comments = await _commentService.GetAllAsync(postId, limit);
             return Ok(comments);
         }
 

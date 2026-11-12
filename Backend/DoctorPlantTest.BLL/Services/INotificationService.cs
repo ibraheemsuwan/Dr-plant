@@ -11,7 +11,8 @@ namespace DoctorPlantTest.BLL.Services
     {
         Task CreateNotificationAsync(long receiverUserId, long actorUserId, long postId, string type, string message);
 
-        Task<List<NotificationDto>> GetMyNotificationsAsync(long userId);
+        /// <summary>The user's newest notifications (default 50).</summary>
+        Task<List<NotificationDto>> GetMyNotificationsAsync(long userId, int limit = 50);
 
         Task<int> GetUnreadCountAsync(long userId);
 

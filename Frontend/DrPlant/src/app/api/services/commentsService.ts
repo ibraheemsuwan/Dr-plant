@@ -1,8 +1,8 @@
 import { apiDelete, apiGet, apiPost } from "../http";
 import { asArray } from "../utils";
 
-export async function listCommentsRaw(): Promise<Record<string, unknown>[]> {
-  const data = await apiGet<unknown>("/Comments");
+export async function listCommentsRaw(postId?: number): Promise<Record<string, unknown>[]> {
+  const data = await apiGet<unknown>(postId ? `/Comments?postId=${postId}` : "/Comments");
   return asArray<Record<string, unknown>>(data);
 }
 

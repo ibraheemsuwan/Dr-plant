@@ -28,10 +28,20 @@ namespace DoctorPlantTest.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] int limit = 500)
         {
-            var posts = await _postService.GetAllAsync();
+            var posts = await _postService.GetAllAsync(limit);
             return Ok(posts);
+        }
+
+        /// <summary>
+        /// One page of posts with their likes and comments, newest first.
+        /// Query: page, pageSize (max 50), category, userId ("my posts"), excludeUserId ("community"), search.
+        /// </summary>
+        [HttpGet("feed")]
+        public async Task<IActionResult> Feed([FromQuery] PostFeedQuery query)
+        {
+            return Ok(await _postService.GetFeedAsync(query));
         }
 
         [HttpGet("{id}")]

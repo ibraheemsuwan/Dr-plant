@@ -4,182 +4,22 @@ import {
   mapApiPostToBlogPost,
   mapApiCommentToBlogComment,
   mapApiLikeToRecord,
-  pickPostRecordId,
 } from "../mappers";
-import { pickNum } from "../utils";
-import type { AuthUser } from "../types";
-import * as commentsService from "./commentsService";
-import * as likesService from "./likesService";
+import { asArray, pickNum } from "../utils";
 import * as postsService from "./postsService";
-import * as usersService from "./usersService";
-
-async function enrichCommentAuthors(
-  posts: BlogPost[],
-  commentsByPost: Map<number, BlogComment[]>,
-): Promise<Map<number, BlogComment[]>> {
-  const allComments = [...commentsByPost.values()].flat();
-  const needs = allComments.some(
-    (c) => !c.authorName.trim() || c.authorName === "User",
-  );
-  if (!needs) return commentsByPost;
-
-  let byId = new Map<number, AuthUser>();
-  try {
-    const users = await usersService.listUsers();
-    byId = new Map(users.map((u) => [u.id, u]));
-  } catch {
-    const ids = [
-      ...new Set(
-        allComments
-          .map((c) => Math.trunc(Number(c.authorId)))
-          .filter((n) => Number.isFinite(n) && n > 0),
-      ),
-    ];
-    for (const id of ids) {
-      try {
-        const u = await usersService.getUser(id);
-        byId.set(id, u);
-      } catch {
-        /* ignore */
-      }
-    }
-  }
-
-  const inferName = (uid: number): string => {
-    const u = byId.get(uid);
-    if (!u) return "User";
-    return (
-      [u.firstName, u.lastName].filter(Boolean).join(" ").trim() ||
-      u.email.split("@")[0] ||
-      u.email
-    );
-  };
-
-  const next = new Map<number, BlogComment[]>();
-  for (const p of posts) {
-    const pid = p.id;
-    const list = commentsByPost.get(pid) ?? [];
-    const updated = list.map((c) => {
-      if (c.authorName.trim() && c.authorName !== "User") return c;
-      const uid = Math.trunc(Number(c.authorId));
-      if (!Number.isFinite(uid) || uid <= 0) return c;
-      return { ...c, authorName: inferName(uid) };
-    });
-    next.set(pid, updated);
-  }
-  return next;
-}
-
-async function enrichBlogAuthors(posts: BlogPost[]): Promise<BlogPost[]> {
-  const needs = posts.some(
-    (p) => !p.author.trim() || p.author === "User",
-  );
-  if (!needs) return posts;
-
-  let byId = new Map<number, AuthUser>();
-  try {
-    const users = await usersService.listUsers();
-    byId = new Map(users.map((u) => [u.id, u]));
-  } catch {
-    const ids = [
-      ...new Set(
-        posts
-          .map((p) => Math.trunc(Number(p.userId)))
-          .filter((n) => Number.isFinite(n) && n > 0),
-      ),
-    ];
-    for (const id of ids) {
-      try {
-        const u = await usersService.getUser(id);
-        byId.set(id, u);
-      } catch {
-        /* ignore */
-      }
-    }
-  }
-
-  return posts.map((p) => {
-    if (p.author.trim() && p.author !== "User") return p;
-    const uid = Math.trunc(Number(p.userId));
-    if (!Number.isFinite(uid) || uid <= 0) return p;
-    const u = byId.get(uid);
-    if (!u) return p;
-    const name =
-      [u.firstName, u.lastName].filter(Boolean).join(" ").trim() ||
-      u.email.split("@")[0] ||
-      u.email;
-    return { ...p, author: name };
-  });
-}
-
-/**
- * Loads posts, comments, and likes from the API and merges into `BlogPost[]`
- * for the existing blog UI.
- */
-export async function fetchBlogPostsMerged(): Promise<BlogPost[]> {
-  const [postRows, commentRows, likeRows] = await Promise.all([
-    postsService.listPostsRaw(),
-    commentsService.listCommentsRaw(),
-    likesService.listLikesRaw(),
-  ]);
-
-  const commentsByPost = new Map<number, BlogComment[]>();
-  for (const cr of commentRows) {
-    const c = mapApiCommentToBlogComment(cr);
-    const pid = c.postId;
-    if (pid == null) continue;
-    const { postId: _p, ...rest } = c;
-    const bc: BlogComment = {
-      id: rest.id,
-      authorName: rest.authorName,
-      authorId: rest.authorId,
-      text: rest.text,
-      date: rest.date,
-    };
-    const list = commentsByPost.get(pid) ?? [];
-    list.push(bc);
-    commentsByPost.set(pid, list);
-  }
-
-  const likesByPost = new Map<number, string[]>();
-  const likeIdByPostUser = new Map<string, number>();
-  for (const lr of likeRows) {
-    const rec = mapApiLikeToRecord(lr);
-    if (!rec) continue;
-    const arr = likesByPost.get(rec.postId) ?? [];
-    arr.push(String(rec.userId));
-    likesByPost.set(rec.postId, arr);
-    likeIdByPostUser.set(`${rec.postId}:${rec.userId}`, rec.id);
-  }
-
-  const merged = postRows
-    .map((p) => {
-      const rec = p as Record<string, unknown>;
-      const pid = pickPostRecordId(rec);
-      const comments = commentsByPost.get(pid) ?? [];
-      const likeUserIds = likesByPost.get(pid) ?? [];
-      return ensurePostShape(mapApiPostToBlogPost(rec, comments, likeUserIds));
-    })
-    .filter((post) => post.id > 0);
-
-  const enrichedCommentsByPost = await enrichCommentAuthors(merged, commentsByPost);
-
-  const byNewest = [...merged].sort((a, b) => {
-    const ta = a.date instanceof Date ? a.date.getTime() : new Date(a.date).getTime();
-    const tb = b.date instanceof Date ? b.date.getTime() : new Date(b.date).getTime();
-    if (tb !== ta) return tb - ta;
-    return b.id - a.id;
-  });
-
-  const withComments = byNewest.map((p) => ({
-    ...p,
-    comments: enrichedCommentsByPost.get(p.id) ?? p.comments ?? [],
-  }));
-
-  return enrichBlogAuthors(withComments);
-}
 
 export type LikeLookup = Map<string, number>;
+
+export type BlogFeedParams = postsService.PostFeedParams;
+
+export type BlogFeedResult = {
+  posts: BlogPost[];
+  page: number;
+  total: number;
+  totalPages: number;
+  /** `postId:userId` -> likeId, for the posts on this page (needed to un-like) */
+  likeLookup: LikeLookup;
+};
 
 export function buildLikeLookup(likeRows: Record<string, unknown>[]): LikeLookup {
   const m = new Map<string, number>();
@@ -197,7 +37,55 @@ export function buildLikeLookup(likeRows: Record<string, unknown>[]): LikeLookup
   return m;
 }
 
-export async function fetchLikeLookup(): Promise<LikeLookup> {
-  const likeRows = await likesService.listLikesRaw();
-  return buildLikeLookup(likeRows);
+function mapFeedItem(item: Record<string, unknown>): BlogPost {
+  const comments: BlogComment[] = asArray<Record<string, unknown>>(item.comments).map((cr) => {
+    const c = mapApiCommentToBlogComment(cr);
+    return {
+      id: c.id,
+      authorName: c.authorName,
+      authorId: c.authorId,
+      text: c.text,
+      date: c.date,
+    };
+  });
+
+  const likeUserIds = asArray<Record<string, unknown>>(item.likes)
+    .map((lr) => mapApiLikeToRecord(lr))
+    .filter((l): l is NonNullable<typeof l> => l != null)
+    .map((l) => String(l.userId));
+
+  return ensurePostShape(mapApiPostToBlogPost(item, comments, likeUserIds));
+}
+
+/**
+ * One page of the blog from the server: posts (newest first) with their comments, likes and author names.
+ * Replaces loading the posts, comments, likes and users tables in full and joining them in the browser.
+ */
+export async function fetchBlogFeed(params: BlogFeedParams): Promise<BlogFeedResult> {
+  const feed = await postsService.fetchPostFeedRaw(params);
+
+  const likeRows = feed.items.flatMap((item) => asArray<Record<string, unknown>>(item.likes));
+
+  return {
+    posts: feed.items.map(mapFeedItem).filter((p) => p.id > 0),
+    page: feed.page,
+    total: feed.total,
+    totalPages: feed.totalPages,
+    likeLookup: buildLikeLookup(likeRows),
+  };
+}
+
+/**
+ * Many posts at once, for the admin dashboard: walks the pages (50 at a time, newest first).
+ * Stops after `maxPosts` so one huge community cannot freeze the page.
+ */
+export async function fetchBlogPostsMerged(maxPosts = 500): Promise<BlogPost[]> {
+  const pageSize = 50;
+  const all: BlogPost[] = [];
+  for (let page = 1; all.length < maxPosts; page++) {
+    const feed = await fetchBlogFeed({ page, pageSize });
+    all.push(...feed.posts);
+    if (page >= feed.totalPages) break;
+  }
+  return all.slice(0, maxPosts);
 }
