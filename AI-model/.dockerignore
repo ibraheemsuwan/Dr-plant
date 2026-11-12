@@ -1,0 +1,7 @@
+Plant_d_test/
+Plant_d_train/
+Plant_d_val/
+_archive/
+*.keras
+.idea/
+__pycache__/

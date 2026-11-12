@@ -49,3 +49,4 @@ Backend/DoctorPlantTest.API/wwwroot/images/diagnoses/
 
 # Old model versions kept locally only
 AI-model/_archive/
+!Backend/DoctorPlantTest.API/Seed/*.sql

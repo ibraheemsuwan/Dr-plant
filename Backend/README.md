@@ -74,3 +74,8 @@ Production: environment variable `Claude__ApiKey` (or `ANTHROPIC_API_KEY`). With
 runs on the local model only. Model and effort are in `appsettings.json` → `Claude`
 (default `claude-opus-5-5`, effort `medium`). Each diagnosis is logged with its source and token usage,
 and stored in `imagediagnoses.Status` as `<status>/<source>` (e.g. `Completed/ai`) to track API usage.
+
+## Docker and deployment
+
+`docker compose up -d --build` runs MySQL + API + model together; production hosting, environment variables, backups
+and a launch checklist are in [DEPLOYMENT.md](../DEPLOYMENT.md). Run the tests with `dotnet test DoctorPlantTest.Tests`.

@@ -37,6 +37,8 @@ namespace DoctorPlantTest.DAL.Entities
         [MaxLength(500)]
         public string? ImageUrl { get; set; }
 
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
         public User? User { get; set; }
 
         public CropDetail? CropDetail { get; set; }

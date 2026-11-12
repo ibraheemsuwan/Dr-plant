@@ -9,12 +9,18 @@
 
 	<ItemGroup>
 		<PackageReference Include="Anthropic" Version="13.8.0" />
+		<PackageReference Include="Azure.Identity" Version="1.21.0" />
 		<PackageReference Include="CloudinaryDotNet" Version="1.28.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.2" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.2" />
-		<PackageReference Include="Microsoft.OpenApi" Version="2.4.1" />
-		<PackageReference Include="SixLabors.ImageSharp" Version="4.1.3" />
+		<PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="8.0.1" />
+		<PackageReference Include="Microsoft.Identity.Client" Version="4.92.0" />
+		<PackageReference Include="Microsoft.OpenApi" Version="2.13.0" />
+		<PackageReference Include="MySqlConnector" Version="3.0.0" />
+		<PackageReference Include="SkiaSharp" Version="4.156.0" />
+		<PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="4.156.0" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="10.1.7" />
+		<PackageReference Include="System.Formats.Asn1" Version="8.0.2" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -28,6 +34,7 @@
 
 	<ItemGroup>
 		<None Update="Diagnosis\model_class_map.json" CopyToOutputDirectory="PreserveNewest" />
+		<None Update="Seed\reference_data.sql" CopyToOutputDirectory="PreserveNewest" />
 	</ItemGroup>
 
 </Project>

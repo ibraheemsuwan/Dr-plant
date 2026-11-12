@@ -1,0 +1,7 @@
+**/bin/
+**/obj/
+**/.vs/
+**/*.user
+DoctorPlantTest.Tests/
+Dockerfile
+README.md

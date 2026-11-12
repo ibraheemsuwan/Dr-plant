@@ -1,4 +1,5 @@
 using DoctorPlantTest.API.Authorization;
+using DoctorPlantTest.API.Data;
 using DoctorPlantTest.API.Diagnosis;
 using DoctorPlantTest.API.Serialization;
 using DoctorPlantTest.BLL.Exceptions;
@@ -130,10 +131,19 @@ builder.Services.AddRateLimiter(options =>
             }));
 });
 
-// Behind ngrok / a reverse proxy: use the real client IP and scheme (trusts loopback proxies only)
+// Behind a reverse proxy / hosting platform: use the real client IP (needed for per-IP rate limits) and scheme.
+// By default only loopback proxies are trusted. In a container the platform's load balancer is not loopback,
+// so the Docker image sets ForwardedHeaders:TrustAll=true. Only enable that when the app is reachable
+// exclusively through the proxy (otherwise clients could spoof X-Forwarded-For to dodge rate limits).
+var trustAllProxies = builder.Configuration.GetValue<bool>("ForwardedHeaders:TrustAll");
 builder.Services.Configure<ForwardedHeadersOptions>(options =>
 {
     options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+    if (trustAllProxies)
+    {
+        options.KnownNetworks.Clear();
+        options.KnownProxies.Clear();
+    }
 });
 
 // DbContext — connection string from configuration, not hardcoded
@@ -188,6 +198,9 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
+// Migrations + admin account + reference data on first run (idempotent; controlled by configuration)
+await DatabaseBootstrapper.RunAsync(app.Services, app.Configuration, app.Logger);
+
 app.UseForwardedHeaders();
 
 // Global exception handler — logs full details, returns a safe message to the client
@@ -225,7 +238,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+// In production TLS is terminated by the hosting platform/reverse proxy
+if (!app.Environment.IsProduction())
+    app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 
@@ -237,5 +252,8 @@ app.UseAuthorization();
 app.UseRateLimiter();
 
 app.MapControllers();
+
+// Liveness probe for hosting platforms / uptime monitors (no DB access)
+app.MapGet("/health", () => Results.Ok(new { status = "ok" }));
 
 app.Run();

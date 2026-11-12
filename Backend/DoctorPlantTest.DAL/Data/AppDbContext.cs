@@ -43,7 +43,13 @@ namespace DoctorPlantTest.DAL.Data
                 .HasOne(id => id.Disease)
                 .WithMany(d => d.ImageDiagnoses)
                 .HasForeignKey(id => id.DiseaseId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<ImageDiagnosis>()
+                .HasOne<User>()
+                .WithMany()
+                .HasForeignKey(id => id.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Post>()
                 .HasOne(p => p.User)

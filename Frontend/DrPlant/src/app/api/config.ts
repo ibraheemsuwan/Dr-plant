@@ -1,13 +1,17 @@
-/** Default public API base. Override with `VITE_API_URL` in `.env.local`. */
-export const DEFAULT_API_BASE =
-  "https://symptom-remold-closable.ngrok-free.dev/api";
+/**
+ * API base URL, set per environment with `VITE_API_URL` (Netlify env var / `.env.local`).
+ * Local development falls back to the local backend; a production build without it fails loudly
+ * instead of silently calling a stale tunnel.
+ */
+const LOCAL_DEV_API_BASE = "http://localhost:5274/api";
 
 export function getApiBaseUrl(): string {
-  const raw = import.meta.env.VITE_API_URL as string | undefined;
-  const s = (
-    raw != null && String(raw).trim() !== "" ? String(raw) : DEFAULT_API_BASE
-  ).replace(/\/$/, "");
-  return s;
+  const raw = (import.meta.env.VITE_API_URL as string | undefined)?.trim();
+  if (raw) return raw.replace(/\/$/, "");
+  if (import.meta.env.DEV) return LOCAL_DEV_API_BASE;
+  throw new Error(
+    "VITE_API_URL is not set. Configure it in the hosting environment (e.g. https://api.example.com/api).",
+  );
 }
 
 /** Ngrok free tunnels return an HTML interstitial unless this header is sent (fetch/XHR only). */

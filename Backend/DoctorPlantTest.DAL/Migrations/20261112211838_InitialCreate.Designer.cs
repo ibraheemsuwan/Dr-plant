@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DoctorPlantTest.DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260426143306_AddContactMessagesTable")]
-    partial class AddContactMessagesTable
+    [Migration("20261112211838_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -114,6 +114,9 @@ namespace DoctorPlantTest.DAL.Migrations
                         .HasColumnType("bigint");
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("CropId"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("DifficultyAr")
                         .IsRequired()
@@ -298,7 +301,7 @@ namespace DoctorPlantTest.DAL.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<long>("DiseaseId")
+                    b.Property<long?>("DiseaseId")
                         .HasColumnType("bigint");
 
                     b.Property<string>("ImageUrl")
@@ -308,9 +311,14 @@ namespace DoctorPlantTest.DAL.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
+
                     b.HasKey("DiagnosisId");
 
                     b.HasIndex("DiseaseId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("ImageDiagnoses");
                 });
@@ -341,6 +349,42 @@ namespace DoctorPlantTest.DAL.Migrations
                     b.ToTable("Likes");
                 });
 
+            modelBuilder.Entity("DoctorPlantTest.DAL.Entities.Notification", b =>
+                {
+                    b.Property<long>("NotificationId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("NotificationId"));
+
+                    b.Property<long>("ActorUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<long>("PostId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("ReceiverUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("NotificationId");
+
+                    b.ToTable("Notifications");
+                });
+
             modelBuilder.Entity("DoctorPlantTest.DAL.Entities.Post", b =>
                 {
                     b.Property<long>("PostId")
@@ -348,6 +392,10 @@ namespace DoctorPlantTest.DAL.Migrations
                         .HasColumnType("bigint");
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("PostId"));
+
+                    b.Property<string>("Category")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Content")
                         .IsRequired()
@@ -411,6 +459,10 @@ namespace DoctorPlantTest.DAL.Migrations
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.HasKey("UserId");
 
@@ -485,7 +537,12 @@ namespace DoctorPlantTest.DAL.Migrations
                     b.HasOne("DoctorPlantTest.DAL.Entities.Disease", "Disease")
                         .WithMany("ImageDiagnoses")
                         .HasForeignKey("DiseaseId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("DoctorPlantTest.DAL.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Disease");
