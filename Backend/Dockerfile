@@ -25,6 +25,9 @@ ENV ASPNETCORE_ENVIRONMENT=Production \
     DOTNET_EnableDiagnostics=0
 EXPOSE 8080
 
+# Local image storage (Storage__Provider=Local) writes here: mount a persistent volume on this folder
+RUN mkdir -p /app/uploads && chown app:app /app/uploads
+
 # Runs as the non-root "app" user that ships with the .NET 8 images
 USER app
 ENTRYPOINT ["dotnet", "DoctorPlantTest.API.dll"]

@@ -37,12 +37,18 @@ services:
         condition: service_started
     ports:
       - "8080:8080"
+    volumes:
+      - uploads:/app/uploads
     environment:
       ConnectionStrings__DefaultConnection: "Server=db;Database=doctorplant;User=root;Password=${DB_PASSWORD};"
       Jwt__Key: ${JWT_KEY:?Set JWT_KEY in .env (64+ random characters)}
-      Cloudinary__CloudName: ${CLOUDINARY_CLOUD_NAME:?Set CLOUDINARY_CLOUD_NAME in .env}
-      Cloudinary__ApiKey: ${CLOUDINARY_API_KEY:?Set CLOUDINARY_API_KEY in .env}
-      Cloudinary__ApiSecret: ${CLOUDINARY_API_SECRET:?Set CLOUDINARY_API_SECRET in .env}
+      # Images: "Local" keeps them on this server's disk (volume below); "Cloudinary" uses the hosted service
+      Storage__Provider: ${STORAGE_PROVIDER:-Local}
+      Storage__LocalPath: /app/uploads
+      Storage__PublicBaseUrl: ${PUBLIC_API_URL:-http://localhost:8080}
+      Cloudinary__CloudName: ${CLOUDINARY_CLOUD_NAME:-}
+      Cloudinary__ApiKey: ${CLOUDINARY_API_KEY:-}
+      Cloudinary__ApiSecret: ${CLOUDINARY_API_SECRET:-}
       FlaskApi__BaseUrl: http://model:5000
       FlaskApi__ApiKey: ${MODEL_API_KEY}
       Claude__ApiKey: ${ANTHROPIC_API_KEY:-}
@@ -59,3 +65,4 @@ services:
 
 volumes:
   dbdata:
+  uploads:

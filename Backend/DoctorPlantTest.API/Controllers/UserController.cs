@@ -15,18 +15,18 @@ namespace DoctorPlantTest.API.Controllers
         private readonly IUserService _userService;
         private readonly IImageDiagnosisService _diagnoses;
         private readonly INotificationService _notifications;
-        private readonly ICloudinaryService _cloudinary;
+        private readonly IImageStorage _images;
 
         public UsersController(
             IUserService userService,
             IImageDiagnosisService diagnoses,
             INotificationService notifications,
-            ICloudinaryService cloudinary)
+            IImageStorage cloudinary)
         {
             _userService = userService;
             _diagnoses = diagnoses;
             _notifications = notifications;
-            _cloudinary = cloudinary;
+            _images = cloudinary;
         }
 
         [HttpGet]
@@ -132,7 +132,7 @@ namespace DoctorPlantTest.API.Controllers
             await _userService.DeleteAsync(id);
 
             foreach (var url in imageUrls)
-                await _cloudinary.DeleteImageAsync(url);
+                await _images.DeleteImageAsync(url);
             return Ok(new { message = "User deleted successfully." });
         }
     }

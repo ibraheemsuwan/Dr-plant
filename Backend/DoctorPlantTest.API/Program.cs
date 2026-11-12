@@ -60,9 +60,14 @@ var jwtKey = RequireSetting("Jwt:Key");
 if (Encoding.UTF8.GetByteCount(jwtKey) < 32)
     throw new InvalidOperationException("Jwt:Key must be at least 32 bytes long.");
 RequireSetting("ConnectionStrings:DefaultConnection");
-RequireSetting("Cloudinary:CloudName");
-RequireSetting("Cloudinary:ApiKey");
-RequireSetting("Cloudinary:ApiSecret");
+// Image storage: "Cloudinary" (default, hosted) or "Local" (server disk, no third party)
+var useLocalStorage = string.Equals(builder.Configuration["Storage:Provider"], "Local", StringComparison.OrdinalIgnoreCase);
+if (!useLocalStorage)
+{
+    RequireSetting("Cloudinary:CloudName");
+    RequireSetting("Cloudinary:ApiKey");
+    RequireSetting("Cloudinary:ApiSecret");
+}
 
 // JWT Authentication
 builder.Services.AddAuthentication("Bearer")
@@ -152,8 +157,16 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
-// Cloudinary
-builder.Services.AddSingleton<ICloudinaryService, CloudinaryService>();
+// Image storage
+if (useLocalStorage)
+{
+    builder.Services.AddSingleton<LocalImageStorage>();
+    builder.Services.AddSingleton<IImageStorage>(sp => sp.GetRequiredService<LocalImageStorage>());
+}
+else
+{
+    builder.Services.AddSingleton<IImageStorage, CloudinaryService>();
+}
 
 // Repositories
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
@@ -246,6 +259,25 @@ if (!app.Environment.IsProduction())
     app.UseHttpsRedirection();
 
 app.UseStaticFiles();
+
+if (useLocalStorage)
+{
+    // Serve stored images from disk. Files are always JPEGs written by LocalImageStorage; nosniff stops browsers
+    // from treating anything else in the folder as HTML/script.
+    var uploads = app.Services.GetRequiredService<LocalImageStorage>().RootPath;
+    Directory.CreateDirectory(uploads);
+    app.UseStaticFiles(new StaticFileOptions
+    {
+        FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(uploads),
+        RequestPath = LocalImageStorage.RequestPath,
+        ServeUnknownFileTypes = false,
+        OnPrepareResponse = ctx =>
+        {
+            ctx.Context.Response.Headers["X-Content-Type-Options"] = "nosniff";
+            ctx.Context.Response.Headers.CacheControl = "public,max-age=31536000,immutable";
+        },
+    });
+}
 
 app.UseCors("Frontend");
 

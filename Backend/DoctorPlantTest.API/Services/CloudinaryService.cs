@@ -3,9 +3,9 @@ using CloudinaryDotNet.Actions;
 
 namespace DoctorPlantTest.API.Services
 {
-    public class CloudinaryService : ICloudinaryService
+    public class CloudinaryService : IImageStorage
     {
-        private readonly Cloudinary _cloudinary;
+        private readonly Cloudinary _images;
 
         public CloudinaryService(IConfiguration configuration)
         {
@@ -14,7 +14,7 @@ namespace DoctorPlantTest.API.Services
                 configuration["Cloudinary:ApiKey"],
                 configuration["Cloudinary:ApiSecret"]
             );
-            _cloudinary = new Cloudinary(account) { Api = { Secure = true } };
+            _images = new Cloudinary(account) { Api = { Secure = true } };
         }
 
         public async Task<string> UploadImageAsync(IFormFile file, string folder)
@@ -38,7 +38,7 @@ namespace DoctorPlantTest.API.Services
             {
                 var publicId = ExtractPublicId(imageUrl);
                 if (publicId == null) return;
-                await _cloudinary.DestroyAsync(new DeletionParams(publicId));
+                await _images.DestroyAsync(new DeletionParams(publicId));
             }
             catch
             {
@@ -57,7 +57,7 @@ namespace DoctorPlantTest.API.Services
                 Overwrite = false
             };
 
-            var result = await _cloudinary.UploadAsync(uploadParams);
+            var result = await _images.UploadAsync(uploadParams);
 
             if (result.Error != null)
                 throw new InvalidOperationException($"Cloudinary upload failed: {result.Error.Message}");

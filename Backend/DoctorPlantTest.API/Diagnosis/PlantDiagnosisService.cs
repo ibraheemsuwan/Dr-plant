@@ -66,7 +66,7 @@ namespace DoctorPlantTest.API.Diagnosis
         private readonly AiCallBudget _aiBudget;
         private readonly ModelClassMap _map;
         private readonly AppDbContext _db;
-        private readonly ICloudinaryService _cloudinary;
+        private readonly IImageStorage _images;
         private readonly IImageDiagnosisService _diagnoses;
         private readonly DiagnosisOptions _options;
         private readonly ILogger<PlantDiagnosisService> _logger;
@@ -77,7 +77,7 @@ namespace DoctorPlantTest.API.Diagnosis
             AiCallBudget aiBudget,
             ModelClassMap map,
             AppDbContext db,
-            ICloudinaryService cloudinary,
+            IImageStorage cloudinary,
             IImageDiagnosisService diagnoses,
             IOptions<DiagnosisOptions> options,
             ILogger<PlantDiagnosisService> logger)
@@ -87,7 +87,7 @@ namespace DoctorPlantTest.API.Diagnosis
             _aiBudget = aiBudget;
             _map = map;
             _db = db;
-            _cloudinary = cloudinary;
+            _images = cloudinary;
             _diagnoses = diagnoses;
             _options = options.Value;
             _logger = logger;
@@ -408,7 +408,7 @@ namespace DoctorPlantTest.API.Diagnosis
             try
             {
                 using var stream = new MemoryStream(jpeg);
-                return await _cloudinary.UploadImageAsync(stream, "diagnosis.jpg", "diagnoses");
+                return await _images.UploadImageAsync(stream, "diagnosis.jpg", "diagnoses");
             }
             catch (Exception ex)
             {

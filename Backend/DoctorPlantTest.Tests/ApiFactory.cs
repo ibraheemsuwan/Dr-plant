@@ -50,9 +50,9 @@ namespace DoctorPlantTest.Tests
                 services.AddDbContext<AppDbContext>(o => o.UseInMemoryDatabase(_dbName));
 
                 // Never touch the real Cloudinary from tests
-                services.RemoveAll<ICloudinaryService>();
+                services.RemoveAll<IImageStorage>();
                 services.AddSingleton<FakeCloudinary>();
-                services.AddSingleton<ICloudinaryService>(sp => sp.GetRequiredService<FakeCloudinary>());
+                services.AddSingleton<IImageStorage>(sp => sp.GetRequiredService<FakeCloudinary>());
 
                 // Never send real email from tests; capture it instead
                 services.RemoveAll<IEmailSender>();
@@ -99,7 +99,7 @@ namespace DoctorPlantTest.Tests
         }
     }
 
-    public class FakeCloudinary : ICloudinaryService
+    public class FakeCloudinary : IImageStorage
     {
         public List<string> Deleted { get; } = [];
         public Task<string> UploadImageAsync(Microsoft.AspNetCore.Http.IFormFile file, string folder) => Task.FromResult("https://fake/upload/x.jpg");

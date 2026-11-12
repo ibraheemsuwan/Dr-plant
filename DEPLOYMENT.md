@@ -14,7 +14,7 @@ Any host that runs Docker works (Railway, Render, Fly.io, a VPS, Azure Container
 
 ## 0. Before the first deploy
 
-- [ ] Rotate the Cloudinary secret (the old one was in git history) and use the new one below.
+- [ ] Decide where images live (section 3b). If you stay on Cloudinary, rotate its secret (the old one was in git history).
 - [ ] Generate secrets: `openssl rand -base64 48` (JWT) and `openssl rand -hex 32` (model key).
 - [ ] Put `best_model.keras` somewhere the model image can get it (see "Model weights").
 
@@ -39,7 +39,9 @@ Set these on the API service (the `:` in a setting name becomes `__`):
 |---|---|
 | `ConnectionStrings__DefaultConnection` | `Server=HOST;Port=3306;Database=doctorplant;User=...;Password=...;SslMode=Required;` |
 | `Jwt__Key` | 64+ random characters |
-| `Cloudinary__CloudName`, `__ApiKey`, `__ApiSecret` | from the Cloudinary console |
+| `Storage__Provider` | `Cloudinary` (default) or `Local` (images on the server disk, see 3b) |
+| `Storage__LocalPath`, `Storage__PublicBaseUrl` | only for `Local`: folder on a persistent volume, and the public address of the API |
+| `Cloudinary__CloudName`, `__ApiKey`, `__ApiSecret` | only for `Cloudinary`: from the Cloudinary console |
 | `FlaskApi__BaseUrl` | internal URL of the model service, e.g. `http://model:5000` |
 | `FlaskApi__ApiKey` | same value as `MODEL_API_KEY` on the model service |
 | `AllowedOrigins__0` | `https://dr-plant.netlify.app` (add `AllowedOrigins__1` for a custom domain) |
@@ -67,6 +69,27 @@ Weights are not in git. Either:
 **Set `VITE_API_URL` in Netlify → Site settings → Environment variables** (e.g. `https://api.yourdomain.com/api`)
 **before deploying this version.** The code no longer falls back to the old ngrok tunnel, and a build without the
 variable fails at runtime with a clear message.
+
+## 3b. Where images are stored
+
+Photos (diagnoses, posts, crops) go through one storage layer with two providers:
+
+| | Cloudinary (default) | Local disk (`Storage__Provider=Local`) |
+|---|---|---|
+| Third-party account / keys | needed | none |
+| Cost | free tier, then paid by usage | the server's disk |
+| Survives redeploys | yes | **only on a persistent volume** (`Storage__LocalPath`) |
+| Backups | handled by the service | **you** back up the folder together with the database |
+| Speed for visitors far from the server | CDN | served by your API |
+| Works on hosts with ephemeral disk (many PaaS free plans) | yes | no, unless a volume is attached |
+
+Local storage re-encodes every upload as a JPEG (strips GPS/EXIF, refuses files that are not images) and names files randomly.
+It suits a single VPS or the `docker-compose.yml` setup, which already mounts a volume. Other S3-compatible storage
+(Cloudflare R2, Backblaze B2) would need one more provider class behind the same interface.
+
+Existing images keep their stored URLs: switching the provider does not move old photos. The 24 crop pictures in the seed data
+point to a Cloudinary account that is not this project's (`dbwncwexj`). Re-upload them from the admin dashboard
+(edit crop, choose a picture) so they live in your own storage.
 
 ## 4. Database
 
