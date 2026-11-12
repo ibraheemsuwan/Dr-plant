@@ -1,8 +1,6 @@
-import { ApiError } from "../errors";
 import {
   apiDelete,
   apiGet,
-  apiPatch,
   apiPost,
   apiPut,
 } from "../http";
@@ -58,56 +56,10 @@ export async function deletePost(id: number): Promise<void> {
   await apiDelete(`/Posts/${id}`);
 }
 
-function isWrongMethodOrRoute(e: unknown): boolean {
-  return e instanceof ApiError && (e.status === 405 || e.status === 404);
-}
-
+/** PUT /Posts/{id} as multipart (same fields as create; a new image is optional). */
 export async function updatePost(
   id: number,
   payload: CreatePostPayload,
 ): Promise<unknown> {
-  const formBody = postWriteBodyFormData(payload);
-
-  let lastError: unknown;
-
-  const resourcePaths = [`/Posts/${id}`, `/Post/${id}`];
-
-  for (const path of resourcePaths) {
-    for (const run of [
-      () => apiPatch<unknown>(path, formBody),
-      () => apiPut<unknown>(path, formBody),
-    ]) {
-      try {
-        return await run();
-      } catch (e) {
-        lastError = e;
-
-        if (e instanceof ApiError && e.status === 405) continue;
-        throw e;
-      }
-    }
-  }
-
-  const postAttempts: Array<() => Promise<unknown>> = [
-    () => apiPost<unknown>("/Posts/Update", formBody),
-    () => apiPost<unknown>("/Posts/update", formBody),
-    () => apiPost<unknown>("/Post/Update", formBody),
-    () => apiPost<unknown>("/Post/update", formBody),
-    () => apiPost<unknown>(`/Posts/${id}`, formBody),
-    () => apiPost<unknown>(`/Post/${id}`, formBody),
-    () => apiPost<unknown>(`/Posts/Edit/${id}`, formBody),
-    () => apiPost<unknown>(`/Posts/edit/${id}`, formBody),
-  ];
-
-  for (const run of postAttempts) {
-    try {
-      return await run();
-    } catch (e) {
-      lastError = e;
-      if (isWrongMethodOrRoute(e)) continue;
-      throw e;
-    }
-  }
-
-  throw lastError;
+  return apiPut<unknown>(`/Posts/${id}`, postWriteBodyFormData(payload));
 }

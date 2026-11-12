@@ -20,12 +20,6 @@ import {
   resolveCropImageSrc,
   difficultyTextClass,
 } from "../data/seasonalCropsData";
-import {
-  DRPLANT_CROPS_CHANGED,
-  hiddenBuiltinKey,
-  loadCustomCrops,
-  loadHiddenBuiltins,
-} from "../lib/cropsOverrideStorage";
 import { DRPLANT_API_CROPS_CHANGED } from "../api/events";
 import { mapApiCropDto, type ApiCropCard } from "../api/cropsMap";
 import * as cropsService from "../api/services/cropsService";
@@ -63,23 +57,13 @@ function CropPhoto({
   );
 }
 
-function buildMergedCrops(): Record<SeasonTabId, DisplayCrop[]> {
-  const hidden = loadHiddenBuiltins();
-  const custom = loadCustomCrops();
+function buildBuiltinCrops(): Record<SeasonTabId, DisplayCrop[]> {
   const result = {} as Record<SeasonTabId, DisplayCrop[]>;
   for (const sid of SEASON_IDS) {
-    const base = (CROPS_BY_SEASON[sid] ?? []).filter(
-      (c) => !hidden.has(hiddenBuiltinKey(sid, c.nameEn)),
-    );
-    const row: DisplayCrop[] = base.map((c) => ({
+    result[sid] = (CROPS_BY_SEASON[sid] ?? []).map((c) => ({
       ...c,
       listKey: `b:${sid}:${c.nameEn}`,
     }));
-    for (const cu of custom.filter((x) => x.season === sid)) {
-      const { id, season: _season, ...rest } = cu;
-      row.push({ ...rest, listKey: id });
-    }
-    result[sid] = row;
   }
   return result;
 }
@@ -90,7 +74,6 @@ export function SeasonalCrops() {
     "all",
   );
   const [searchQuery, setSearchQuery] = useState("");
-  const [cropVersion, setCropVersion] = useState(0);
   const [apiCrops, setApiCrops] = useState<ApiCropCard[]>([]);
 
   const loadApiCrops = useCallback(async () => {
@@ -111,26 +94,20 @@ export function SeasonalCrops() {
   }, [loadApiCrops]);
 
   useEffect(() => {
-    const onChange = () => setCropVersion((v) => v + 1);
-    window.addEventListener(DRPLANT_CROPS_CHANGED, onChange);
-    return () => window.removeEventListener(DRPLANT_CROPS_CHANGED, onChange);
-  }, []);
-
-  useEffect(() => {
     const onApi = () => void loadApiCrops();
     window.addEventListener(DRPLANT_API_CROPS_CHANGED, onApi);
     return () => window.removeEventListener(DRPLANT_API_CROPS_CHANGED, onApi);
   }, [loadApiCrops]);
 
   const mergedBySeason = useMemo(() => {
-    const base = buildMergedCrops();
+    const base = buildBuiltinCrops();
     const out = { ...base } as Record<SeasonTabId, DisplayCrop[]>;
     for (const sid of SEASON_IDS) {
       const fromApi = apiCrops.filter((c) => c.season === sid);
       out[sid] = [...(out[sid] ?? []), ...fromApi];
     }
     return out;
-  }, [cropVersion, apiCrops]);
+  }, [apiCrops]);
 
   const allCropsList = useMemo(
     () => SEASON_IDS.flatMap((id) => mergedBySeason[id] ?? []),

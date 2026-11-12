@@ -76,6 +76,12 @@ export function PlantScan() {
   const [isScanning, setIsScanning] = useState(false);
   const [scanResult, setScanResult] = useState<ScanResultUi | null>(null);
   const [scanError, setScanError] = useState<string | null>(null);
+  /** Extra context from the API: which crop, how sure, and where the answer came from */
+  const [scanMeta, setScanMeta] = useState<{
+    cropName: string;
+    cropNameAr: string;
+    confidenceLevel: string;
+  } | null>(null);
   const [isCameraOpen, setIsCameraOpen] = useState(false);
   const [cameraError, setCameraError] = useState<string | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -186,6 +192,11 @@ export function PlantScan() {
       const o =
         raw && typeof raw === "object" ? (raw as Record<string, unknown>) : {};
       const parsed = parsePredictResponse(raw);
+      setScanMeta({
+        cropName: String(o.cropName ?? ""),
+        cropNameAr: String(o.cropNameAr ?? ""),
+        confidenceLevel: String(o.confidenceLevel ?? "").toLowerCase(),
+      });
 
       // Neither the model nor the AI was confident: ask for a better photo instead of guessing
       if (parsed.status.toLowerCase() === "uncertain") {
@@ -540,6 +551,14 @@ export function PlantScan() {
                         {language === "ar" ? "الحالة: " : "Status: "}
                         {displayStatus}
                       </p>
+                      {scanMeta && (scanMeta.cropName || scanMeta.cropNameAr) ? (
+                        <p className="text-sm text-muted-foreground">
+                          {language === "ar" ? "النبتة: " : "Plant: "}
+                          {language === "ar"
+                            ? scanMeta.cropNameAr || scanMeta.cropName
+                            : scanMeta.cropName || scanMeta.cropNameAr}
+                        </p>
+                      ) : null}
                     </div>
                   </div>
 
@@ -559,6 +578,13 @@ export function PlantScan() {
                         style={{ width: `${scanResult.confidence}%` }}
                       />
                     </div>
+                    {scanMeta?.confidenceLevel === "medium" ? (
+                      <p className="rounded-xl border border-amber-300/60 bg-amber-50 px-3 py-2 text-xs text-amber-800 dark:border-amber-700/50 dark:bg-amber-950/30 dark:text-amber-300">
+                        {language === "ar"
+                          ? "الثقة متوسطة: قارن الأعراض المذكورة بما تراه على النبتة، وإن لم تتطابق صوّر ورقة أخرى عن قرب."
+                          : "Medium confidence: compare the symptoms below with your plant; if they don't match, photograph another leaf up close."}
+                      </p>
+                    ) : null}
                   </div>
 
                   {/* Disease details */}
@@ -597,12 +623,19 @@ export function PlantScan() {
                     </div>
                   </div>
 
+                  <p className="text-center text-xs leading-relaxed text-muted-foreground">
+                    {language === "ar"
+                      ? "التشخيص استرشادي ولا يغني عن استشارة مهندس زراعي، خصوصًا قبل استخدام المبيدات."
+                      : "This diagnosis is guidance only and does not replace an agronomist, especially before using pesticides."}
+                  </p>
+
                   <button
                     type="button"
                     onClick={() => {
                       setSelectedImage(null);
                       setSelectedFile(null);
                       setScanResult(null);
+                      setScanMeta(null);
                       setScanError(null);
                     }}
                     className="w-full py-3 border-2 border-border rounded-full hover:border-primary hover:text-primary transition-all text-sm font-medium"

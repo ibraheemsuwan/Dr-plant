@@ -5,6 +5,7 @@ namespace DoctorPlantTest.BLL.DTOs.Comment
         public long CommentId { get; set; }
         public long PostId { get; set; }
         public long UserId { get; set; }
+        public string AuthorName { get; set; } = string.Empty;
         public string Text { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; }
     }

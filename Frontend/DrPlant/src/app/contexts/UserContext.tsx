@@ -6,7 +6,6 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import { isAdminEmail } from "../config/adminEmails";
 import * as authService from "../api/services/authService";
 import * as usersService from "../api/services/usersService";
 import {
@@ -87,8 +86,8 @@ function computeIsAdmin(u: AuthUser | null): boolean {
   if (!u) return false;
   if (u.isAdmin === true) return true;
   const r = (u.role ?? "").toLowerCase();
-  if (r === "admin" || r === "administrator") return true;
-  return isAdminEmail(u.email);
+  // The role comes from the server (JWT / login response); the API enforces it too
+  return r === "admin" || r === "administrator";
 }
 
 export function UserProvider({ children }: { children: React.ReactNode }) {

@@ -1,5 +1,5 @@
 import type { AuthUser } from "./types";
-import type { BlogPost, BlogComment } from "../lib/blogPostsStorage";
+import type { BlogPost, BlogComment } from "../lib/blogTypes";
 import { getApiBaseUrl } from "./config";
 import { pickNum, pickStr, pickBool } from "./utils";
 

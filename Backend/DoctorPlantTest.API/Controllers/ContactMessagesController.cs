@@ -1,4 +1,5 @@
-﻿using DoctorPlantTest.API.Authorization;
+using DoctorPlantTest.API.Authorization;
+using Microsoft.AspNetCore.RateLimiting;
 using DoctorPlantTest.BLL.DTOs.ContactMessages;
 using DoctorPlantTest.DAL.Data;
 using DoctorPlantTest.DAL.Entities;
@@ -20,21 +21,22 @@ public class ContactMessagesController : ControllerBase
     }
 
     [HttpPost]
+    [EnableRateLimiting(RateLimitPolicies.Contact)]
     public async Task<IActionResult> CreateMessage(CreateContactMessageDto dto)
     {
         var message = new ContactMessage
         {
-            Name = dto.Name,
-            Email = dto.Email,
-            Subject = dto.Subject,
-            Message = dto.Message,
+            Name = dto.Name.Trim(),
+            Email = dto.Email.Trim(),
+            Subject = dto.Subject.Trim(),
+            Message = dto.Message.Trim(),
             Status = "Unread"
         };
 
         _context.ContactMessages.Add(message);
         await _context.SaveChangesAsync();
 
-        return Ok(new { message = "Message sent successfully" });
+        return Ok(new { message = "Message sent successfully", id = message.Id });
     }
 
     [Authorize(Policy = Policies.Admin)]

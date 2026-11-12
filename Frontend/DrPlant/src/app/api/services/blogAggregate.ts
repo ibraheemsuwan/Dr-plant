@@ -1,5 +1,5 @@
-import type { BlogPost, BlogComment } from "../../lib/blogPostsStorage";
-import { ensurePostShape } from "../../lib/blogPostsStorage";
+import type { BlogPost, BlogComment } from "../../lib/blogTypes";
+import { ensurePostShape } from "../../lib/blogTypes";
 import {
   mapApiPostToBlogPost,
   mapApiCommentToBlogComment,

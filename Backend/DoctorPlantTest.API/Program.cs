@@ -105,6 +105,17 @@ builder.Services.AddRateLimiter(options =>
                 QueueLimit = 0
             }));
 
+    // 5 contact-form messages per 10 minutes per IP (anti-spam)
+    options.AddPolicy(RateLimitPolicies.Contact, httpContext =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 5,
+                Window = TimeSpan.FromMinutes(10),
+                QueueLimit = 0
+            }));
+
     // 30 diagnoses per hour per user (falls back to IP)
     options.AddPolicy(RateLimitPolicies.Predict, httpContext =>
         RateLimitPartition.GetFixedWindowLimiter(

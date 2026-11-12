@@ -26,12 +26,7 @@ import {
   type BlogComment,
   type BlogPost,
   DRPLANT_POSTS_CHANGED,
-} from "../../lib/blogPostsStorage";
-import {
-  buildPostCategoryKey,
-  getPostCategoryOverride,
-  setPostCategoryOverride,
-} from "../../lib/postCategoryOverrides";
+} from "../../lib/blogTypes";
 import { Input } from "../../components/ui/input";
 import { Textarea } from "../../components/ui/textarea";
 import { cn } from "../../components/ui/utils";
@@ -128,17 +123,7 @@ export function BlogPage() {
         fetchBlogPostsMerged(),
         likesService.listLikesRaw(),
       ]);
-      const withCategoryOverrides = merged.map((p) => {
-        const key = buildPostCategoryKey({
-          userId: p.userId,
-          title: p.title,
-          content: p.excerpt,
-        });
-        const override = getPostCategoryOverride(key);
-        if (!override) return p;
-        return { ...p, category: override };
-      });
-      setPosts(withCategoryOverrides);
+      setPosts(merged);
       setLikeLookup(buildLikeLookup(likesRaw));
     } catch (e) {
       setBlogError(getErrorMessage(e));
@@ -176,17 +161,11 @@ export function BlogPage() {
     try {
       setSubmitting(true);
       const categoryTrim = (formData.category || "").trim() || "General";
-      const overrideKey = buildPostCategoryKey({
-        userId: user.id,
-        title: formData.title.trim(),
-        content: contentTrim,
-      });
-      setPostCategoryOverride(overrideKey, categoryTrim);
 
       const payload = {
         title: formData.title.trim(),
         content: contentTrim,
-        category: formData.category,
+        category: categoryTrim,
         userId: user.id,
         file: mediaFile,
       };

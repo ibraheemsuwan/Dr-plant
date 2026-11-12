@@ -26,14 +26,14 @@ import type { AuthUser } from "../../api/types";
 import type {
   ContactMessage,
   ContactMessageStatus,
-} from "../../lib/contactMessagesStorage";
+} from "../../api/services/contactMessagesService";
 import * as contactMessagesService from "../../api/services/contactMessagesService";
 import emailjs from "@emailjs/browser";
 import { SEASON_IDS, type SeasonTabId } from "../../data/seasonalCropsData";
 import {
   DRPLANT_POSTS_CHANGED,
   type BlogPost,
-} from "../../lib/blogPostsStorage";
+} from "../../lib/blogTypes";
 
 type AdminTab = "users" | "crops" | "posts" | "messages";
 

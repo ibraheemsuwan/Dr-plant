@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using DoctorPlantTest.BLL.DTOs.Comment;
@@ -11,26 +11,34 @@ namespace DoctorPlantTest.BLL.Services
     {
         private readonly IGenericRepository<Comment> _commentRepository;
         private readonly IGenericRepository<Post> _postRepository;
+        private readonly IGenericRepository<User> _userRepository;
         private readonly INotificationService _notificationService;
 
         public CommentService(
             IGenericRepository<Comment> commentRepository,
             IGenericRepository<Post> postRepository,
+            IGenericRepository<User> userRepository,
             INotificationService notificationService)
         {
             _commentRepository = commentRepository;
             _postRepository = postRepository;
+            _userRepository = userRepository;
             _notificationService = notificationService;
         }
 
         public async Task<IEnumerable<CommentDto>> GetAllAsync()
         {
-            var comments = await _commentRepository.GetAllAsync();
+            var comments = (await _commentRepository.GetAllAsync()).ToList();
+            var ids = comments.Select(c => c.UserId).Distinct().ToList();
+            var names = (await _userRepository.FindAsync(u => ids.Contains(u.UserId)))
+                .ToDictionary(u => u.UserId, u => u.Name);
+
             return comments.Select(c => new CommentDto
             {
                 CommentId = c.CommentId,
                 PostId = c.PostId,
                 UserId = c.UserId,
+                AuthorName = names.TryGetValue(c.UserId, out var name) ? name : string.Empty,
                 Text = c.Text,
                 CreatedAt = c.CreatedAt
             });

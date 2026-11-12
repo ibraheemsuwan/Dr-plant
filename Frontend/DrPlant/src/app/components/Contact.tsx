@@ -3,6 +3,7 @@ import { useLanguage } from "../contexts/LanguageContext";
 import { useRef, useState, type ChangeEvent, type FormEvent } from "react";
 import emailjs from "@emailjs/browser";
 import { createContactMessage } from "../api/services/contactMessagesService";
+import { getErrorMessage } from "../api/errors";
 import { Reveal } from "./animations/Reveal";
 
 const SERVICE_ID = "service_wvxexne";
@@ -30,23 +31,26 @@ export function Contact() {
     setSubmitError(null);
     setSubmitted(false);
     try {
-      await emailjs.sendForm(SERVICE_ID, TEMPLATE_ID, formRef.current, {
-        publicKey: PUBLIC_KEY,
-      });
+      // The database is the source of truth: the admin dashboard reads messages from it
       await createContactMessage({
         name: formData.name,
         email: formData.email,
         subject: formData.subject,
         message: formData.message,
       });
+      // Email notification to the team is best-effort; the message is already saved
+      try {
+        await emailjs.sendForm(SERVICE_ID, TEMPLATE_ID, formRef.current, {
+          publicKey: PUBLIC_KEY,
+        });
+      } catch (mailErr) {
+        console.warn("Contact email notification failed", mailErr);
+      }
       setSubmitted(true);
       setFormData({ name: "", email: "", subject: "", message: "" });
       window.setTimeout(() => setSubmitted(false), 3000);
     } catch (err) {
-      const message =
-        err && typeof err === "object" && "text" in err
-          ? String((err as { text?: unknown }).text ?? "")
-          : "";
+      const message = getErrorMessage(err);
       setSubmitError(
         message.trim() ||
           (language === "ar"
@@ -300,7 +304,7 @@ export function Contact() {
             <div className="rounded-3xl border border-border bg-card overflow-hidden flex-1">
               <div className="relative h-[260px] sm:h-[320px] lg:h-[360px]">
                 <img
-                  src="/assets/map.jpg"
+                  src="/assets/map.webp"
                   alt={language === "ar" ? "خريطة الموقع" : "Location map"}
                   className="absolute inset-0 h-full w-full object-cover"
                   decoding="async"

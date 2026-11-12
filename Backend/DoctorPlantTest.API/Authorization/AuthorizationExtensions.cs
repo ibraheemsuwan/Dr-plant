@@ -13,6 +13,8 @@ namespace DoctorPlantTest.API.Authorization
         public const string Auth = "auth";
         /// <summary>Plant diagnosis: per authenticated user.</summary>
         public const string Predict = "predict";
+        /// <summary>Public contact form: per client IP.</summary>
+        public const string Contact = "contact";
     }
 
     public static class ClaimsPrincipalExtensions

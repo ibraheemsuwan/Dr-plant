@@ -4,6 +4,7 @@ namespace DoctorPlantTest.BLL.DTOs.Post
     {
         public long PostId { get; set; }
         public long UserId { get; set; }
+        public string AuthorName { get; set; } = string.Empty;
         public string Category { get; set; } = "General";
         public string Title { get; set; } = string.Empty;
         public string Content { get; set; } = string.Empty;

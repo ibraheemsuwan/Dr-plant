@@ -71,13 +71,27 @@ namespace DoctorPlantTest.API.Controllers
 
         [HttpPut("{id}")]
         [Authorize]
-        public async Task<IActionResult> Update(long id, [FromBody] UpdatePostDto dto)
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> Update(long id, [FromForm] UpdatePostDto dto, IFormFile? file)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
             var post = await _postService.GetByIdAsync(id);
             if (post == null) return NotFound(new { message = "Post not found." });
             if (!User.CanModify(post.UserId)) return Forbid();
+
+            if (file != null && file.Length > 0)
+            {
+                var validationError = ValidateFile(file);
+                if (validationError != null) return BadRequest(new { message = validationError });
+
+                try { dto.ImageUrl = await _cloudinary.UploadImageAsync(file, "posts"); }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Failed to upload post image");
+                    return StatusCode(500, new { message = "Failed to upload image." });
+                }
+            }
 
             try { await _postService.UpdateAsync(id, dto); }
             catch (KeyNotFoundException) { return NotFound(new { message = "Post not found." }); }
