@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 
 type Language = 'ar' | 'en';
 
@@ -347,8 +347,31 @@ const translations = {
 
 export const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
+const LANGUAGE_STORAGE_KEY = 'drplant_language';
+
+/** The saved choice, else the browser's language (Arabic for ar-*), else English. */
+function initialLanguage(): Language {
+  try {
+    const saved = localStorage.getItem(LANGUAGE_STORAGE_KEY);
+    if (saved === 'ar' || saved === 'en') return saved;
+  } catch {
+    /* storage unavailable */
+  }
+  return typeof navigator !== 'undefined' && navigator.language?.toLowerCase().startsWith('ar') ? 'ar' : 'en';
+}
+
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [language, setLanguage] = useState<Language>('en');
+  const [language, setLanguage] = useState<Language>(initialLanguage);
+
+  // Remember the choice and tell the browser (screen readers, translation tools, search engines)
+  useEffect(() => {
+    document.documentElement.lang = language;
+    try {
+      localStorage.setItem(LANGUAGE_STORAGE_KEY, language);
+    } catch {
+      /* private mode: the choice just isn't remembered */
+    }
+  }, [language]);
 
   const toggleLanguage = () => {
     setLanguage(prev => prev === 'ar' ? 'en' : 'ar');

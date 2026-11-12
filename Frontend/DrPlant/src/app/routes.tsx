@@ -4,12 +4,15 @@ import { Home } from "./components/Home";
 import { PlantScan } from "./components/PlantScan";
 import { Contact } from "./components/Contact";
 import { Login } from "./components/Login";
+import { RouteError } from "./components/RouteError";
+import { NotFound } from "./pages/NotFound/NotFound";
 
 // Heavier or less-visited pages load on demand (smaller first download on mobile)
 export const router = createBrowserRouter([
   {
     path: "/",
     Component: Root,
+    ErrorBoundary: RouteError,
     children: [
       { index: true, Component: Home },
       { path: "scan", Component: PlantScan },
@@ -56,6 +59,7 @@ export const router = createBrowserRouter([
       },
       { path: "login", Component: Login },
       { path: "register", Component: Login },
+      { path: "*", Component: NotFound },
     ],
   },
 ]);
