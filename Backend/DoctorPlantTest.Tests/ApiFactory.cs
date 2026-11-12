@@ -2,6 +2,7 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
 using DoctorPlantTest.API.Services;
+using DoctorPlantTest.BLL.Services.Email;
 using DoctorPlantTest.DAL.Data;
 using DoctorPlantTest.DAL.Entities;
 using Microsoft.AspNetCore.Hosting;
@@ -31,6 +32,7 @@ namespace DoctorPlantTest.Tests
                 ["Cloudinary:ApiKey"] = "test",
                 ["Cloudinary:ApiSecret"] = "test",
                 ["AllowedOrigins:0"] = "https://dr-plant.netlify.app",
+                ["Frontend:BaseUrl"] = "https://dr-plant.netlify.app",
                 // Tests register many users from one IP
                 ["RateLimits:AuthPerMinute"] = "100000",
                 ["RateLimits:ContactPer10Minutes"] = "100000",
@@ -51,6 +53,11 @@ namespace DoctorPlantTest.Tests
                 services.RemoveAll<ICloudinaryService>();
                 services.AddSingleton<FakeCloudinary>();
                 services.AddSingleton<ICloudinaryService>(sp => sp.GetRequiredService<FakeCloudinary>());
+
+                // Never send real email from tests; capture it instead
+                services.RemoveAll<IEmailSender>();
+                services.AddSingleton<FakeEmailSender>();
+                services.AddSingleton<IEmailSender>(sp => sp.GetRequiredService<FakeEmailSender>());
             });
         }
 
@@ -62,6 +69,34 @@ namespace DoctorPlantTest.Tests
 
         public Task WithDb(Func<AppDbContext, Task> action) =>
             WithDb<object?>(async db => { await action(db); return null; });
+    }
+
+    public class FakeEmailSender : IEmailSender
+    {
+        private readonly object _lock = new();
+        private readonly List<(string To, string Subject, string Text)> _sent = [];
+        public bool IsConfigured => true;
+
+        public IReadOnlyList<(string To, string Subject, string Text)> Sent { get { lock (_lock) return _sent.ToList(); } }
+
+        public Task SendAsync(string toEmail, string subject, string textBody, string htmlBody, CancellationToken ct = default)
+        {
+            lock (_lock) _sent.Add((toEmail, subject, textBody));
+            return Task.CompletedTask;
+        }
+
+        /// <summary>The app sends in the background, so wait briefly for the message to arrive.</summary>
+        public async Task<(string To, string Subject, string Text)?> WaitForAsync(string to, int timeoutMs = 3000)
+        {
+            var deadline = DateTime.UtcNow.AddMilliseconds(timeoutMs);
+            while (DateTime.UtcNow < deadline)
+            {
+                var hit = Sent.Where(m => m.To.Equals(to, StringComparison.OrdinalIgnoreCase)).Cast<(string, string, string)?>().LastOrDefault();
+                if (hit != null) return hit;
+                await Task.Delay(25);
+            }
+            return null;
+        }
     }
 
     public class FakeCloudinary : ICloudinaryService

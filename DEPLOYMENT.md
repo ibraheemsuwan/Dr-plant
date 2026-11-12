@@ -45,6 +45,8 @@ Set these on the API service (the `:` in a setting name becomes `__`):
 | `AllowedOrigins__0` | `https://dr-plant.netlify.app` (add `AllowedOrigins__1` for a custom domain) |
 | `Database__AutoMigrate` | `true` |
 | `Admin__Email`, `Admin__Password` | first admin account (10+ chars); can be removed after first start |
+| `Email__SmtpHost`, `__SmtpPort`, `__SmtpUsername`, `__SmtpPassword`, `__FromAddress` | SMTP service used to send password-reset links. **Required for "Forgot password" to work in production** |
+| `Frontend__BaseUrl` | public URL of the site, used in the emailed reset link (defaults to the first `AllowedOrigins` entry) |
 | `Claude__ApiKey` | optional, enables the AI fallback |
 
 Model service: `MODEL_API_KEY`, and the weights (below). Keep it on a private network, not on the internet.

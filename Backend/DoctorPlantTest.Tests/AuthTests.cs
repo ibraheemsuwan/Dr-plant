@@ -30,7 +30,7 @@ namespace DoctorPlantTest.Tests
         }
 
         [Fact]
-        public async Task Duplicate_email_is_rejected_with_409_even_in_different_case()
+        public async Task Duplicate_email_is_rejected_with_409()
         {
             var client = _factory.CreateClient();
             var email = $"dup-{Guid.NewGuid():N}@test.com";

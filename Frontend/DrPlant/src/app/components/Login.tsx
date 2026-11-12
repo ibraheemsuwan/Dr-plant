@@ -248,7 +248,7 @@ export function Login() {
               <div className="flex justify-between mb-2">
                 <label className="text-sm font-medium">{t("password")}</label>
                 {isLogin && (
-                  <Link to="#" className="text-primary text-sm hover:underline">
+                  <Link to="/forgot-password" className="text-primary text-sm hover:underline">
                     {t("forgotPassword")}
                   </Link>
                 )}

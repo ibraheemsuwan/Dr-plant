@@ -1,4 +1,4 @@
-﻿using DoctorPlantTest.API.Authorization;
+using DoctorPlantTest.API.Authorization;
 using DoctorPlantTest.BLL.DTOs.Auth;
 using DoctorPlantTest.BLL.Exceptions;
 using DoctorPlantTest.BLL.Services;
@@ -25,6 +25,22 @@ namespace DoctorPlantTest.API.Controllers
             var result = await _authService.LoginAsync(dto);
             if (result == null) return Unauthorized("Invalid email or password");
             return Ok(result);
+        }
+
+        /// <summary>Always answers the same way, so it cannot be used to find out which emails have accounts.</summary>
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto dto)
+        {
+            await _authService.RequestPasswordResetAsync(dto.Email);
+            return Ok(new { message = "If an account exists for that email, a reset link has been sent." });
+        }
+
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto dto)
+        {
+            var ok = await _authService.ResetPasswordAsync(dto.Token, dto.NewPassword);
+            if (!ok) return BadRequest(new { message = "This reset link is invalid or has expired." });
+            return Ok(new { message = "Password updated. You can now sign in." });
         }
 
         [HttpPost("register")]

@@ -47,6 +47,12 @@ services:
       FlaskApi__ApiKey: ${MODEL_API_KEY}
       Claude__ApiKey: ${ANTHROPIC_API_KEY:-}
       AllowedOrigins__0: ${FRONTEND_ORIGIN:?Set FRONTEND_ORIGIN in .env (e.g. https://dr-plant.netlify.app)}
+      Frontend__BaseUrl: ${FRONTEND_ORIGIN}
+      Email__SmtpHost: ${SMTP_HOST:-}
+      Email__SmtpPort: ${SMTP_PORT:-587}
+      Email__SmtpUsername: ${SMTP_USERNAME:-}
+      Email__SmtpPassword: ${SMTP_PASSWORD:-}
+      Email__FromAddress: ${EMAIL_FROM:-}
       Database__AutoMigrate: "true"
       Admin__Email: ${ADMIN_EMAIL:?Set ADMIN_EMAIL in .env}
       Admin__Password: ${ADMIN_PASSWORD:?Set ADMIN_PASSWORD in .env (10+ characters)}

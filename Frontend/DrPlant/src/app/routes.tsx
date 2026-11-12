@@ -46,6 +46,14 @@ export const router = createBrowserRouter([
         path: "terms",
         lazy: async () => ({ Component: (await import("./pages/Legal/Legal")).TermsPage }),
       },
+      {
+        path: "forgot-password",
+        lazy: async () => ({ Component: (await import("./pages/Auth/PasswordReset")).ForgotPasswordPage }),
+      },
+      {
+        path: "reset-password",
+        lazy: async () => ({ Component: (await import("./pages/Auth/PasswordReset")).ResetPasswordPage }),
+      },
       { path: "login", Component: Login },
       { path: "register", Component: Login },
     ],
