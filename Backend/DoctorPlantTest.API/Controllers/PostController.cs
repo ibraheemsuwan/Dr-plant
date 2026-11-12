@@ -1,3 +1,5 @@
+using DoctorPlantTest.API.Diagnosis;
+using DoctorPlantTest.API.Authorization;
 using DoctorPlantTest.API.Services;
 using DoctorPlantTest.BLL.DTOs.Post;
 using DoctorPlantTest.BLL.Services;
@@ -15,21 +17,31 @@ namespace DoctorPlantTest.API.Controllers
         private const long MaxFileSizeBytes = 5 * 1024 * 1024;
 
         private readonly IPostService _postService;
-        private readonly ICloudinaryService _cloudinary;
+        private readonly IImageStorage _images;
         private readonly ILogger<PostsController> _logger;
 
-        public PostsController(IPostService postService, ICloudinaryService cloudinary, ILogger<PostsController> logger)
+        public PostsController(IPostService postService, IImageStorage cloudinary, ILogger<PostsController> logger)
         {
             _postService = postService;
-            _cloudinary = cloudinary;
+            _images = cloudinary;
             _logger = logger;
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] int limit = 500)
         {
-            var posts = await _postService.GetAllAsync();
+            var posts = await _postService.GetAllAsync(limit);
             return Ok(posts);
+        }
+
+        /// <summary>
+        /// One page of posts with their likes and comments, newest first.
+        /// Query: page, pageSize (max 50), category, userId ("my posts"), excludeUserId ("community"), search.
+        /// </summary>
+        [HttpGet("feed")]
+        public async Task<IActionResult> Feed([FromQuery] PostFeedQuery query)
+        {
+            return Ok(await _postService.GetFeedAsync(query));
         }
 
         [HttpGet("{id}")]
@@ -47,12 +59,17 @@ namespace DoctorPlantTest.API.Controllers
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
+            var userId = User.GetUserId();
+            if (userId == null) return Unauthorized(new { message = "Invalid token." });
+            dto.UserId = userId.Value; // never trust the client-sent UserId
+
             if (file != null && file.Length > 0)
             {
                 var validationError = ValidateFile(file);
                 if (validationError != null) return BadRequest(new { message = validationError });
 
-                try { dto.ImageUrl = await _cloudinary.UploadImageAsync(file, "posts"); }
+                try { dto.ImageUrl = await _images.UploadImageAsync(file, "posts"); }
+                catch (InvalidImageException) { return BadRequest(new { message = "The uploaded file is not a valid image." }); }
                 catch (Exception ex)
                 {
                     _logger.LogError(ex, "Failed to upload post image");
@@ -66,9 +83,28 @@ namespace DoctorPlantTest.API.Controllers
 
         [HttpPut("{id}")]
         [Authorize]
-        public async Task<IActionResult> Update(long id, [FromBody] UpdatePostDto dto)
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> Update(long id, [FromForm] UpdatePostDto dto, IFormFile? file)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            var post = await _postService.GetByIdAsync(id);
+            if (post == null) return NotFound(new { message = "Post not found." });
+            if (!User.CanModify(post.UserId)) return Forbid();
+
+            if (file != null && file.Length > 0)
+            {
+                var validationError = ValidateFile(file);
+                if (validationError != null) return BadRequest(new { message = validationError });
+
+                try { dto.ImageUrl = await _images.UploadImageAsync(file, "posts"); }
+                catch (InvalidImageException) { return BadRequest(new { message = "The uploaded file is not a valid image." }); }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Failed to upload post image");
+                    return StatusCode(500, new { message = "Failed to upload image." });
+                }
+            }
 
             try { await _postService.UpdateAsync(id, dto); }
             catch (KeyNotFoundException) { return NotFound(new { message = "Post not found." }); }
@@ -80,6 +116,10 @@ namespace DoctorPlantTest.API.Controllers
         [Authorize]
         public async Task<IActionResult> Delete(long id)
         {
+            var post = await _postService.GetByIdAsync(id);
+            if (post == null) return NotFound(new { message = "Post not found." });
+            if (!User.CanModify(post.UserId)) return Forbid();
+
             await _postService.DeleteAsync(id);
             return Ok(new { message = "Post deleted successfully." });
         }

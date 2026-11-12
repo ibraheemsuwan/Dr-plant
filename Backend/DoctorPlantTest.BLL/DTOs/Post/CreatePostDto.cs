@@ -4,7 +4,7 @@ namespace DoctorPlantTest.BLL.DTOs.Post
 {
     public class CreatePostDto
     {
-        [Required]
+        // Ignored from the client: the controller overwrites it with the authenticated user's id
         public long UserId { get; set; }
 
         [Required]

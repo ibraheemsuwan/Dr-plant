@@ -1,0 +1,68 @@
+# Runs the whole backend: MySQL + .NET API + Python model.
+#   1. cp .env.example .env   and fill it in
+#   2. put best_model.keras in AI-model/
+#   3. docker compose up -d --build
+# API: http://localhost:8080  (health: /health, docs only in Development)
+services:
+  db:
+    image: mysql:8.4
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:?Set DB_PASSWORD in .env}
+      MYSQL_DATABASE: doctorplant
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - dbdata:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-p${DB_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  model:
+    build: ./AI-model
+    restart: unless-stopped
+    environment:
+      MODEL_API_KEY: ${MODEL_API_KEY:?Set MODEL_API_KEY in .env}
+    volumes:
+      - ./AI-model/best_model.keras:/app/best_model.keras:ro
+
+  api:
+    build: ./Backend
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+      model:
+        condition: service_started
+    ports:
+      - "8080:8080"
+    volumes:
+      - uploads:/app/uploads
+    environment:
+      ConnectionStrings__DefaultConnection: "Server=db;Database=doctorplant;User=root;Password=${DB_PASSWORD};"
+      Jwt__Key: ${JWT_KEY:?Set JWT_KEY in .env (64+ random characters)}
+      # Images: "Local" keeps them on this server's disk (volume below); "Cloudinary" uses the hosted service
+      Storage__Provider: ${STORAGE_PROVIDER:-Local}
+      Storage__LocalPath: /app/uploads
+      Storage__PublicBaseUrl: ${PUBLIC_API_URL:-http://localhost:8080}
+      Cloudinary__CloudName: ${CLOUDINARY_CLOUD_NAME:-}
+      Cloudinary__ApiKey: ${CLOUDINARY_API_KEY:-}
+      Cloudinary__ApiSecret: ${CLOUDINARY_API_SECRET:-}
+      FlaskApi__BaseUrl: http://model:5000
+      FlaskApi__ApiKey: ${MODEL_API_KEY}
+      Claude__ApiKey: ${ANTHROPIC_API_KEY:-}
+      AllowedOrigins__0: ${FRONTEND_ORIGIN:?Set FRONTEND_ORIGIN in .env (e.g. https://dr-plant.netlify.app)}
+      Frontend__BaseUrl: ${FRONTEND_ORIGIN}
+      Email__SmtpHost: ${SMTP_HOST:-}
+      Email__SmtpPort: ${SMTP_PORT:-587}
+      Email__SmtpUsername: ${SMTP_USERNAME:-}
+      Email__SmtpPassword: ${SMTP_PASSWORD:-}
+      Email__FromAddress: ${EMAIL_FROM:-}
+      Database__AutoMigrate: "true"
+      Admin__Email: ${ADMIN_EMAIL:?Set ADMIN_EMAIL in .env}
+      Admin__Password: ${ADMIN_PASSWORD:?Set ADMIN_PASSWORD in .env (10+ characters)}
+
+volumes:
+  dbdata:
+  uploads:

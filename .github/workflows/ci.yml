@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+    branches: [main, add-frontend]
+  pull_request:
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      - run: dotnet restore DoctorPlantTest.API/DoctorPlantTest.API.csproj
+      - run: dotnet build DoctorPlantTest.API/DoctorPlantTest.API.csproj -c Release --no-restore
+      - run: dotnet test DoctorPlantTest.Tests -c Release
+      - name: Report vulnerable packages (non-blocking)
+        continue-on-error: true
+        run: |
+          dotnet list DoctorPlantTest.API/DoctorPlantTest.API.csproj package --vulnerable --include-transitive | tee vuln.txt
+          ! grep -q "has the following vulnerable packages" vuln.txt
+
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Frontend/DrPlant
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: Frontend/DrPlant/package-lock.json
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm test
+      - run: npm run build
+        env:
+          VITE_API_URL: https://api.example.com/api

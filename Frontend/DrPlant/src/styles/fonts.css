@@ -1,0 +1,21 @@
+/* Fonts are bundled with the site (npm @fontsource packages, SIL Open Font License) instead of being loaded from Google.
+   Each file only downloads when a page actually uses that weight and those characters (unicode-range). */
+@import "@fontsource/playfair-display/400.css";
+@import "@fontsource/playfair-display/500.css";
+@import "@fontsource/playfair-display/600.css";
+@import "@fontsource/playfair-display/700.css";
+@import "@fontsource/playfair-display/800.css";
+@import "@fontsource/playfair-display/900.css";
+@import "@fontsource/playfair-display/400-italic.css";
+@import "@fontsource/playfair-display/700-italic.css";
+@import "@fontsource/inter/300.css";
+@import "@fontsource/inter/400.css";
+@import "@fontsource/inter/500.css";
+@import "@fontsource/inter/600.css";
+@import "@fontsource/inter/700.css";
+@import "@fontsource/noto-kufi-arabic/300.css";
+@import "@fontsource/noto-kufi-arabic/400.css";
+@import "@fontsource/noto-kufi-arabic/500.css";
+@import "@fontsource/noto-kufi-arabic/600.css";
+@import "@fontsource/noto-kufi-arabic/700.css";
+@import "@fontsource/noto-kufi-arabic/800.css";

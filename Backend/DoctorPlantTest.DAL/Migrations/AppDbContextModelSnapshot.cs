@@ -112,6 +112,9 @@ namespace DoctorPlantTest.DAL.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("CropId"));
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<string>("DifficultyAr")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -295,7 +298,7 @@ namespace DoctorPlantTest.DAL.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<long>("DiseaseId")
+                    b.Property<long?>("DiseaseId")
                         .HasColumnType("bigint");
 
                     b.Property<string>("ImageUrl")
@@ -305,9 +308,14 @@ namespace DoctorPlantTest.DAL.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
+
                     b.HasKey("DiagnosisId");
 
                     b.HasIndex("DiseaseId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("ImageDiagnoses");
                 });
@@ -526,7 +534,12 @@ namespace DoctorPlantTest.DAL.Migrations
                     b.HasOne("DoctorPlantTest.DAL.Entities.Disease", "Disease")
                         .WithMany("ImageDiagnoses")
                         .HasForeignKey("DiseaseId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("DoctorPlantTest.DAL.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Disease");

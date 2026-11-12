@@ -1,4 +1,4 @@
-﻿using DoctorPlantTest.BLL.Services;
+using DoctorPlantTest.BLL.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -18,7 +18,7 @@ namespace DoctorPlantTest.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetMyNotifications()
+        public async Task<IActionResult> GetMyNotifications([FromQuery] int limit = 50)
         {
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
@@ -27,7 +27,7 @@ namespace DoctorPlantTest.API.Controllers
 
             long userId = long.Parse(userIdClaim);
 
-            var notifications = await _notificationService.GetMyNotificationsAsync(userId);
+            var notifications = await _notificationService.GetMyNotificationsAsync(userId, limit);
 
             return Ok(notifications);
         }

@@ -2,4 +2,5 @@
   <Project Path="DoctorPlantTest.API/DoctorPlantTest.API.csproj" />
   <Project Path="DoctorPlantTest.BLL/DoctorPlantTest.BLL.csproj" />
   <Project Path="DoctorPlantTest.DAL/DoctorPlantTest.DAL.csproj" />
+  <Project Path="DoctorPlantTest.Tests/DoctorPlantTest.Tests.csproj" />
 </Solution>

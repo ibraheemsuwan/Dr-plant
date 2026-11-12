@@ -1,3 +1,5 @@
+using DoctorPlantTest.API.Diagnosis;
+using DoctorPlantTest.API.Authorization;
 using DoctorPlantTest.API.Services;
 using DoctorPlantTest.BLL.DTOs.Crop;
 using DoctorPlantTest.BLL.Services;
@@ -15,13 +17,13 @@ namespace DoctorPlantTest.API.Controllers
         private const long MaxFileSizeBytes = 5 * 1024 * 1024;
 
         private readonly ICropService _cropService;
-        private readonly ICloudinaryService _cloudinary;
+        private readonly IImageStorage _images;
         private readonly ILogger<CropsController> _logger;
 
-        public CropsController(ICropService cropService, ICloudinaryService cloudinary, ILogger<CropsController> logger)
+        public CropsController(ICropService cropService, IImageStorage cloudinary, ILogger<CropsController> logger)
         {
             _cropService = cropService;
-            _cloudinary = cloudinary;
+            _images = cloudinary;
             _logger = logger;
         }
 
@@ -41,7 +43,7 @@ namespace DoctorPlantTest.API.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        [Authorize(Policy = Policies.Admin)]
         [Consumes("multipart/form-data")]
         public async Task<IActionResult> Create([FromForm] CreateCropDto dto, IFormFile? file)
         {
@@ -52,7 +54,8 @@ namespace DoctorPlantTest.API.Controllers
                 var validationError = ValidateFile(file);
                 if (validationError != null) return BadRequest(new { message = validationError });
 
-                try { dto.ImageUrl = await _cloudinary.UploadImageAsync(file, "crops"); }
+                try { dto.ImageUrl = await _images.UploadImageAsync(file, "crops"); }
+                catch (InvalidImageException) { return BadRequest(new { message = "The uploaded file is not a valid image." }); }
                 catch (Exception ex)
                 {
                     _logger.LogError(ex, "Failed to upload crop image");
@@ -65,7 +68,7 @@ namespace DoctorPlantTest.API.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize]
+        [Authorize(Policy = Policies.Admin)]
         [Consumes("multipart/form-data")]
         public async Task<IActionResult> Update(long id, [FromForm] UpdateCropDto dto, IFormFile? file)
         {
@@ -76,7 +79,8 @@ namespace DoctorPlantTest.API.Controllers
                 var validationError = ValidateFile(file);
                 if (validationError != null) return BadRequest(new { message = validationError });
 
-                try { dto.ImageUrl = await _cloudinary.UploadImageAsync(file, "crops"); }
+                try { dto.ImageUrl = await _images.UploadImageAsync(file, "crops"); }
+                catch (InvalidImageException) { return BadRequest(new { message = "The uploaded file is not a valid image." }); }
                 catch (Exception ex)
                 {
                     _logger.LogError(ex, "Failed to upload crop image");
@@ -91,7 +95,7 @@ namespace DoctorPlantTest.API.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize]
+        [Authorize(Policy = Policies.Admin)]
         public async Task<IActionResult> Delete(long id)
         {
             await _cropService.DeleteAsync(id);

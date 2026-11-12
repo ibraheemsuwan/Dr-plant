@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using DoctorPlantTest.BLL.DTOs.Like;
@@ -23,20 +23,38 @@ namespace DoctorPlantTest.BLL.Services
             _notificationService = notificationService;
         }
 
-        public async Task<IEnumerable<LikeDto>> GetAllAsync()
+        public async Task<IEnumerable<LikeDto>> GetAllAsync(long? postId = null, int limit = 2000)
         {
-            var likes = await _likeRepository.GetAllAsync();
+            System.Linq.Expressions.Expression<Func<Like, bool>>? filter = postId == null ? null : l => l.PostId == postId;
+            var likes = await _likeRepository.PageAsync(
+                filter, o => o.OrderByDescending(l => l.CreatedAt).ThenByDescending(l => l.LikeId), 0, Math.Clamp(limit, 1, 5000));
             return likes.Select(l => new LikeDto
             {
                 LikeId = l.LikeId,
                 PostId = l.PostId,
                 UserId = l.UserId,
                 CreatedAt = l.CreatedAt
-            });
+            }).ToList();
         }
 
-        public async Task AddAsync(CreateLikeDto dto)
+        public async Task<LikeDto?> GetByIdAsync(long id)
         {
+            var l = await _likeRepository.GetByIdAsync(id);
+            if (l == null) return null;
+            return new LikeDto
+            {
+                LikeId = l.LikeId,
+                PostId = l.PostId,
+                UserId = l.UserId,
+                CreatedAt = l.CreatedAt
+            };
+        }
+
+        public async Task<bool> AddAsync(CreateLikeDto dto)
+        {
+            if (await _likeRepository.AnyAsync(l => l.PostId == dto.PostId && l.UserId == dto.UserId))
+                return false;
+
             var like = new Like
             {
                 PostId = dto.PostId,
@@ -58,6 +76,8 @@ namespace DoctorPlantTest.BLL.Services
                     "Someone liked your post"
                 );
             }
+
+            return true;
         }
 
         public async Task DeleteAsync(long id)

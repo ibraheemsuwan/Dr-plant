@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,12 +11,16 @@ namespace DoctorPlantTest.BLL.Services
     {
         Task CreateNotificationAsync(long receiverUserId, long actorUserId, long postId, string type, string message);
 
-        Task<List<NotificationDto>> GetMyNotificationsAsync(long userId);
+        /// <summary>The user's newest notifications (default 50).</summary>
+        Task<List<NotificationDto>> GetMyNotificationsAsync(long userId, int limit = 50);
 
         Task<int> GetUnreadCountAsync(long userId);
 
         Task MarkAsReadAsync(long notificationId, long userId);
 
         Task MarkAllAsReadAsync(long userId);
+
+        /// <summary>Removes notifications received by or caused by this user.</summary>
+        Task DeleteForUserAsync(long userId);
     }
 }

@@ -1,5 +1,6 @@
-﻿using DoctorPlantTest.DAL.Data;
+using DoctorPlantTest.DAL.Data;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace DoctorPlantTest.DAL.Repositories
 {
@@ -22,6 +23,33 @@ namespace DoctorPlantTest.DAL.Repositories
         public async Task<T?> GetByIdAsync(long id)
         {
             return await _dbSet.FindAsync(id);
+        }
+
+        public async Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate)
+        {
+            return await _dbSet.FirstOrDefaultAsync(predicate);
+        }
+
+        public async Task<List<T>> FindAsync(Expression<Func<T, bool>> predicate)
+        {
+            return await _dbSet.Where(predicate).ToListAsync();
+        }
+
+        public async Task<bool> AnyAsync(Expression<Func<T, bool>> predicate)
+        {
+            return await _dbSet.AnyAsync(predicate);
+        }
+
+        public async Task<int> CountAsync(Expression<Func<T, bool>>? predicate = null)
+        {
+            return predicate == null ? await _dbSet.CountAsync() : await _dbSet.CountAsync(predicate);
+        }
+
+        public async Task<List<T>> PageAsync(Expression<Func<T, bool>>? predicate, Func<IQueryable<T>, IOrderedQueryable<T>> order, int skip, int take)
+        {
+            IQueryable<T> query = _dbSet.AsNoTracking();
+            if (predicate != null) query = query.Where(predicate);
+            return await order(query).Skip(skip).Take(take).ToListAsync();
         }
 
         public async Task AddAsync(T entity)

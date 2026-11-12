@@ -1,4 +1,11 @@
+using DoctorPlantTest.API.Authorization;
+using DoctorPlantTest.API.Data;
+using DoctorPlantTest.API.Diagnosis;
 using DoctorPlantTest.API.Serialization;
+using DoctorPlantTest.BLL.Exceptions;
+using DoctorPlantTest.BLL.Services.Email;
+using Microsoft.AspNetCore.HttpOverrides;
+using System.Threading.RateLimiting;
 using DoctorPlantTest.API.Services;
 using Microsoft.OpenApi;
 using System.Text.Json.Serialization;
@@ -38,6 +45,30 @@ builder.Services.AddSwaggerGen(options =>
 
 builder.Services.AddHttpClient();
 
+// Fail fast if required secrets are missing (set via user-secrets in dev, environment variables in production)
+string RequireSetting(string key)
+{
+    var value = builder.Configuration[key];
+    if (string.IsNullOrWhiteSpace(value))
+        throw new InvalidOperationException(
+            $"Missing required setting '{key}'. In development: dotnet user-secrets set \"{key}\" \"<value>\". " +
+            $"In production: set environment variable '{key.Replace(":", "__")}'.");
+    return value;
+}
+
+var jwtKey = RequireSetting("Jwt:Key");
+if (Encoding.UTF8.GetByteCount(jwtKey) < 32)
+    throw new InvalidOperationException("Jwt:Key must be at least 32 bytes long.");
+RequireSetting("ConnectionStrings:DefaultConnection");
+// Image storage: "Cloudinary" (default, hosted) or "Local" (server disk, no third party)
+var useLocalStorage = string.Equals(builder.Configuration["Storage:Provider"], "Local", StringComparison.OrdinalIgnoreCase);
+if (!useLocalStorage)
+{
+    RequireSetting("Cloudinary:CloudName");
+    RequireSetting("Cloudinary:ApiKey");
+    RequireSetting("Cloudinary:ApiSecret");
+}
+
 // JWT Authentication
 builder.Services.AddAuthentication("Bearer")
     .AddJwtBearer("Bearer", options =>
@@ -50,18 +81,92 @@ builder.Services.AddAuthentication("Bearer")
             ValidateIssuerSigningKey = true,
             ValidIssuer = builder.Configuration["Jwt:Issuer"],
             ValidAudience = builder.Configuration["Jwt:Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
         };
     });
+
+// Authorization — role "admin" comes from the JWT role claim
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy(Policies.Admin, policy => policy.RequireRole("admin", "Admin"));
+});
+
+// Rate limiting — protects login/register from brute force and the model from abuse
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+    options.OnRejected = async (context, token) =>
+    {
+        await context.HttpContext.Response.WriteAsJsonAsync(
+            new { message = "Too many requests. Please wait a moment and try again." }, token);
+    };
+
+    // 10 login/register attempts per minute per IP
+    options.AddPolicy(RateLimitPolicies.Auth, httpContext =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = builder.Configuration.GetValue("RateLimits:AuthPerMinute", 10),
+                Window = TimeSpan.FromMinutes(1),
+                QueueLimit = 0
+            }));
+
+    // 5 contact-form messages per 10 minutes per IP (anti-spam)
+    options.AddPolicy(RateLimitPolicies.Contact, httpContext =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = builder.Configuration.GetValue("RateLimits:ContactPer10Minutes", 5),
+                Window = TimeSpan.FromMinutes(10),
+                QueueLimit = 0
+            }));
+
+    // 30 diagnoses per hour per user (falls back to IP)
+    options.AddPolicy(RateLimitPolicies.Predict, httpContext =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            httpContext.User.GetUserId()?.ToString()
+                ?? httpContext.Connection.RemoteIpAddress?.ToString()
+                ?? "unknown",
+            _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = builder.Configuration.GetValue("RateLimits:PredictPerHour", 30),
+                Window = TimeSpan.FromHours(1),
+                QueueLimit = 0
+            }));
+});
+
+// Behind a reverse proxy / hosting platform: use the real client IP (needed for per-IP rate limits) and scheme.
+// By default only loopback proxies are trusted. In a container the platform's load balancer is not loopback,
+// so the Docker image sets ForwardedHeaders:TrustAll=true. Only enable that when the app is reachable
+// exclusively through the proxy (otherwise clients could spoof X-Forwarded-For to dodge rate limits).
+var trustAllProxies = builder.Configuration.GetValue<bool>("ForwardedHeaders:TrustAll");
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+    if (trustAllProxies)
+    {
+        options.KnownNetworks.Clear();
+        options.KnownProxies.Clear();
+    }
+});
 
 // DbContext — connection string from configuration, not hardcoded
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")!;
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
-// Cloudinary
-builder.Services.AddSingleton<ICloudinaryService, CloudinaryService>();
+// Image storage
+if (useLocalStorage)
+{
+    builder.Services.AddSingleton<LocalImageStorage>();
+    builder.Services.AddSingleton<IImageStorage>(sp => sp.GetRequiredService<LocalImageStorage>());
+}
+else
+{
+    builder.Services.AddSingleton<IImageStorage, CloudinaryService>();
+}
 
 // Repositories
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
@@ -75,18 +180,33 @@ builder.Services.AddScoped<ICropDetailService, CropDetailService>();
 builder.Services.AddScoped<IImageDiagnosisService, ImageDiagnosisService>();
 builder.Services.AddScoped<ICommentService, CommentService>();
 builder.Services.AddScoped<ILikeService, LikeService>();
+builder.Services.AddSingleton<IEmailSender, SmtpEmailSender>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IContactMessageService, ContactMessageService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
 
-// CORS — restrict to known frontend origins (configure in appsettings.json)
-var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>() ?? [];
+// Plant diagnosis: local Keras model (Flask) first, Claude vision as fallback
+builder.Services.Configure<DiagnosisOptions>(builder.Configuration.GetSection("Diagnosis"));
+builder.Services.Configure<LocalModelOptions>(builder.Configuration.GetSection("FlaskApi"));
+builder.Services.Configure<ClaudeOptions>(builder.Configuration.GetSection("Claude"));
+builder.Services.AddHttpClient(LocalModelClient.HttpClientName);
+builder.Services.AddSingleton(new ModelClassMap(Path.Combine(AppContext.BaseDirectory, "Diagnosis", "model_class_map.json")));
+builder.Services.AddSingleton<ILocalModel, LocalModelClient>();
+builder.Services.AddSingleton<IVisionDiagnoser, ClaudeVisionClient>();
+builder.Services.AddSingleton<AiCallBudget>();
+builder.Services.AddScoped<PlantDiagnosisService>();
+
+// CORS — only the frontend origins listed in AllowedOrigins (appsettings*.json)
+var allowedOrigins = (builder.Configuration.GetSection("AllowedOrigins").Get<string[]>() ?? [])
+    .Select(o => o.TrimEnd('/'))
+    .Where(o => !string.IsNullOrWhiteSpace(o))
+    .ToArray();
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll", policy =>
+    options.AddPolicy("Frontend", policy =>
     {
         policy
-            .AllowAnyOrigin()
+            .WithOrigins(allowedOrigins)
             .AllowAnyHeader()
             .AllowAnyMethod();
     });
@@ -94,27 +214,37 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// Global exception handler — returns structured JSON for unhandled exceptions
+// Migrations + admin account + reference data on first run (idempotent; controlled by configuration)
+await DatabaseBootstrapper.RunAsync(app.Services, app.Configuration, app.Logger);
+
+app.UseForwardedHeaders();
+
+// Global exception handler — logs full details, returns a safe message to the client
 app.UseExceptionHandler(errorApp =>
 {
     errorApp.Run(async context =>
     {
-        context.Response.StatusCode = 500;
-        context.Response.ContentType = "application/json";
+        var error = context.Features.Get<IExceptionHandlerFeature>()?.Error;
 
-        var error = context.Features.Get<IExceptionHandlerFeature>();
+        if (error is EmailAlreadyExistsException)
+        {
+            context.Response.StatusCode = StatusCodes.Status409Conflict;
+            await context.Response.WriteAsJsonAsync(new { message = "This email is already registered." });
+            return;
+        }
+
+        context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+
         if (error != null)
         {
             var logger = context.RequestServices.GetRequiredService<ILogger<Program>>();
-            logger.LogError(error.Error, "Unhandled exception");
-
-            await context.Response.WriteAsJsonAsync(new
-            {
-                message = error?.Error.Message,
-                inner = error?.Error.InnerException?.Message,
-                stackTrace = error?.Error.StackTrace
-            });
+            logger.LogError(error, "Unhandled exception");
         }
+
+        // Error details only in development; never expose internals in production
+        await context.Response.WriteAsJsonAsync(app.Environment.IsDevelopment()
+            ? new { message = "An unexpected error occurred.", detail = error?.Message }
+            : new { message = "An unexpected error occurred.", detail = (string?)null });
     });
 });
 
@@ -124,15 +254,44 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+// In production TLS is terminated by the hosting platform/reverse proxy
+if (!app.Environment.IsProduction())
+    app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 
-app.UseCors("AllowAll");
+if (useLocalStorage)
+{
+    // Serve stored images from disk. Files are always JPEGs written by LocalImageStorage; nosniff stops browsers
+    // from treating anything else in the folder as HTML/script.
+    var uploads = app.Services.GetRequiredService<LocalImageStorage>().RootPath;
+    Directory.CreateDirectory(uploads);
+    app.UseStaticFiles(new StaticFileOptions
+    {
+        FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(uploads),
+        RequestPath = LocalImageStorage.RequestPath,
+        ServeUnknownFileTypes = false,
+        OnPrepareResponse = ctx =>
+        {
+            ctx.Context.Response.Headers["X-Content-Type-Options"] = "nosniff";
+            ctx.Context.Response.Headers.CacheControl = "public,max-age=31536000,immutable";
+        },
+    });
+}
+
+app.UseCors("Frontend");
 
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.UseRateLimiter();
+
 app.MapControllers();
 
+// Liveness probe for hosting platforms / uptime monitors (no DB access)
+app.MapGet("/health", () => Results.Ok(new { status = "ok" }));
+
 app.Run();
+
+// Lets the integration tests (WebApplicationFactory<Program>) start the app
+public partial class Program { }

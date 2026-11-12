@@ -1,4 +1,6 @@
-﻿using DoctorPlantTest.BLL.DTOs.ContactMessages;
+using DoctorPlantTest.API.Authorization;
+using Microsoft.AspNetCore.RateLimiting;
+using DoctorPlantTest.BLL.DTOs.ContactMessages;
 using DoctorPlantTest.DAL.Data;
 using DoctorPlantTest.DAL.Entities;
 using Microsoft.AspNetCore.Authorization;
@@ -19,24 +21,25 @@ public class ContactMessagesController : ControllerBase
     }
 
     [HttpPost]
+    [EnableRateLimiting(RateLimitPolicies.Contact)]
     public async Task<IActionResult> CreateMessage(CreateContactMessageDto dto)
     {
         var message = new ContactMessage
         {
-            Name = dto.Name,
-            Email = dto.Email,
-            Subject = dto.Subject,
-            Message = dto.Message,
+            Name = dto.Name.Trim(),
+            Email = dto.Email.Trim(),
+            Subject = dto.Subject.Trim(),
+            Message = dto.Message.Trim(),
             Status = "Unread"
         };
 
         _context.ContactMessages.Add(message);
         await _context.SaveChangesAsync();
 
-        return Ok(new { message = "Message sent successfully" });
+        return Ok(new { message = "Message sent successfully", id = message.Id });
     }
 
-    [Authorize]
+    [Authorize(Policy = Policies.Admin)]
     [HttpGet]
     public async Task<IActionResult> GetAllMessages()
     {
@@ -48,7 +51,7 @@ public class ContactMessagesController : ControllerBase
         return Ok(messages);
     }
 
-    [Authorize]
+    [Authorize(Policy = Policies.Admin)]
     [HttpGet("{id}")]
     public async Task<IActionResult> GetMessageById(int id)
     {
@@ -68,7 +71,7 @@ public class ContactMessagesController : ControllerBase
         return Ok(msg);
     }
 
-    [Authorize]
+    [Authorize(Policy = Policies.Admin)]
     [HttpPut("{id}/reply")]
     public async Task<IActionResult> ReplyToMessage(int id, ReplyContactMessageDto dto)
     {
@@ -87,7 +90,7 @@ public class ContactMessagesController : ControllerBase
         return Ok(new { message = "Reply saved successfully" });
     }
 
-    [Authorize]
+    [Authorize(Policy = Policies.Admin)]
     [HttpPut("{id}/status")]
     public async Task<IActionResult> ChangeStatus(int id, ChangeMessageStatusDto dto)
     {
@@ -113,7 +116,7 @@ public class ContactMessagesController : ControllerBase
         return Ok(new { message = "Status updated successfully" });
     }
 
-    [Authorize]
+    [Authorize(Policy = Policies.Admin)]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteMessage(int id)
     {
