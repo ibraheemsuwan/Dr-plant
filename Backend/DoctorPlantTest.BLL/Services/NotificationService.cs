@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -78,6 +78,13 @@ namespace DoctorPlantTest.BLL.Services
             notification.IsRead = true;
 
             await _notificationRepository.UpdateAsync(notification);
+        }
+
+        public async Task DeleteForUserAsync(long userId)
+        {
+            var rows = await _notificationRepository.FindAsync(n => n.ReceiverUserId == userId || n.ActorUserId == userId);
+            foreach (var row in rows)
+                await _notificationRepository.DeleteAsync(row.NotificationId);
         }
 
         public async Task MarkAllAsReadAsync(long userId)

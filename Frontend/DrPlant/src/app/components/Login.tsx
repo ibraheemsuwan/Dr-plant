@@ -315,6 +315,20 @@ export function Login() {
               </div>
             )}
 
+            {!isLogin ? (
+              <p className="text-center text-xs leading-relaxed text-muted-foreground">
+                {language === "ar" ? "بإنشاء حساب فإنك توافق على " : "By signing up you agree to the "}
+                <Link to="/terms" className="font-medium text-primary hover:underline">
+                  {language === "ar" ? "شروط الاستخدام" : "Terms of Use"}
+                </Link>
+                {language === "ar" ? " و" : " and "}
+                <Link to="/privacy" className="font-medium text-primary hover:underline">
+                  {language === "ar" ? "سياسة الخصوصية" : "Privacy Policy"}
+                </Link>
+                .
+              </p>
+            ) : null}
+
             <button
               type="submit"
               disabled={authLoading}

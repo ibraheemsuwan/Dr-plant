@@ -83,6 +83,15 @@ namespace DoctorPlantTest.BLL.Services
             await _diagnosisRepository.AddAsync(diagnosis);
         }
 
+        public async Task<IReadOnlyList<string>> DeleteByUserAsync(long userId)
+        {
+            var rows = await _diagnosisRepository.FindAsync(d => d.UserId == userId);
+            var urls = rows.Where(r => !string.IsNullOrEmpty(r.ImageUrl)).Select(r => r.ImageUrl!).ToList();
+            foreach (var row in rows)
+                await _diagnosisRepository.DeleteAsync(row.DiagnosisId);
+            return urls;
+        }
+
         public async Task DeleteAsync(long id)
         {
             await _diagnosisRepository.DeleteAsync(id);

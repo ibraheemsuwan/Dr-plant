@@ -1,5 +1,5 @@
 import { useState, useEffect, type FormEvent } from "react";
-import { Link, Navigate } from "react-router";
+import { Link, Navigate, useNavigate } from "react-router";
 import {
   Mail,
   User,
@@ -9,15 +9,41 @@ import {
   Lock,
   Eye,
   EyeOff,
+  Trash2,
 } from "lucide-react";
 import { useLanguage } from "../contexts/LanguageContext";
 import { useUser } from "../contexts/UserContext";
 import { Reveal } from "./animations/Reveal";
+import * as usersService from "../api/services/usersService";
+import { getErrorMessage } from "../api/errors";
 
 export function Settings() {
   const { t, language } = useLanguage();
-  const { user, isLoggedIn, updateProfile, updatePassword, authLoading } =
+  const { user, isLoggedIn, updateProfile, updatePassword, authLoading, logout } =
     useUser();
+  const navigate = useNavigate();
+  const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
+
+  const handleDeleteAccount = async () => {
+    if (!user) return;
+    const confirmText =
+      language === "ar"
+        ? "سيتم حذف حسابك نهائيًا مع منشوراتك وتعليقاتك وسجل تشخيصاتك وصورها. لا يمكن التراجع عن هذا. هل أنت متأكد؟"
+        : "This permanently deletes your account with your posts, comments, diagnosis history and photos. This cannot be undone. Are you sure?";
+    if (!window.confirm(confirmText)) return;
+    setDeleting(true);
+    setDeleteError(null);
+    try {
+      await usersService.deleteUser(user.id);
+      logout();
+      navigate("/", { replace: true });
+    } catch (e) {
+      setDeleteError(getErrorMessage(e));
+    } finally {
+      setDeleting(false);
+    }
+  };
   const [saved, setSaved] = useState(false);
   const [passwordSaved, setPasswordSaved] = useState(false);
   const [showPw, setShowPw] = useState(false);
@@ -283,6 +309,35 @@ export function Settings() {
                 </button>
               </form>
             </div>
+          </section>
+
+          <section className="rounded-3xl border border-destructive/30 bg-card p-6 sm:p-8">
+            <h2 className="mb-2 flex items-center gap-2 text-lg font-semibold text-destructive">
+              <Trash2 className="h-5 w-5" />
+              {language === "ar" ? "حذف الحساب" : "Delete account"}
+            </h2>
+            <p className="mb-4 text-sm text-muted-foreground">
+              {language === "ar"
+                ? "يحذف حسابك ومنشوراتك وتعليقاتك وسجل تشخيصاتك وصورها نهائيًا."
+                : "Permanently removes your account, posts, comments, diagnosis history and photos."}
+            </p>
+            {deleteError ? (
+              <p className="mb-3 text-sm text-destructive">{deleteError}</p>
+            ) : null}
+            <button
+              type="button"
+              onClick={() => void handleDeleteAccount()}
+              disabled={deleting}
+              className="rounded-full border border-destructive px-6 py-2.5 text-sm font-semibold text-destructive transition-colors hover:bg-destructive hover:text-white disabled:opacity-60"
+            >
+              {deleting
+                ? language === "ar"
+                  ? "جارٍ الحذف..."
+                  : "Deleting..."
+                : language === "ar"
+                  ? "حذف حسابي نهائيًا"
+                  : "Delete my account"}
+            </button>
           </section>
 
           <p className="text-center text-sm text-muted-foreground px-4">

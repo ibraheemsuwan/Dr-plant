@@ -23,6 +23,29 @@ namespace DoctorPlantTest.API.Services
             return await UploadImageAsync(stream, file.FileName, folder);
         }
 
+        /// <summary>
+        /// https://res.cloudinary.com/&lt;cloud&gt;/image/upload/v123/folder/name.jpg  ->  folder/name  (null if not a Cloudinary URL)
+        /// </summary>
+        public static string? ExtractPublicId(string imageUrl)
+        {
+            var match = System.Text.RegularExpressions.Regex.Match(imageUrl, @"/upload/(?:v\d+/)?(.+?)(?:\.[A-Za-z0-9]+)?$");
+            return match.Success ? match.Groups[1].Value : null;
+        }
+
+        public async Task DeleteImageAsync(string imageUrl)
+        {
+            try
+            {
+                var publicId = ExtractPublicId(imageUrl);
+                if (publicId == null) return;
+                await _cloudinary.DestroyAsync(new DeletionParams(publicId));
+            }
+            catch
+            {
+                // Account deletion must not fail because an image could not be removed from storage
+            }
+        }
+
         public async Task<string> UploadImageAsync(Stream stream, string fileName, string folder)
         {
             var uploadParams = new ImageUploadParams

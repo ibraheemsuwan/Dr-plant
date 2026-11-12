@@ -34,6 +34,18 @@ export const router = createBrowserRouter([
         path: "admin",
         lazy: async () => ({ Component: (await import("./pages/AdminDashboard/AdminDashboard")).AdminDashboard }),
       },
+      {
+        path: "my-diagnoses",
+        lazy: async () => ({ Component: (await import("./pages/MyDiagnoses/MyDiagnoses")).MyDiagnoses }),
+      },
+      {
+        path: "privacy",
+        lazy: async () => ({ Component: (await import("./pages/Legal/Legal")).PrivacyPage }),
+      },
+      {
+        path: "terms",
+        lazy: async () => ({ Component: (await import("./pages/Legal/Legal")).TermsPage }),
+      },
       { path: "login", Component: Login },
       { path: "register", Component: Login },
     ],

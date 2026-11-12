@@ -101,7 +101,7 @@ builder.Services.AddRateLimiter(options =>
             httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
             _ => new FixedWindowRateLimiterOptions
             {
-                PermitLimit = 10,
+                PermitLimit = builder.Configuration.GetValue("RateLimits:AuthPerMinute", 10),
                 Window = TimeSpan.FromMinutes(1),
                 QueueLimit = 0
             }));
@@ -112,7 +112,7 @@ builder.Services.AddRateLimiter(options =>
             httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
             _ => new FixedWindowRateLimiterOptions
             {
-                PermitLimit = 5,
+                PermitLimit = builder.Configuration.GetValue("RateLimits:ContactPer10Minutes", 5),
                 Window = TimeSpan.FromMinutes(10),
                 QueueLimit = 0
             }));
@@ -125,7 +125,7 @@ builder.Services.AddRateLimiter(options =>
                 ?? "unknown",
             _ => new FixedWindowRateLimiterOptions
             {
-                PermitLimit = 30,
+                PermitLimit = builder.Configuration.GetValue("RateLimits:PredictPerHour", 30),
                 Window = TimeSpan.FromHours(1),
                 QueueLimit = 0
             }));
@@ -257,3 +257,6 @@ app.MapControllers();
 app.MapGet("/health", () => Results.Ok(new { status = "ok" }));
 
 app.Run();
+
+// Lets the integration tests (WebApplicationFactory<Program>) start the app
+public partial class Program { }

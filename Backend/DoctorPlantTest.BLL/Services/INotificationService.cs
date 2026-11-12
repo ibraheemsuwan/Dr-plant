@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,5 +18,8 @@ namespace DoctorPlantTest.BLL.Services
         Task MarkAsReadAsync(long notificationId, long userId);
 
         Task MarkAllAsReadAsync(long userId);
+
+        /// <summary>Removes notifications received by or caused by this user.</summary>
+        Task DeleteForUserAsync(long userId);
     }
 }

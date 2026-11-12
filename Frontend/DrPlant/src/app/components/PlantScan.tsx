@@ -26,8 +26,11 @@ import {
   Leaf,
   Scan,
   Sparkles,
+  History,
 } from "lucide-react";
+import { Link } from "react-router";
 import { LanguageContext } from "../contexts/LanguageContext";
+import { useUser } from "../contexts/UserContext";
 import { Reveal } from "./animations/Reveal";
 
 function pickBilingual(
@@ -71,6 +74,7 @@ export function PlantScan() {
     throw new Error("useLanguage must be used within LanguageProvider");
   }
   const { t, language } = languageContext;
+  const { isLoggedIn } = useUser();
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isScanning, setIsScanning] = useState(false);
@@ -245,6 +249,15 @@ export function PlantScan() {
   };
 
   const r = scanResult;
+  const historyLink = isLoggedIn ? (
+    <Link
+      to="/my-diagnoses"
+      className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-sm font-medium transition-colors hover:border-primary hover:text-primary"
+    >
+      <History className="h-4 w-4" />
+      {language === "ar" ? "سجل تشخيصاتي" : "My diagnoses"}
+    </Link>
+  ) : null;
   const displayName =
     r && r.nameEn !== undefined
       ? pickBilingual(language, r.nameEn ?? "", r.nameAr) || r.plantName
@@ -349,6 +362,7 @@ export function PlantScan() {
             <p className="mx-auto max-w-xl text-lg text-muted-foreground">
               {t("scanDescription")}
             </p>
+            {historyLink ? <div className="mt-6">{historyLink}</div> : null}
           </div>
 
           <div className="grid gap-8 lg:grid-cols-2">

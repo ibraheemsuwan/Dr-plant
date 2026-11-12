@@ -1,5 +1,6 @@
 using DoctorPlantTest.API.Authorization;
 using DoctorPlantTest.BLL.DTOs.User;
+using DoctorPlantTest.API.Services;
 using DoctorPlantTest.BLL.Exceptions;
 using DoctorPlantTest.BLL.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -12,10 +13,20 @@ namespace DoctorPlantTest.API.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly IImageDiagnosisService _diagnoses;
+        private readonly INotificationService _notifications;
+        private readonly ICloudinaryService _cloudinary;
 
-        public UsersController(IUserService userService)
+        public UsersController(
+            IUserService userService,
+            IImageDiagnosisService diagnoses,
+            INotificationService notifications,
+            ICloudinaryService cloudinary)
         {
             _userService = userService;
+            _diagnoses = diagnoses;
+            _notifications = notifications;
+            _cloudinary = cloudinary;
         }
 
         [HttpGet]
@@ -115,7 +126,13 @@ namespace DoctorPlantTest.API.Controllers
         {
             if (!User.CanModify(id)) return Forbid();
 
+            // Remove personal data that is not covered by database cascades (older databases have no FK for these)
+            var imageUrls = await _diagnoses.DeleteByUserAsync(id);
+            await _notifications.DeleteForUserAsync(id);
             await _userService.DeleteAsync(id);
+
+            foreach (var url in imageUrls)
+                await _cloudinary.DeleteImageAsync(url);
             return Ok(new { message = "User deleted successfully." });
         }
     }

@@ -748,9 +748,9 @@ export function Home() {
                   {language === "ar" ? "تواصل معنا" : "Contact"}
                 </h4>
                 <ul className="space-y-2 text-background/60 text-sm dark:text-white/70">
-                  <li>info@plantzone.com</li>
-                  <li>+20 123 456 7890</li>
-                  <li>{language === "ar" ? "القاهرة، مصر" : "Cairo, Egypt"}</li>
+                  <li>yazanarar59@gmail.com</li>
+                  <li dir="ltr" className={language === "ar" ? "text-end" : ""}>+970 599812555</li>
+                  <li>{language === "ar" ? "طولكرم، فلسطين" : "Tulkarm, Palestine"}</li>
                 </ul>
               </div>
             </div>
@@ -762,14 +762,18 @@ export function Home() {
                   : "All rights reserved."}
               </p>
               <div className="flex gap-4">
-                {["Facebook", "Twitter", "Instagram"].map((social) => (
-                  <button
-                    key={social}
-                    className="hover:text-background transition-colors dark:hover:text-white"
-                  >
-                    {social}
-                  </button>
-                ))}
+                <Link
+                  to="/privacy"
+                  className="hover:text-background transition-colors dark:hover:text-white"
+                >
+                  {language === "ar" ? "سياسة الخصوصية" : "Privacy Policy"}
+                </Link>
+                <Link
+                  to="/terms"
+                  className="hover:text-background transition-colors dark:hover:text-white"
+                >
+                  {language === "ar" ? "شروط الاستخدام" : "Terms of Use"}
+                </Link>
               </div>
             </div>
           </div>
