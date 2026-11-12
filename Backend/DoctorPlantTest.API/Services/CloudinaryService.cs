@@ -20,10 +20,14 @@ namespace DoctorPlantTest.API.Services
         public async Task<string> UploadImageAsync(IFormFile file, string folder)
         {
             await using var stream = file.OpenReadStream();
+            return await UploadImageAsync(stream, file.FileName, folder);
+        }
 
+        public async Task<string> UploadImageAsync(Stream stream, string fileName, string folder)
+        {
             var uploadParams = new ImageUploadParams
             {
-                File = new FileDescription(file.FileName, stream),
+                File = new FileDescription(fileName, stream),
                 Folder = folder,
                 UseFilename = false,
                 UniqueFilename = true,

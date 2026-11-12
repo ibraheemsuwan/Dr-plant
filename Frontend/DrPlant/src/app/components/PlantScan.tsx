@@ -187,8 +187,34 @@ export function PlantScan() {
         raw && typeof raw === "object" ? (raw as Record<string, unknown>) : {};
       const parsed = parsePredictResponse(raw);
 
-      if (isHealthyPrediction(o)) {
+      // Neither the model nor the AI was confident: ask for a better photo instead of guessing
+      if (parsed.status.toLowerCase() === "uncertain") {
+        const msg =
+          lang === "ar"
+            ? String(o.messageAr ?? o.message ?? "")
+            : String(o.message ?? o.messageAr ?? "");
+        setScanError(
+          msg ||
+            (lang === "ar"
+              ? "لم نتمكن من التشخيص بثقة. صوّر ورقة واحدة مصابة عن قرب وحاول مرة أخرى."
+              : "We couldn't diagnose this photo confidently. Take a close-up of one affected leaf and try again."),
+        );
+        setScanResult(null);
+        return;
+      }
+
+      if (parsed.status.toLowerCase() === "healthy" || isHealthyPrediction(o)) {
         setScanResult(buildHealthyScanResult(parsed.confidencePct, lang));
+        return;
+      }
+
+      // Disease details come inline (from our database, or from the AI for crops we don't cover)
+      const inlineDisease =
+        o.disease && typeof o.disease === "object"
+          ? (o.disease as Record<string, unknown>)
+          : null;
+      if (inlineDisease) {
+        setScanResult(mapDiseaseRowToScanResult(inlineDisease, parsed, lang));
         return;
       }
 

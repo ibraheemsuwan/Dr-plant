@@ -1,4 +1,5 @@
 using DoctorPlantTest.API.Authorization;
+using DoctorPlantTest.API.Diagnosis;
 using DoctorPlantTest.API.Serialization;
 using DoctorPlantTest.BLL.Exceptions;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -147,6 +148,16 @@ builder.Services.AddScoped<ILikeService, LikeService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IContactMessageService, ContactMessageService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
+
+// Plant diagnosis: local Keras model (Flask) first, Claude vision as fallback
+builder.Services.Configure<DiagnosisOptions>(builder.Configuration.GetSection("Diagnosis"));
+builder.Services.Configure<LocalModelOptions>(builder.Configuration.GetSection("FlaskApi"));
+builder.Services.Configure<ClaudeOptions>(builder.Configuration.GetSection("Claude"));
+builder.Services.AddHttpClient(LocalModelClient.HttpClientName);
+builder.Services.AddSingleton(new ModelClassMap(Path.Combine(AppContext.BaseDirectory, "Diagnosis", "model_class_map.json")));
+builder.Services.AddSingleton<LocalModelClient>();
+builder.Services.AddSingleton<ClaudeVisionClient>();
+builder.Services.AddScoped<PlantDiagnosisService>();
 
 // CORS — only the frontend origins listed in AllowedOrigins (appsettings*.json)
 var allowedOrigins = (builder.Configuration.GetSection("AllowedOrigins").Get<string[]>() ?? [])

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -24,6 +24,7 @@ namespace DoctorPlantTest.BLL.Services
             return diagnoses.Select(d => new ImageDiagnosisDto
             {
                 DiagnosisId = d.DiagnosisId,
+                UserId = d.UserId,
                 ImageUrl = d.ImageUrl,
                 DiseaseId = d.DiseaseId,
                 ConfidencePercent = d.ConfidencePercent,
@@ -40,6 +41,7 @@ namespace DoctorPlantTest.BLL.Services
             return new ImageDiagnosisDto
             {
                 DiagnosisId = d.DiagnosisId,
+                UserId = d.UserId,
                 ImageUrl = d.ImageUrl,
                 DiseaseId = d.DiseaseId,
                 ConfidencePercent = d.ConfidencePercent,
@@ -48,10 +50,29 @@ namespace DoctorPlantTest.BLL.Services
             };
         }
 
+        public async Task<IEnumerable<ImageDiagnosisDto>> GetByUserAsync(long userId)
+        {
+            var diagnoses = await _diagnosisRepository.FindAsync(d => d.UserId == userId);
+
+            return diagnoses
+                .OrderByDescending(d => d.CreatedAt)
+                .Select(d => new ImageDiagnosisDto
+                {
+                    DiagnosisId = d.DiagnosisId,
+                    UserId = d.UserId,
+                    ImageUrl = d.ImageUrl,
+                    DiseaseId = d.DiseaseId,
+                    ConfidencePercent = d.ConfidencePercent,
+                    Status = d.Status,
+                    CreatedAt = d.CreatedAt
+                });
+        }
+
         public async Task AddAsync(CreateImageDiagnosisDto dto)
         {
             var diagnosis = new ImageDiagnosis
             {
+                UserId = dto.UserId,
                 ImageUrl = dto.ImageUrl,
                 DiseaseId = dto.DiseaseId,
                 ConfidencePercent = dto.ConfidencePercent,

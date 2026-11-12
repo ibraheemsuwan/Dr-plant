@@ -1,0 +1,657 @@
+{
+  "_comment": "Maps each model output class (AI-model/class_names.json) to CropId/DiseaseId in the database. Regenerate when the model or the diseases table changes.",
+  "healthyDiseaseId": 82,
+  "notRecognizedDiseaseId": 83,
+  "classes": [
+    {
+      "class": "Apple Apple scab",
+      "cropId": 24,
+      "diseaseId": 1
+    },
+    {
+      "class": "Apple Black rot",
+      "cropId": 24,
+      "diseaseId": 2
+    },
+    {
+      "class": "Apple Cedar apple rust",
+      "cropId": 24,
+      "diseaseId": 3
+    },
+    {
+      "class": "Apple healthy",
+      "cropId": 24,
+      "diseaseId": 82
+    },
+    {
+      "class": "Apricot Healthy",
+      "cropId": 3,
+      "diseaseId": 82
+    },
+    {
+      "class": "Apricot blight leaf disease",
+      "cropId": 3,
+      "diseaseId": 4
+    },
+    {
+      "class": "Apricot shot hole",
+      "cropId": 3,
+      "diseaseId": 5
+    },
+    {
+      "class": "Carambola Anthracnose Disease",
+      "cropId": 2,
+      "diseaseId": 6
+    },
+    {
+      "class": "Carambola Bed Bugs Disease",
+      "cropId": 2,
+      "diseaseId": 7
+    },
+    {
+      "class": "Carambola Early Blight Disease",
+      "cropId": 2,
+      "diseaseId": 8
+    },
+    {
+      "class": "Carambola Fruit Borer Disease",
+      "cropId": 2,
+      "diseaseId": 9
+    },
+    {
+      "class": "Carambola Healthy Fruits",
+      "cropId": 2,
+      "diseaseId": 82
+    },
+    {
+      "class": "Carambola Healthy leaf",
+      "cropId": 2,
+      "diseaseId": 82
+    },
+    {
+      "class": "Carambola Hooded Hopper Insect Disease",
+      "cropId": 2,
+      "diseaseId": 10
+    },
+    {
+      "class": "Carambola Leaf Insect Pest Disease",
+      "cropId": 2,
+      "diseaseId": 11
+    },
+    {
+      "class": "Carambola Stem Borer Disease",
+      "cropId": 2,
+      "diseaseId": 12
+    },
+    {
+      "class": "Cauliflower Alternaria Leaf Spot",
+      "cropId": 22,
+      "diseaseId": 13
+    },
+    {
+      "class": "Cauliflower Bacterial spot rot",
+      "cropId": 22,
+      "diseaseId": 14
+    },
+    {
+      "class": "Cauliflower Black Rot",
+      "cropId": 22,
+      "diseaseId": 2
+    },
+    {
+      "class": "Cauliflower Cabbage aphid colony",
+      "cropId": 22,
+      "diseaseId": 15
+    },
+    {
+      "class": "Cauliflower Downy Mildew",
+      "cropId": 22,
+      "diseaseId": 16
+    },
+    {
+      "class": "Cauliflower Healthy",
+      "cropId": 22,
+      "diseaseId": 82
+    },
+    {
+      "class": "Cauliflower club root",
+      "cropId": 22,
+      "diseaseId": 17
+    },
+    {
+      "class": "Cauliflower ring spot",
+      "cropId": 22,
+      "diseaseId": 18
+    },
+    {
+      "class": "Corn Cercospora leaf spot Gray leaf spot",
+      "cropId": 17,
+      "diseaseId": 19
+    },
+    {
+      "class": "Corn Common rust",
+      "cropId": 17,
+      "diseaseId": 20
+    },
+    {
+      "class": "Corn Northern Leaf Blight",
+      "cropId": 17,
+      "diseaseId": 21
+    },
+    {
+      "class": "Corn healthy",
+      "cropId": 17,
+      "diseaseId": 82
+    },
+    {
+      "class": "Cucumber Downy mildew",
+      "cropId": 15,
+      "diseaseId": 16
+    },
+    {
+      "class": "Cucumber Healthy leaves",
+      "cropId": 15,
+      "diseaseId": 82
+    },
+    {
+      "class": "Cucumber Powdery mildew",
+      "cropId": 15,
+      "diseaseId": 22
+    },
+    {
+      "class": "Eggplaant Healthy Leaf",
+      "cropId": 14,
+      "diseaseId": 82
+    },
+    {
+      "class": "Eggplaant Insect Pest Disease",
+      "cropId": 14,
+      "diseaseId": 23
+    },
+    {
+      "class": "Eggplaant Leaf Spot Disease",
+      "cropId": 14,
+      "diseaseId": 24
+    },
+    {
+      "class": "Eggplaant Mosaic Virus Disease",
+      "cropId": 14,
+      "diseaseId": 25
+    },
+    {
+      "class": "Eggplaant Small Leaf Disease",
+      "cropId": 14,
+      "diseaseId": 26
+    },
+    {
+      "class": "Eggplaant White Mold Disease",
+      "cropId": 14,
+      "diseaseId": 27
+    },
+    {
+      "class": "Eggplaant Wilt Disease",
+      "cropId": 14,
+      "diseaseId": 28
+    },
+    {
+      "class": "Grape Black_rot",
+      "cropId": 21,
+      "diseaseId": 2
+    },
+    {
+      "class": "Grape Esca Black Measles",
+      "cropId": 21,
+      "diseaseId": 29
+    },
+    {
+      "class": "Grape Leaf blight Isariopsis Leaf Spot)",
+      "cropId": 21,
+      "diseaseId": 30
+    },
+    {
+      "class": "Grape healthy",
+      "cropId": 21,
+      "diseaseId": 82
+    },
+    {
+      "class": "Guava_ Canker",
+      "cropId": 12,
+      "diseaseId": 31
+    },
+    {
+      "class": "Guava Dot",
+      "cropId": 12,
+      "diseaseId": 32
+    },
+    {
+      "class": "Guava Healthy",
+      "cropId": 12,
+      "diseaseId": 82
+    },
+    {
+      "class": "Guava Mummification",
+      "cropId": 12,
+      "diseaseId": 33
+    },
+    {
+      "class": "Guava Rust",
+      "cropId": 12,
+      "diseaseId": 34
+    },
+    {
+      "class": "Lemon Anthracnose",
+      "cropId": 8,
+      "diseaseId": 6
+    },
+    {
+      "class": "Lemon Bacterial Blight",
+      "cropId": 8,
+      "diseaseId": 35
+    },
+    {
+      "class": "Lemon Citrus Canker",
+      "cropId": 8,
+      "diseaseId": 36
+    },
+    {
+      "class": "Lemon Curl Virus",
+      "cropId": 8,
+      "diseaseId": 37
+    },
+    {
+      "class": "Lemon Deficiency Leaf",
+      "cropId": 8,
+      "diseaseId": 38
+    },
+    {
+      "class": "Lemon Dry Leaf",
+      "cropId": 8,
+      "diseaseId": 39
+    },
+    {
+      "class": "Lemon Healthy Leaf",
+      "cropId": 8,
+      "diseaseId": 82
+    },
+    {
+      "class": "Lemon Sooty Mould",
+      "cropId": 8,
+      "diseaseId": 40
+    },
+    {
+      "class": "Lemon Spider Mites",
+      "cropId": 8,
+      "diseaseId": 41
+    },
+    {
+      "class": "Lettuce Bacterial",
+      "cropId": 9,
+      "diseaseId": 42
+    },
+    {
+      "class": "Lettuce Downy mildew",
+      "cropId": 9,
+      "diseaseId": 43
+    },
+    {
+      "class": "Lettuce Healthy",
+      "cropId": 9,
+      "diseaseId": 82
+    },
+    {
+      "class": "Lettuce Powdery mildew",
+      "cropId": 9,
+      "diseaseId": 44
+    },
+    {
+      "class": "Lettuce Septoria light",
+      "cropId": 9,
+      "diseaseId": 45
+    },
+    {
+      "class": "Lettuce Shepherd purse weeds",
+      "cropId": 9,
+      "diseaseId": 46
+    },
+    {
+      "class": "Lettuce Viral",
+      "cropId": 9,
+      "diseaseId": 47
+    },
+    {
+      "class": "Mango Anthracnose",
+      "cropId": 6,
+      "diseaseId": 6
+    },
+    {
+      "class": "Mango Bacterial Canker",
+      "cropId": 6,
+      "diseaseId": 81
+    },
+    {
+      "class": "Mango Cutting Weevil",
+      "cropId": 6,
+      "diseaseId": 48
+    },
+    {
+      "class": "Mango Die Back",
+      "cropId": 6,
+      "diseaseId": 49
+    },
+    {
+      "class": "Mango Gall Midge",
+      "cropId": 6,
+      "diseaseId": 50
+    },
+    {
+      "class": "Mango Healthy",
+      "cropId": 6,
+      "diseaseId": 82
+    },
+    {
+      "class": "Mango Powdery Mildew",
+      "cropId": 6,
+      "diseaseId": 22
+    },
+    {
+      "class": "Mango Sooty Mould",
+      "cropId": 6,
+      "diseaseId": 40
+    },
+    {
+      "class": "Not Recognize",
+      "cropId": null,
+      "diseaseId": 83
+    },
+    {
+      "class": "Olive Healthy",
+      "cropId": 19,
+      "diseaseId": 82
+    },
+    {
+      "class": "Olive aculus olearius",
+      "cropId": 19,
+      "diseaseId": 51
+    },
+    {
+      "class": "Olive peacock_spot",
+      "cropId": 19,
+      "diseaseId": 52
+    },
+    {
+      "class": "Orange Citrus Canker",
+      "cropId": 10,
+      "diseaseId": 53
+    },
+    {
+      "class": "Orange Citrus Nutrient Deficiency Yellow Leaf",
+      "cropId": 10,
+      "diseaseId": 54
+    },
+    {
+      "class": "Orange Healthy",
+      "cropId": 10,
+      "diseaseId": 82
+    },
+    {
+      "class": "Orange Multiple Diseases Leaf",
+      "cropId": 10,
+      "diseaseId": 55
+    },
+    {
+      "class": "Orange Young Healthy Leaf",
+      "cropId": 10,
+      "diseaseId": 82
+    },
+    {
+      "class": "Pea DOWNY MILDEW",
+      "cropId": 7,
+      "diseaseId": 16
+    },
+    {
+      "class": "Pea LEAFMINNER",
+      "cropId": 7,
+      "diseaseId": 56
+    },
+    {
+      "class": "Pea POWDER MILDEW",
+      "cropId": 7,
+      "diseaseId": 22
+    },
+    {
+      "class": "Pea healthy",
+      "cropId": 7,
+      "diseaseId": 82
+    },
+    {
+      "class": "Pepper bell Bacterial spot",
+      "cropId": 16,
+      "diseaseId": 57
+    },
+    {
+      "class": "Pepper bell healthy",
+      "cropId": 16,
+      "diseaseId": 82
+    },
+    {
+      "class": "Pomegranate Alternaria",
+      "cropId": 23,
+      "diseaseId": 58
+    },
+    {
+      "class": "Pomegranate Anthracnose",
+      "cropId": 23,
+      "diseaseId": 6
+    },
+    {
+      "class": "Pomegranate Bacterial Blight",
+      "cropId": 23,
+      "diseaseId": 35
+    },
+    {
+      "class": "Pomegranate Cercospora",
+      "cropId": 23,
+      "diseaseId": 59
+    },
+    {
+      "class": "Pomegranate Healthy",
+      "cropId": 23,
+      "diseaseId": 82
+    },
+    {
+      "class": "Potato Early blight",
+      "cropId": 1,
+      "diseaseId": 60
+    },
+    {
+      "class": "Potato Late blight",
+      "cropId": 1,
+      "diseaseId": 61
+    },
+    {
+      "class": "Potato healthy",
+      "cropId": 1,
+      "diseaseId": 82
+    },
+    {
+      "class": "Pumpkin Bacterial Leaf Spot",
+      "cropId": 20,
+      "diseaseId": 62
+    },
+    {
+      "class": "Pumpkin Downy Mildew",
+      "cropId": 20,
+      "diseaseId": 16
+    },
+    {
+      "class": "Pumpkin Healthy",
+      "cropId": 20,
+      "diseaseId": 82
+    },
+    {
+      "class": "Pumpkin Mosaic",
+      "cropId": 20,
+      "diseaseId": 63
+    },
+    {
+      "class": "Pumpkin Powdery Mildew",
+      "cropId": 20,
+      "diseaseId": 22
+    },
+    {
+      "class": "Radish Black leaf spot",
+      "cropId": 5,
+      "diseaseId": 64
+    },
+    {
+      "class": "Radish Downey mildew",
+      "cropId": 5,
+      "diseaseId": 16
+    },
+    {
+      "class": "Radish Fresh leaf",
+      "cropId": 5,
+      "diseaseId": 82
+    },
+    {
+      "class": "Radish Mosaic virus",
+      "cropId": 5,
+      "diseaseId": 80
+    },
+    {
+      "class": "Radish flea beetle",
+      "cropId": 5,
+      "diseaseId": 65
+    },
+    {
+      "class": "Soybean Mossaic Virus",
+      "cropId": 4,
+      "diseaseId": 80
+    },
+    {
+      "class": "Soybean Southern blight",
+      "cropId": 4,
+      "diseaseId": 66
+    },
+    {
+      "class": "Soybean Sudden Death Syndrone",
+      "cropId": 4,
+      "diseaseId": 67
+    },
+    {
+      "class": "Soybean Yellow Mosaic",
+      "cropId": 4,
+      "diseaseId": 68
+    },
+    {
+      "class": "Soybean bacterial blight",
+      "cropId": 4,
+      "diseaseId": 35
+    },
+    {
+      "class": "Soybean brown spot",
+      "cropId": 4,
+      "diseaseId": 69
+    },
+    {
+      "class": "Soybean crestamento",
+      "cropId": 4,
+      "diseaseId": 70
+    },
+    {
+      "class": "Soybean ferrugen",
+      "cropId": 4,
+      "diseaseId": 71
+    },
+    {
+      "class": "Soybean powdery mildew",
+      "cropId": 4,
+      "diseaseId": 22
+    },
+    {
+      "class": "Soybean septoria",
+      "cropId": 4,
+      "diseaseId": 72
+    },
+    {
+      "class": "Strawberry Leaf scorch",
+      "cropId": 11,
+      "diseaseId": 73
+    },
+    {
+      "class": "Strawberry healthy",
+      "cropId": 11,
+      "diseaseId": 82
+    },
+    {
+      "class": "Tomato Bacterial spot",
+      "cropId": 13,
+      "diseaseId": 57
+    },
+    {
+      "class": "Tomato Early blight",
+      "cropId": 13,
+      "diseaseId": 60
+    },
+    {
+      "class": "Tomato Late blight",
+      "cropId": 13,
+      "diseaseId": 61
+    },
+    {
+      "class": "Tomato Leaf Mold",
+      "cropId": 13,
+      "diseaseId": 74
+    },
+    {
+      "class": "Tomato Septoria leaf spot",
+      "cropId": 13,
+      "diseaseId": 75
+    },
+    {
+      "class": "Tomato Spider mites Two spotted spider mite",
+      "cropId": 13,
+      "diseaseId": 76
+    },
+    {
+      "class": "Tomato Target Spot",
+      "cropId": 13,
+      "diseaseId": 77
+    },
+    {
+      "class": "Tomato Tomato YellowLeaf Curl Virus",
+      "cropId": 13,
+      "diseaseId": 78
+    },
+    {
+      "class": "Tomato Tomato mosaic virus",
+      "cropId": 13,
+      "diseaseId": 79
+    },
+    {
+      "class": "Tomato healthy",
+      "cropId": 13,
+      "diseaseId": 82
+    },
+    {
+      "class": "watermelon anthracnose",
+      "cropId": 18,
+      "diseaseId": 6
+    },
+    {
+      "class": "watermelon downy mildew",
+      "cropId": 18,
+      "diseaseId": 16
+    },
+    {
+      "class": "watermelon healthy",
+      "cropId": 18,
+      "diseaseId": 82
+    },
+    {
+      "class": "watermelon mosaic virus",
+      "cropId": 18,
+      "diseaseId": 80
+    }
+  ]
+}

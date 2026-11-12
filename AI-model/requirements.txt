@@ -1,0 +1,5 @@
+tensorflow==2.21.0
+flask>=3.0,<4
+pillow>=10
+numpy
+waitress>=3.0,<4

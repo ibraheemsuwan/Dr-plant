@@ -36,7 +36,41 @@ Set the same keys as environment variables (`:` becomes `__`):
 | `Cloudinary__ApiSecret`                |                                                |
 | `FlaskApi__BaseUrl`                    | `http://ai-model:5000`                         |
 
-## AI model
+## Plant diagnosis (hybrid)
+
+`POST /api/Diagnoses/predict` works in this order:
+
+1. **Local model** (Flask, `AI-model/API.py`). If it is ≥ `Diagnosis:HighConfidence` (85%) sure → answer.
+2. **Claude vision** (if a key is set) looks at the photo, with the crops/diseases catalogue from the DB.
+   It returns a disease id from our DB when it matches, or its own description for crops we don't cover.
+3. Claude unavailable → local answer if ≥ `Diagnosis:MinConfidence` (60%).
+4. Otherwise → `status: "Uncertain"` with a message asking for a clearer photo. No guess is shown.
+
+Model classes map to DB rows explicitly in `DoctorPlantTest.API/Diagnosis/model_class_map.json`
+(130 classes). Regenerate it if the model or the `diseases` table changes.
+
+### Run the local model
 
 Model weights (`*.keras`) and the dataset are not in git. Get `best_model.keras` from the team
 and place it in `AI-model/` next to `API.py`.
+
+```bash
+cd AI-model
+pip install -r requirements.txt
+python API.py            # serves on 127.0.0.1:5000 (waitress)
+```
+
+Optional: set `MODEL_API_KEY` on the Flask side and the same value in `FlaskApi:ApiKey` so only the
+backend can call the model.
+
+### Enable Claude (optional, recommended)
+
+```bash
+cd Backend/DoctorPlantTest.API
+dotnet user-secrets set "Claude:ApiKey" "<key from console.anthropic.com>"
+```
+
+Production: environment variable `Claude__ApiKey` (or `ANTHROPIC_API_KEY`). Without a key the app
+runs on the local model only. Model and effort are in `appsettings.json` → `Claude`
+(default `claude-opus-5-5`, effort `medium`). Each diagnosis is logged with its source and token usage,
+and stored in `imagediagnoses.Status` as `<status>/<source>` (e.g. `Completed/ai`) to track API usage.
