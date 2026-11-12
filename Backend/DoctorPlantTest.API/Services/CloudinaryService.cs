@@ -6,9 +6,11 @@ namespace DoctorPlantTest.API.Services
     public class CloudinaryService : IImageStorage
     {
         private readonly Cloudinary _images;
+        private readonly ILogger<CloudinaryService> _logger;
 
-        public CloudinaryService(IConfiguration configuration)
+        public CloudinaryService(IConfiguration configuration, ILogger<CloudinaryService> logger)
         {
+            _logger = logger;
             var account = new Account(
                 configuration["Cloudinary:CloudName"],
                 configuration["Cloudinary:ApiKey"],
@@ -38,11 +40,17 @@ namespace DoctorPlantTest.API.Services
             {
                 var publicId = ExtractPublicId(imageUrl);
                 if (publicId == null) return;
-                await _images.DestroyAsync(new DeletionParams(publicId));
+                // Invalidate: also purge the CDN copy, otherwise a deleted photo stays downloadable until the cache expires
+                var result = await _images.DestroyAsync(new DeletionParams(publicId) { Invalidate = true });
+                if (result.Result == "ok")
+                    _logger.LogInformation("Deleted image {PublicId} from Cloudinary", publicId);
+                else
+                    _logger.LogWarning("Cloudinary did not delete {PublicId}: {Result} {Error}", publicId, result.Result, result.Error?.Message);
             }
-            catch
+            catch (Exception ex)
             {
-                // Account deletion must not fail because an image could not be removed from storage
+                // Account deletion must not fail because an image could not be removed from storage, but do not hide it
+                _logger.LogWarning(ex, "Could not delete image from Cloudinary");
             }
         }
 
