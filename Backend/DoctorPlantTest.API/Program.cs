@@ -1,4 +1,8 @@
+using DoctorPlantTest.API.Authorization;
 using DoctorPlantTest.API.Serialization;
+using DoctorPlantTest.BLL.Exceptions;
+using Microsoft.AspNetCore.HttpOverrides;
+using System.Threading.RateLimiting;
 using DoctorPlantTest.API.Services;
 using Microsoft.OpenApi;
 using System.Text.Json.Serialization;
@@ -73,6 +77,53 @@ builder.Services.AddAuthentication("Bearer")
         };
     });
 
+// Authorization — role "admin" comes from the JWT role claim
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy(Policies.Admin, policy => policy.RequireRole("admin", "Admin"));
+});
+
+// Rate limiting — protects login/register from brute force and the model from abuse
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+    options.OnRejected = async (context, token) =>
+    {
+        await context.HttpContext.Response.WriteAsJsonAsync(
+            new { message = "Too many requests. Please wait a moment and try again." }, token);
+    };
+
+    // 10 login/register attempts per minute per IP
+    options.AddPolicy(RateLimitPolicies.Auth, httpContext =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 10,
+                Window = TimeSpan.FromMinutes(1),
+                QueueLimit = 0
+            }));
+
+    // 30 diagnoses per hour per user (falls back to IP)
+    options.AddPolicy(RateLimitPolicies.Predict, httpContext =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            httpContext.User.GetUserId()?.ToString()
+                ?? httpContext.Connection.RemoteIpAddress?.ToString()
+                ?? "unknown",
+            _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 30,
+                Window = TimeSpan.FromHours(1),
+                QueueLimit = 0
+            }));
+});
+
+// Behind ngrok / a reverse proxy: use the real client IP and scheme (trusts loopback proxies only)
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+});
+
 // DbContext — connection string from configuration, not hardcoded
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")!;
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -97,14 +148,17 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IContactMessageService, ContactMessageService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
 
-// CORS — restrict to known frontend origins (configure in appsettings.json)
-var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>() ?? [];
+// CORS — only the frontend origins listed in AllowedOrigins (appsettings*.json)
+var allowedOrigins = (builder.Configuration.GetSection("AllowedOrigins").Get<string[]>() ?? [])
+    .Select(o => o.TrimEnd('/'))
+    .Where(o => !string.IsNullOrWhiteSpace(o))
+    .ToArray();
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll", policy =>
+    options.AddPolicy("Frontend", policy =>
     {
         policy
-            .AllowAnyOrigin()
+            .WithOrigins(allowedOrigins)
             .AllowAnyHeader()
             .AllowAnyMethod();
     });
@@ -112,27 +166,34 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// Global exception handler — returns structured JSON for unhandled exceptions
+app.UseForwardedHeaders();
+
+// Global exception handler — logs full details, returns a safe message to the client
 app.UseExceptionHandler(errorApp =>
 {
     errorApp.Run(async context =>
     {
-        context.Response.StatusCode = 500;
-        context.Response.ContentType = "application/json";
+        var error = context.Features.Get<IExceptionHandlerFeature>()?.Error;
 
-        var error = context.Features.Get<IExceptionHandlerFeature>();
+        if (error is EmailAlreadyExistsException)
+        {
+            context.Response.StatusCode = StatusCodes.Status409Conflict;
+            await context.Response.WriteAsJsonAsync(new { message = "This email is already registered." });
+            return;
+        }
+
+        context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+
         if (error != null)
         {
             var logger = context.RequestServices.GetRequiredService<ILogger<Program>>();
-            logger.LogError(error.Error, "Unhandled exception");
-
-            await context.Response.WriteAsJsonAsync(new
-            {
-                message = error?.Error.Message,
-                inner = error?.Error.InnerException?.Message,
-                stackTrace = error?.Error.StackTrace
-            });
+            logger.LogError(error, "Unhandled exception");
         }
+
+        // Error details only in development; never expose internals in production
+        await context.Response.WriteAsJsonAsync(app.Environment.IsDevelopment()
+            ? new { message = "An unexpected error occurred.", detail = error?.Message }
+            : new { message = "An unexpected error occurred.", detail = (string?)null });
     });
 });
 
@@ -146,10 +207,12 @@ app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 
-app.UseCors("AllowAll");
+app.UseCors("Frontend");
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseRateLimiter();
 
 app.MapControllers();
 

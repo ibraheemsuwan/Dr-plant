@@ -1,3 +1,4 @@
+using DoctorPlantTest.API.Authorization;
 using DoctorPlantTest.API.Services;
 using DoctorPlantTest.BLL.DTOs.Crop;
 using DoctorPlantTest.BLL.Services;
@@ -41,7 +42,7 @@ namespace DoctorPlantTest.API.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        [Authorize(Policy = Policies.Admin)]
         [Consumes("multipart/form-data")]
         public async Task<IActionResult> Create([FromForm] CreateCropDto dto, IFormFile? file)
         {
@@ -65,7 +66,7 @@ namespace DoctorPlantTest.API.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize]
+        [Authorize(Policy = Policies.Admin)]
         [Consumes("multipart/form-data")]
         public async Task<IActionResult> Update(long id, [FromForm] UpdateCropDto dto, IFormFile? file)
         {
@@ -91,7 +92,7 @@ namespace DoctorPlantTest.API.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize]
+        [Authorize(Policy = Policies.Admin)]
         public async Task<IActionResult> Delete(long id)
         {
             await _cropService.DeleteAsync(id);

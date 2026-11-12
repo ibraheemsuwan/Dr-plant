@@ -1,3 +1,4 @@
+using DoctorPlantTest.API.Authorization;
 using DoctorPlantTest.BLL.DTOs.Like;
 using DoctorPlantTest.BLL.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -28,7 +29,13 @@ namespace DoctorPlantTest.API.Controllers
         public async Task<IActionResult> Create([FromBody] CreateLikeDto dto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            await _likeService.AddAsync(dto);
+
+            var userId = User.GetUserId();
+            if (userId == null) return Unauthorized(new { message = "Invalid token." });
+            dto.UserId = userId.Value; // never trust the client-sent UserId
+
+            var added = await _likeService.AddAsync(dto);
+            if (!added) return Ok(new { message = "Post already liked." });
             return StatusCode(201, new { message = "Like added successfully." });
         }
 
@@ -36,6 +43,10 @@ namespace DoctorPlantTest.API.Controllers
         [Authorize]
         public async Task<IActionResult> Delete(long id)
         {
+            var like = await _likeService.GetByIdAsync(id);
+            if (like == null) return NotFound(new { message = "Like not found." });
+            if (!User.CanModify(like.UserId)) return Forbid();
+
             await _likeService.DeleteAsync(id);
             return Ok(new { message = "Like removed successfully." });
         }

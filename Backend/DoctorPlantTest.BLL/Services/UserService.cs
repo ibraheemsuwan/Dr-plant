@@ -1,4 +1,5 @@
 using DoctorPlantTest.BLL.DTOs.User;
+using DoctorPlantTest.BLL.Exceptions;
 using DoctorPlantTest.DAL.Entities;
 using DoctorPlantTest.DAL.Repositories;
 using Microsoft.Extensions.Logging;
@@ -30,12 +31,17 @@ namespace DoctorPlantTest.BLL.Services
 
         public async Task AddAsync(CreateUserDto dto)
         {
+            var email = dto.Email.Trim();
+            if (await _userRepository.AnyAsync(u => u.Email == email))
+                throw new EmailAlreadyExistsException(email);
+
             var user = new User
             {
                 FirstName = dto.FirstName,
                 LastName = dto.LastName,
                 Name = dto.Name ?? $"{dto.FirstName} {dto.LastName}",
-                Email = dto.Email,
+                Email = email,
+                Role = "user",
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password),
                 CreatedAt = DateTime.UtcNow
             };
@@ -54,8 +60,12 @@ namespace DoctorPlantTest.BLL.Services
 
             user.FirstName = dto.FirstName;
             user.LastName = dto.LastName;
+            var email = dto.Email.Trim();
+            if (await _userRepository.AnyAsync(u => u.Email == email && u.UserId != id))
+                throw new EmailAlreadyExistsException(email);
+
             user.Name = $"{dto.FirstName} {dto.LastName}".Trim();
-            user.Email = dto.Email;
+            user.Email = email;
             await _userRepository.UpdateAsync(user);
         }
 

@@ -1,4 +1,5 @@
-﻿using DoctorPlantTest.BLL.DTOs.ContactMessages;
+﻿using DoctorPlantTest.API.Authorization;
+using DoctorPlantTest.BLL.DTOs.ContactMessages;
 using DoctorPlantTest.DAL.Data;
 using DoctorPlantTest.DAL.Entities;
 using Microsoft.AspNetCore.Authorization;
@@ -36,7 +37,7 @@ public class ContactMessagesController : ControllerBase
         return Ok(new { message = "Message sent successfully" });
     }
 
-    [Authorize]
+    [Authorize(Policy = Policies.Admin)]
     [HttpGet]
     public async Task<IActionResult> GetAllMessages()
     {
@@ -48,7 +49,7 @@ public class ContactMessagesController : ControllerBase
         return Ok(messages);
     }
 
-    [Authorize]
+    [Authorize(Policy = Policies.Admin)]
     [HttpGet("{id}")]
     public async Task<IActionResult> GetMessageById(int id)
     {
@@ -68,7 +69,7 @@ public class ContactMessagesController : ControllerBase
         return Ok(msg);
     }
 
-    [Authorize]
+    [Authorize(Policy = Policies.Admin)]
     [HttpPut("{id}/reply")]
     public async Task<IActionResult> ReplyToMessage(int id, ReplyContactMessageDto dto)
     {
@@ -87,7 +88,7 @@ public class ContactMessagesController : ControllerBase
         return Ok(new { message = "Reply saved successfully" });
     }
 
-    [Authorize]
+    [Authorize(Policy = Policies.Admin)]
     [HttpPut("{id}/status")]
     public async Task<IActionResult> ChangeStatus(int id, ChangeMessageStatusDto dto)
     {
@@ -113,7 +114,7 @@ public class ContactMessagesController : ControllerBase
         return Ok(new { message = "Status updated successfully" });
     }
 
-    [Authorize]
+    [Authorize(Policy = Policies.Admin)]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteMessage(int id)
     {

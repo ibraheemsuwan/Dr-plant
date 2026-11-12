@@ -35,8 +35,24 @@ namespace DoctorPlantTest.BLL.Services
             });
         }
 
-        public async Task AddAsync(CreateLikeDto dto)
+        public async Task<LikeDto?> GetByIdAsync(long id)
         {
+            var l = await _likeRepository.GetByIdAsync(id);
+            if (l == null) return null;
+            return new LikeDto
+            {
+                LikeId = l.LikeId,
+                PostId = l.PostId,
+                UserId = l.UserId,
+                CreatedAt = l.CreatedAt
+            };
+        }
+
+        public async Task<bool> AddAsync(CreateLikeDto dto)
+        {
+            if (await _likeRepository.AnyAsync(l => l.PostId == dto.PostId && l.UserId == dto.UserId))
+                return false;
+
             var like = new Like
             {
                 PostId = dto.PostId,
@@ -58,6 +74,8 @@ namespace DoctorPlantTest.BLL.Services
                     "Someone liked your post"
                 );
             }
+
+            return true;
         }
 
         public async Task DeleteAsync(long id)

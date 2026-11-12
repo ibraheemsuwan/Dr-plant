@@ -1,4 +1,6 @@
-﻿using DoctorPlantTest.BLL.DTOs.Crop;
+﻿using DoctorPlantTest.API.Authorization;
+using Microsoft.AspNetCore.Authorization;
+using DoctorPlantTest.BLL.DTOs.Crop;
 using DoctorPlantTest.BLL.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -34,6 +36,7 @@ namespace DoctorPlantTest.API.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = Policies.Admin)]
         public async Task<IActionResult> Create([FromBody] CreateCropDetailDto dto)
         {
             var result = await _cropDetailService.CreateAsync(dto);
@@ -41,6 +44,7 @@ namespace DoctorPlantTest.API.Controllers
         }
 
         [HttpPut("{cropId}")]
+        [Authorize(Policy = Policies.Admin)]
         public async Task<IActionResult> Update(long cropId, [FromBody] CreateCropDetailDto dto)
         {
             var result = await _cropDetailService.UpdateAsync(cropId, dto);
@@ -52,6 +56,7 @@ namespace DoctorPlantTest.API.Controllers
         }
 
         [HttpDelete("{cropId}")]
+        [Authorize(Policy = Policies.Admin)]
         public async Task<IActionResult> Delete(long cropId)
         {
             var deleted = await _cropDetailService.DeleteAsync(cropId);

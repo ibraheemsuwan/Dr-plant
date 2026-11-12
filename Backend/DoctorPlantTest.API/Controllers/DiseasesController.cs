@@ -1,3 +1,4 @@
+using DoctorPlantTest.API.Authorization;
 using DoctorPlantTest.BLL.DTOs.Disease;
 using DoctorPlantTest.BLL.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -32,7 +33,7 @@ namespace DoctorPlantTest.API.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        [Authorize(Policy = Policies.Admin)]
         public async Task<IActionResult> Create([FromBody] CreateDiseaseDto dto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -41,7 +42,7 @@ namespace DoctorPlantTest.API.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize]
+        [Authorize(Policy = Policies.Admin)]
         public async Task<IActionResult> Update(long id, [FromBody] CreateDiseaseDto dto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -59,7 +60,7 @@ namespace DoctorPlantTest.API.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize]
+        [Authorize(Policy = Policies.Admin)]
         public async Task<IActionResult> Delete(long id)
         {
             await _diseaseService.DeleteAsync(id);

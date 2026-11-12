@@ -1,3 +1,5 @@
+using DoctorPlantTest.API.Authorization;
+using Microsoft.AspNetCore.RateLimiting;
 using DoctorPlantTest.API.Services;
 using DoctorPlantTest.BLL.DTOs.ImageDiagnosis;
 using DoctorPlantTest.BLL.Services;
@@ -66,12 +68,19 @@ namespace DoctorPlantTest.API.Controllers
             _logger = logger;
         }
 
+        private const long MaxPredictImageBytes = 10 * 1024 * 1024;
+
         [HttpPost("predict")]
         [Authorize]
+        [EnableRateLimiting(RateLimitPolicies.Predict)]
+        [RequestSizeLimit(MaxPredictImageBytes + 1024 * 1024)] // image + multipart overhead
         public async Task<IActionResult> Predict(IFormFile file)
         {
             if (file == null || file.Length == 0)
                 return BadRequest(new { message = "No image uploaded." });
+
+            if (file.Length > MaxPredictImageBytes)
+                return BadRequest(new { message = "The image is larger than 10 MB. Please upload a smaller image." });
 
             var extension = Path.GetExtension(file.FileName);
             if (!AllowedExtensions.Contains(extension))

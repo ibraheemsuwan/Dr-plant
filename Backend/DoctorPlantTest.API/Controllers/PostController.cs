@@ -1,3 +1,4 @@
+using DoctorPlantTest.API.Authorization;
 using DoctorPlantTest.API.Services;
 using DoctorPlantTest.BLL.DTOs.Post;
 using DoctorPlantTest.BLL.Services;
@@ -47,6 +48,10 @@ namespace DoctorPlantTest.API.Controllers
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
+            var userId = User.GetUserId();
+            if (userId == null) return Unauthorized(new { message = "Invalid token." });
+            dto.UserId = userId.Value; // never trust the client-sent UserId
+
             if (file != null && file.Length > 0)
             {
                 var validationError = ValidateFile(file);
@@ -70,6 +75,10 @@ namespace DoctorPlantTest.API.Controllers
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
+            var post = await _postService.GetByIdAsync(id);
+            if (post == null) return NotFound(new { message = "Post not found." });
+            if (!User.CanModify(post.UserId)) return Forbid();
+
             try { await _postService.UpdateAsync(id, dto); }
             catch (KeyNotFoundException) { return NotFound(new { message = "Post not found." }); }
 
@@ -80,6 +89,10 @@ namespace DoctorPlantTest.API.Controllers
         [Authorize]
         public async Task<IActionResult> Delete(long id)
         {
+            var post = await _postService.GetByIdAsync(id);
+            if (post == null) return NotFound(new { message = "Post not found." });
+            if (!User.CanModify(post.UserId)) return Forbid();
+
             await _postService.DeleteAsync(id);
             return Ok(new { message = "Post deleted successfully." });
         }

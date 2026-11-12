@@ -1,4 +1,5 @@
 using DoctorPlantTest.BLL.DTOs.Auth;
+using DoctorPlantTest.BLL.Exceptions;
 using DoctorPlantTest.DAL.Entities;
 using DoctorPlantTest.DAL.Repositories;
 using Microsoft.Extensions.Configuration;
@@ -25,8 +26,9 @@ namespace DoctorPlantTest.BLL.Services
 
         public async Task<AuthResponseDto?> LoginAsync(LoginDto dto)
         {
-            var users = await _userRepository.GetAllAsync();
-            var user = users.FirstOrDefault(u => u.Email.Equals(dto.Email, StringComparison.OrdinalIgnoreCase));
+            var email = dto.Email.Trim();
+            // MySQL column collation is case-insensitive, so this matches regardless of case
+            var user = await _userRepository.FirstOrDefaultAsync(u => u.Email == email);
 
             if (user == null || !BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash))
             {
@@ -45,12 +47,16 @@ namespace DoctorPlantTest.BLL.Services
 
         public async Task<AuthResponseDto> RegisterAsync(RegisterDto dto)
         {
+            var email = dto.Email.Trim();
+            if (await _userRepository.AnyAsync(u => u.Email == email))
+                throw new EmailAlreadyExistsException(email);
+
             var user = new User
             {
                 FirstName = dto.FirstName,
                 LastName = dto.LastName,
                 Name = dto.Name ?? $"{dto.FirstName} {dto.LastName}",
-                Email = dto.Email,
+                Email = email,
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password),
                 Role = "user",
                 CreatedAt = DateTime.UtcNow
@@ -83,7 +89,8 @@ namespace DoctorPlantTest.BLL.Services
                 issuer: _configuration["Jwt:Issuer"],
                 audience: _configuration["Jwt:Audience"],
                 claims: claims,
-                expires: DateTime.UtcNow.AddDays(7),
+                expires: DateTime.UtcNow.AddHours(
+                    double.TryParse(_configuration["Jwt:ExpiryHours"], out var hours) && hours > 0 ? hours : 24),
                 signingCredentials: creds
             );
             return new JwtSecurityTokenHandler().WriteToken(token);
