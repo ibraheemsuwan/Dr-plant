@@ -150,7 +150,12 @@ namespace DoctorPlantTest.API.Diagnosis
                 return await FromLocalAsync(top, topEntry!, "medium", alternatives, ct);
 
             // 4) Nobody is sure -> ask for a better photo rather than guess
-            var uncertain = Uncertain(topEntry?.DiseaseId == _map.NotRecognizedDiseaseId ? "not_recognized" : "low_confidence", "local");
+            // When the top guesses point at different crops the model is not recognising this plant at all,
+            // so asking for a better photo would not help.
+            var reason = topEntry?.DiseaseId == _map.NotRecognizedDiseaseId
+                ? "not_recognized"
+                : GuessesDisagreeOnCrop(local) ? "possibly_unsupported" : "low_confidence";
+            var uncertain = Uncertain(reason, "local");
             uncertain.Confidence = top?.Confidence ?? 0;
             uncertain.PredictedClass = top?.RawClass;
             uncertain.Alternatives = alternatives;
@@ -238,6 +243,19 @@ namespace DoctorPlantTest.API.Diagnosis
             return result;
         }
 
+        /// <summary>True when the strongest guesses belong to two or more different crops.</summary>
+        private bool GuessesDisagreeOnCrop(IReadOnlyList<LocalPrediction>? predictions)
+        {
+            if (predictions == null) return false;
+            var crops = predictions
+                .Where(p => p.Confidence >= 10)
+                .Select(p => _map.Find(p.RawClass)?.CropId)
+                .Where(c => c != null)
+                .Distinct()
+                .Count();
+            return crops >= 2;
+        }
+
         private DiagnosisResult Uncertain(string reason, string source)
         {
             var (en, ar) = reason switch
@@ -245,6 +263,9 @@ namespace DoctorPlantTest.API.Diagnosis
                 "not_a_plant" => (
                     "We couldn't find a plant in this photo. Please photograph a leaf or the affected part of the plant.",
                     "لم نجد نباتًا في هذه الصورة. صوّر ورقة النبات أو الجزء المصاب منه."),
+                "possibly_unsupported" => (
+                    "We couldn't recognize this plant. Dr Plant currently covers 24 crops (see the Seasonal Crops page). If your plant is one of them, take a close-up of one affected leaf in daylight and try again; otherwise it may not be supported yet.",
+                    "لم نتعرّف على هذه النبتة. يغطي Dr Plant حاليًا 24 محصولًا (انظر صفحة المحاصيل الموسمية). إن كانت نبتتك منها، صوّر ورقة واحدة مصابة عن قرب في ضوء النهار وحاول مرة أخرى، وإلا فقد لا تكون مدعومة بعد."),
                 "not_recognized" => (
                     "We couldn't recognize the plant in this photo. Make sure it shows a leaf close up and in focus.",
                     "لم نتعرّف على النبات في هذه الصورة. تأكد أن الصورة تُظهر ورقة النبات عن قرب وبوضوح."),
