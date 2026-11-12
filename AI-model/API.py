@@ -105,6 +105,12 @@ def predict():
         "confidence": best["confidence"],
         # new
         "top": top,
+        # every class above 0.1%: lets the backend restrict the answer to the crop the user selected
+        "scores": {
+            class_names[i]: round(float(preds[i]) * 100, 2)
+            for i in np.argsort(preds)[::-1]
+            if preds[i] >= 0.001
+        },
     }), 200
 
 

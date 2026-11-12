@@ -3,11 +3,18 @@ import { apiGet, apiPost } from "../http";
 import { asArray, pickNum } from "../utils";
 import { compressImageForUpload } from "../../lib/compressImage";
 
-/** Multipart predict: field name must be `file`. The photo is compressed in the browser first. */
-export async function predictPlantDisease(file: File): Promise<unknown> {
+/**
+ * Multipart predict: field name must be `file`. The photo is compressed in the browser first.
+ * `cropId` (optional) is the plant the user says it is; the server limits the model to that crop.
+ */
+export async function predictPlantDisease(
+  file: File,
+  cropId?: number | null,
+): Promise<unknown> {
   const upload = await compressImageForUpload(file);
   const fd = new FormData();
   fd.append("file", upload, upload.name);
+  if (cropId != null && cropId > 0) fd.append("cropId", String(cropId));
   return apiPost<unknown>("/Diagnoses/predict", fd);
 }
 

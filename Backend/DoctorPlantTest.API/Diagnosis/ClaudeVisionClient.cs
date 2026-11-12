@@ -37,7 +37,7 @@ namespace DoctorPlantTest.API.Diagnosis
     /// Vision fallback: asks Claude to diagnose the photo when the local model is unsure or doesn't know the crop.
     /// The API key stays on the server (Claude:ApiKey or ANTHROPIC_API_KEY).
     /// </summary>
-    public class ClaudeVisionClient
+    public class ClaudeVisionClient : IVisionDiagnoser
     {
         private readonly ClaudeOptions _options;
         private readonly ILogger<ClaudeVisionClient> _logger;
@@ -78,6 +78,7 @@ namespace DoctorPlantTest.API.Diagnosis
             byte[] jpeg,
             IReadOnlyList<CatalogueCrop> catalogue,
             IReadOnlyList<string> localHints,
+            CatalogueCrop? userCrop,
             CancellationToken ct)
         {
             if (_client == null) return null;
@@ -113,7 +114,7 @@ namespace DoctorPlantTest.API.Diagnosis
                                     MediaType = MediaType.ImageJpeg,
                                 },
                             },
-                            new BetaTextBlockParam { Text = BuildUserPrompt(localHints) },
+                            new BetaTextBlockParam { Text = BuildUserPrompt(localHints, userCrop) },
                         },
                     },
                 ],
@@ -161,12 +162,20 @@ namespace DoctorPlantTest.API.Diagnosis
             _ => Effort.Medium,
         };
 
-        private static string BuildUserPrompt(IReadOnlyList<string> localHints)
+        private static string BuildUserPrompt(IReadOnlyList<string> localHints, CatalogueCrop? userCrop)
         {
-            if (localHints.Count == 0)
-                return "Diagnose the plant in this photo.";
+            var sb = new StringBuilder("Diagnose the plant in this photo.");
 
-            return "Diagnose the plant in this photo.\n\n" +
+            if (userCrop != null)
+            {
+                sb.Append($"\n\nThe user says this plant is: {userCrop.NameEn} ({userCrop.NameAr}), crop_id {userCrop.CropId}. " +
+                          "Treat that as very likely true. Only if the photo clearly shows a different plant, set crop_id to the plant you actually see.");
+            }
+
+            if (localHints.Count == 0)
+                return sb.ToString();
+
+            return sb + "\n\n" +
                    "Our local image model's top guesses (often wrong on field photos, use only as a hint):\n" +
                    string.Join("\n", localHints.Select(h => "- " + h));
         }

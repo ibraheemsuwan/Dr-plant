@@ -10,6 +10,24 @@ namespace DoctorPlantTest.API.Diagnosis
         public double MinConfidence { get; set; } = 60;
 
         public long MaxImageBytes { get; set; } = 10 * 1024 * 1024;
+
+        /// <summary>
+        /// When the user selects the crop, the local model must put at least this much probability (%) on that crop's
+        /// classes. Below it the model does not believe the photo is that crop (or shows a disease it was never taught
+        /// for it) and its answer is not used.
+        /// </summary>
+        public double MinSelectedCropMass { get; set; } = 30;
+
+        /// <summary>
+        /// When the AI is enabled, ask it about EVERY photo as an independent second opinion, even if the local
+        /// model is confident. The local model is a closed set of 130 classes: for a plant or disease it does not
+        /// know it picks the nearest class, often with 95%+ confidence, so confidence alone cannot catch that.
+        /// Without an AI key this has no effect.
+        /// </summary>
+        public bool VerifyWithAi { get; set; } = true;
+
+        /// <summary>Max paid AI calls per UTC day (0 = unlimited). Over the cap, the local model answers alone.</summary>
+        public int MaxAiCallsPerDay { get; set; } = 1000;
     }
 
     /// <summary>"FlaskApi" section: the local Keras model service.</summary>

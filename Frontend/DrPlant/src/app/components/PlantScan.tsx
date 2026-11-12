@@ -6,6 +6,8 @@ import {
   type ChangeEvent,
 } from "react";
 import { getErrorMessage } from "../api/errors";
+import * as cropsService from "../api/services/cropsService";
+import { pickNum, pickStr } from "../api/utils";
 import {
   buildHealthyScanResult,
   buildScanResultFromPredictOnly,
@@ -78,6 +80,36 @@ export function PlantScan() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isScanning, setIsScanning] = useState(false);
+  /** Plants the user can pick from; choosing one makes the diagnosis much more reliable */
+  const [cropOptions, setCropOptions] = useState<
+    { id: number; name: string; nameAr: string }[]
+  >([]);
+  const [selectedCropId, setSelectedCropId] = useState("");
+
+  useEffect(() => {
+    let cancelled = false;
+    cropsService
+      .listCropsRaw()
+      .then((rows) => {
+        if (cancelled) return;
+        setCropOptions(
+          rows
+            .map((r) => ({
+              id: Math.trunc(pickNum(r, "cropId", "CropId")),
+              name: pickStr(r, "name", "Name"),
+              nameAr: pickStr(r, "nameArabic", "NameArabic"),
+            }))
+            .filter((c) => c.id > 0 && c.name)
+            .sort((a, b) => a.name.localeCompare(b.name)),
+        );
+      })
+      .catch(() => {
+        /* the selector is optional; scanning still works without it */
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
   const [scanResult, setScanResult] = useState<ScanResultUi | null>(null);
   const [scanError, setScanError] = useState<string | null>(null);
   /** Extra context from the API: which crop, how sure, and where the answer came from */
@@ -192,7 +224,10 @@ export function PlantScan() {
     setIsScanning(true);
     setScanError(null);
     try {
-      const raw = await predictPlantDisease(selectedFile);
+      const raw = await predictPlantDisease(
+        selectedFile,
+        selectedCropId ? Number(selectedCropId) : null,
+      );
       const o =
         raw && typeof raw === "object" ? (raw as Record<string, unknown>) : {};
       const parsed = parsePredictResponse(raw);
@@ -475,6 +510,35 @@ export function PlantScan() {
                   {scanError}
                 </p>
               ) : null}
+
+              {selectedImage && !scanResult && cropOptions.length > 0 && (
+                <div className="rounded-2xl border border-border bg-card p-4 text-start">
+                  <label
+                    htmlFor="crop-select"
+                    className="mb-2 block text-sm font-semibold"
+                  >
+                    {language === "ar"
+                      ? "ما نوع النبتة؟ (اختياري، يزيد دقة التشخيص)"
+                      : "What plant is it? (optional, improves accuracy)"}
+                  </label>
+                  <select
+                    id="crop-select"
+                    value={selectedCropId}
+                    onChange={(e) => setSelectedCropId(e.target.value)}
+                    disabled={isScanning}
+                    className="w-full rounded-xl border border-border bg-background px-4 py-3 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
+                  >
+                    <option value="">
+                      {language === "ar" ? "لا أعرف (كشف تلقائي)" : "Not sure (detect automatically)"}
+                    </option>
+                    {cropOptions.map((c) => (
+                      <option key={c.id} value={c.id}>
+                        {language === "ar" && c.nameAr ? c.nameAr : c.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
 
               {selectedImage && !scanResult && (
                 <button

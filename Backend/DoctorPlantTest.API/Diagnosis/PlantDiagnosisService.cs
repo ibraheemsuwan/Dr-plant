@@ -61,8 +61,9 @@ namespace DoctorPlantTest.API.Diagnosis
     /// </summary>
     public class PlantDiagnosisService
     {
-        private readonly LocalModelClient _local;
-        private readonly ClaudeVisionClient _claude;
+        private readonly ILocalModel _local;
+        private readonly IVisionDiagnoser _claude;
+        private readonly AiCallBudget _aiBudget;
         private readonly ModelClassMap _map;
         private readonly AppDbContext _db;
         private readonly ICloudinaryService _cloudinary;
@@ -71,8 +72,9 @@ namespace DoctorPlantTest.API.Diagnosis
         private readonly ILogger<PlantDiagnosisService> _logger;
 
         public PlantDiagnosisService(
-            LocalModelClient local,
-            ClaudeVisionClient claude,
+            ILocalModel local,
+            IVisionDiagnoser claude,
+            AiCallBudget aiBudget,
             ModelClassMap map,
             AppDbContext db,
             ICloudinaryService cloudinary,
@@ -82,6 +84,7 @@ namespace DoctorPlantTest.API.Diagnosis
         {
             _local = local;
             _claude = claude;
+            _aiBudget = aiBudget;
             _map = map;
             _db = db;
             _cloudinary = cloudinary;
@@ -90,11 +93,11 @@ namespace DoctorPlantTest.API.Diagnosis
             _logger = logger;
         }
 
-        public async Task<DiagnosisResult> DiagnoseAsync(Stream upload, long userId, CancellationToken ct)
+        public async Task<DiagnosisResult> DiagnoseAsync(Stream upload, long userId, long? selectedCropId, CancellationToken ct)
         {
             var jpeg = await ImagePreparer.ToNormalizedJpegAsync(upload, ct) ?? throw new InvalidImageException();
 
-            var result = await DecideAsync(jpeg, ct);
+            var result = await DecideAsync(jpeg, selectedCropId, ct);
 
             result.ImageUrl = await TryUploadAsync(jpeg);
             await _diagnoses.AddAsync(new CreateImageDiagnosisDto
@@ -113,53 +116,116 @@ namespace DoctorPlantTest.API.Diagnosis
             return result;
         }
 
-        private async Task<DiagnosisResult> DecideAsync(byte[] jpeg, CancellationToken ct)
+        private async Task<DiagnosisResult> DecideAsync(byte[] jpeg, long? selectedCropId, CancellationToken ct)
         {
             var local = await _local.PredictAsync(jpeg, ct);
+
+            // The user told us which plant it is: limit the local model to that crop's classes. If the model puts
+            // little probability on that crop it is not recognising this photo as that plant (or this disease on it),
+            // and its answer must not be used.
+            var userCrop = selectedCropId == null ? null : await LoadCropAsync(selectedCropId.Value, ct);
+            var cropMismatch = false;
+            if (userCrop != null && local != null)
+            {
+                var inCrop = local.Where(p => _map.Find(p.RawClass)?.CropId == userCrop.CropId).ToList();
+                var mass = inCrop.Sum(p => p.Confidence);
+                if (mass >= _options.MinSelectedCropMass)
+                {
+                    local = inCrop
+                        .Select(p => new LocalPrediction(p.RawClass, p.Confidence / mass * 100))
+                        .OrderByDescending(p => p.Confidence)
+                        .ToList();
+                }
+                else
+                {
+                    cropMismatch = true;
+                    _logger.LogInformation(
+                        "Local model puts only {Mass:F1}% on the selected crop {Crop}; top guess {Top}",
+                        mass, userCrop.Name, local.FirstOrDefault()?.RawClass);
+                }
+            }
+
             var top = local?.FirstOrDefault();
             var topEntry = top == null ? null : _map.Find(top.RawClass);
             if (top != null && topEntry == null)
                 _logger.LogWarning("Model class {Class} is missing from model_class_map.json", top.RawClass);
 
-            var localRecognized = topEntry != null && topEntry.DiseaseId != _map.NotRecognizedDiseaseId;
+            var localRecognized = !cropMismatch && topEntry != null && topEntry.DiseaseId != _map.NotRecognizedDiseaseId;
             var alternatives = local == null ? [] : await MapAlternativesAsync(local, ct);
 
-            // 1) Local model is confident -> answer directly (free, fast)
-            if (localRecognized && top!.Confidence >= _options.HighConfidence)
+            var verify = _options.VerifyWithAi && _claude.IsEnabled;
+
+            // 1) No AI second opinion wanted and the local model is confident -> answer directly (free, fast)
+            if (!verify && localRecognized && top!.Confidence >= _options.HighConfidence)
                 return await FromLocalAsync(top, topEntry!, "high", alternatives, ct);
 
-            // 2) Not confident or unknown crop -> ask Claude
+            // 2) Ask the AI: always when verifying, otherwise only when the local model is unsure or does not know the crop
             if (_claude.IsEnabled)
             {
-                var catalogue = await LoadCatalogueAsync(ct);
-                var hints = (local ?? [])
-                    .Where(p => p.Confidence >= 1)
-                    .Select(p => $"{p.RawClass.Replace('_', ' ')} ({p.Confidence:F0}%)")
-                    .ToList();
+                if (_aiBudget.TryAcquire(_options.MaxAiCallsPerDay))
+                {
+                    var catalogue = await LoadCatalogueAsync(ct);
 
-                var vision = await _claude.DiagnoseAsync(jpeg, catalogue, hints, ct);
-                if (vision != null)
-                    return await FromVisionAsync(vision, catalogue, alternatives, ct);
+                    // A verifier must judge the photo independently: showing it the local guess would anchor it
+                    // to that guess (which is exactly what we are checking). Hints only help a pure fallback.
+                    var hints = verify
+                        ? []
+                        : (local ?? [])
+                            .Where(p => p.Confidence >= 1)
+                            .Select(p => $"{p.RawClass.Replace('_', ' ')} ({p.Confidence:F0}%)")
+                            .ToList();
+
+                    var userCropForAi = userCrop == null ? null : catalogue.FirstOrDefault(c => c.CropId == userCrop.CropId);
+                    var vision = await _claude.DiagnoseAsync(jpeg, catalogue, hints, userCropForAi, ct);
+                    if (vision != null)
+                    {
+                        var aiResult = await FromVisionAsync(vision, catalogue, alternatives, ct);
+                        LogDisagreement(top, topEntry, aiResult);
+                        return aiResult;
+                    }
+                }
+                else
+                {
+                    _logger.LogWarning("Daily AI call cap ({Cap}) reached; answering with the local model only", _options.MaxAiCallsPerDay);
+                }
             }
 
             if (local == null)
                 throw new DiagnosisUnavailableException();
 
-            // 3) Claude unavailable: accept a medium-confidence local answer, flagged as such
+            // 3) AI unavailable: accept the local answer if it is confident enough, flagged by its level
             if (localRecognized && top!.Confidence >= _options.MinConfidence)
-                return await FromLocalAsync(top, topEntry!, "medium", alternatives, ct);
+                return await FromLocalAsync(top, topEntry!, top.Confidence >= _options.HighConfidence ? "high" : "medium", alternatives, ct);
 
             // 4) Nobody is sure -> ask for a better photo rather than guess
             // When the top guesses point at different crops the model is not recognising this plant at all,
             // so asking for a better photo would not help.
-            var reason = topEntry?.DiseaseId == _map.NotRecognizedDiseaseId
-                ? "not_recognized"
-                : GuessesDisagreeOnCrop(local) ? "possibly_unsupported" : "low_confidence";
-            var uncertain = Uncertain(reason, "local");
-            uncertain.Confidence = top?.Confidence ?? 0;
-            uncertain.PredictedClass = top?.RawClass;
+            var reason = cropMismatch
+                ? "crop_mismatch"
+                : topEntry?.DiseaseId == _map.NotRecognizedDiseaseId
+                    ? "not_recognized"
+                    : GuessesDisagreeOnCrop(local) ? "possibly_unsupported" : "low_confidence";
+            var uncertain = Uncertain(reason, "local", userCrop);
+            // For a crop mismatch the local top guess belongs to another plant: do not present its confidence as ours
+            uncertain.Confidence = cropMismatch ? 0 : top?.Confidence ?? 0;
+            uncertain.PredictedClass = cropMismatch ? null : top?.RawClass;
             uncertain.Alternatives = alternatives;
             return uncertain;
+        }
+
+        /// <summary>Logs when the AI contradicts the local answer: the metric that shows how often the local model is wrong.</summary>
+        private void LogDisagreement(LocalPrediction? top, ModelClassEntry? entry, DiagnosisResult ai)
+        {
+            if (top == null || entry == null || entry.DiseaseId == _map.NotRecognizedDiseaseId) return;
+
+            var sameCrop = entry.CropId == ai.CropId;
+            var sameOutcome = entry.DiseaseId == ai.DiseaseId ||
+                              (entry.DiseaseId == _map.HealthyDiseaseId && ai.Status == DiagnosisStatus.Healthy);
+            if (sameCrop && sameOutcome) return;
+
+            _logger.LogInformation(
+                "AI disagreed with local model: local={LocalClass} ({LocalConfidence:F1}%) vs ai status={AiStatus} crop={AiCrop} disease={AiDisease} ({AiConfidence:F0}%)",
+                top.RawClass, top.Confidence, ai.Status, ai.CropName, ai.Disease?.Name, ai.Confidence);
         }
 
         private async Task<DiagnosisResult> FromLocalAsync(
@@ -256,13 +322,16 @@ namespace DoctorPlantTest.API.Diagnosis
             return crops >= 2;
         }
 
-        private DiagnosisResult Uncertain(string reason, string source)
+        private DiagnosisResult Uncertain(string reason, string source, Crop? userCrop = null)
         {
             var (en, ar) = reason switch
             {
                 "not_a_plant" => (
                     "We couldn't find a plant in this photo. Please photograph a leaf or the affected part of the plant.",
                     "لم نجد نباتًا في هذه الصورة. صوّر ورقة النبات أو الجزء المصاب منه."),
+                "crop_mismatch" => (
+                    $"Our model could not confirm this {userCrop?.Name ?? "plant"}. The photo may show a problem it was not trained on for this crop, or a different plant. We don't want to guess: please show it to an agronomist or your local agricultural extension service.",
+                    $"لم يتمكن نموذجنا من تأكيد هذه النبتة ({userCrop?.NameArabic ?? "النبتة"}). قد تُظهر الصورة مشكلة لم يتدرّب عليها لهذا المحصول أو نبتة مختلفة. لا نريد التخمين: يُفضّل عرضها على مهندس زراعي أو على الإرشاد الزراعي المحلي."),
                 "possibly_unsupported" => (
                     "We couldn't recognize this plant. Dr Plant currently covers 24 crops (see the Seasonal Crops page). If your plant is one of them, take a close-up of one affected leaf in daylight and try again; otherwise it may not be supported yet.",
                     "لم نتعرّف على هذه النبتة. يغطي Dr Plant حاليًا 24 محصولًا (انظر صفحة المحاصيل الموسمية). إن كانت نبتتك منها، صوّر ورقة واحدة مصابة عن قرب في ضوء النهار وحاول مرة أخرى، وإلا فقد لا تكون مدعومة بعد."),
@@ -308,6 +377,9 @@ namespace DoctorPlantTest.API.Diagnosis
                 return new DiagnosisAlternative(c?.Name, c?.NameArabic, d?.Name, d?.NameAr, e.Prediction.Confidence);
             }).ToList();
         }
+
+        private Task<Crop?> LoadCropAsync(long cropId, CancellationToken ct) =>
+            _db.Crops.AsNoTracking().FirstOrDefaultAsync(c => c.CropId == cropId, ct);
 
         private async Task<IReadOnlyList<CatalogueCrop>> LoadCatalogueAsync(CancellationToken ct)
         {

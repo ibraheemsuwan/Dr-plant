@@ -32,7 +32,7 @@ namespace DoctorPlantTest.API.Controllers
         [Authorize]
         [EnableRateLimiting(RateLimitPolicies.Predict)]
         [RequestSizeLimit(MaxRequestBytes)]
-        public async Task<IActionResult> Predict(IFormFile file, CancellationToken ct)
+        public async Task<IActionResult> Predict(IFormFile file, [FromForm] long? cropId, CancellationToken ct)
         {
             if (file == null || file.Length == 0)
                 return BadRequest(new { message = "No image uploaded." });
@@ -50,7 +50,7 @@ namespace DoctorPlantTest.API.Controllers
             try
             {
                 await using var stream = file.OpenReadStream();
-                r = await _diagnosis.DiagnoseAsync(stream, userId.Value, ct);
+                r = await _diagnosis.DiagnoseAsync(stream, userId.Value, cropId, ct);
             }
             catch (InvalidImageException)
             {

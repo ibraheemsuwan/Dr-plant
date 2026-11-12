@@ -7,7 +7,7 @@ namespace DoctorPlantTest.API.Diagnosis
     public record LocalPrediction(string RawClass, double Confidence);
 
     /// <summary>Calls the Flask/Keras model service. Returns null when the service is unreachable or errors.</summary>
-    public class LocalModelClient
+    public class LocalModelClient : ILocalModel
     {
         public const string HttpClientName = "local-model";
 
@@ -65,6 +65,15 @@ namespace DoctorPlantTest.API.Diagnosis
         {
             using var doc = JsonDocument.Parse(body);
             var root = doc.RootElement;
+
+            // Newer service versions return every class above 0.1% so the answer can be limited to one crop
+            if (root.TryGetProperty("scores", out var scores) && scores.ValueKind == JsonValueKind.Object)
+            {
+                return scores.EnumerateObject()
+                    .Select(p => new LocalPrediction(p.Name, p.Value.GetDouble()))
+                    .OrderByDescending(p => p.Confidence)
+                    .ToList();
+            }
 
             if (root.TryGetProperty("top", out var top) && top.ValueKind == JsonValueKind.Array)
             {

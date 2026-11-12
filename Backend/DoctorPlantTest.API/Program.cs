@@ -176,8 +176,9 @@ builder.Services.Configure<LocalModelOptions>(builder.Configuration.GetSection("
 builder.Services.Configure<ClaudeOptions>(builder.Configuration.GetSection("Claude"));
 builder.Services.AddHttpClient(LocalModelClient.HttpClientName);
 builder.Services.AddSingleton(new ModelClassMap(Path.Combine(AppContext.BaseDirectory, "Diagnosis", "model_class_map.json")));
-builder.Services.AddSingleton<LocalModelClient>();
-builder.Services.AddSingleton<ClaudeVisionClient>();
+builder.Services.AddSingleton<ILocalModel, LocalModelClient>();
+builder.Services.AddSingleton<IVisionDiagnoser, ClaudeVisionClient>();
+builder.Services.AddSingleton<AiCallBudget>();
 builder.Services.AddScoped<PlantDiagnosisService>();
 
 // CORS — only the frontend origins listed in AllowedOrigins (appsettings*.json)
