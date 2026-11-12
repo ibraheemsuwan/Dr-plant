@@ -50,3 +50,8 @@ Backend/DoctorPlantTest.API/wwwroot/images/diagnoses/
 # Old model versions kept locally only
 AI-model/_archive/
 !Backend/DoctorPlantTest.API/Seed/*.sql
+
+# Real-world test photos for model evaluation (large, curated by hand)
+AI-model/real_world_test/
+AI-model/*.json
+!AI-model/class_names.json
