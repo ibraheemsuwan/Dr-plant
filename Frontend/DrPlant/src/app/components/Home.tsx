@@ -15,19 +15,19 @@ import { useLanguage } from "../contexts/LanguageContext";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
 import { Reveal } from "./animations/Reveal";
 
-/** Hero backdrop — light mode (`public/bg-hero.jpg`). */
-const heroBackgroundImage = "/bg-hero.jpg";
-/** Hero backdrop — dark mode only (`public/bg_hero2.jpg`). */
-const heroBackgroundImageDark = "/bg_hero2.jpg";
+/** Hero backdrop — light mode (`public/bg-hero.webp`). */
+const heroBackgroundImage = "/bg-hero.webp";
+/** Hero backdrop — dark mode only (`public/bg_hero2.webp`). */
+const heroBackgroundImageDark = "/bg_hero2.webp";
 
 const heroPlantImage =
-  "https://images.unsplash.com/photo-1593536488938-e1ac82ece373?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx0cm9waWNhbCUyMGhvdXNlJTIwcGxhbnRzJTIwd2hpdGUlMjBwb3RzJTIwYXJyYW5nZW1lbnR8ZW58MXx8fHwxNzc1MzEzMjEzfDA&ixlib=rb-4.1.0&q=80&w=1080";
+  "/assets/photos/home-hero-plant.jpg";
 const farmImage =
-  "https://images.unsplash.com/photo-1769441071410-40528743a0ac?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxnYXJkZW4lMjBmYXJtaW5nJTIwYWdyaWN1bHR1cmUlMjBmaWVsZCUyMGNyb3BzfGVufDF8fHx8MTc3NTMxMzIxOHww&ixlib=rb-4.1.0&q=80&w=1080";
-/** Scan feature visual (`public/scan-plant.jpg`). */
-const scanImage = "/scan-plant.jpg";
+  "/assets/photos/home-farm.jpg";
+/** Scan feature visual (`public/scan-plant.webp`). */
+const scanImage = "/scan-plant.webp";
 const weatherExplainImage =
-  "https://images.unsplash.com/photo-1500382017468-9049fed747ef?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080";
+  "/assets/photos/home-weather.jpg";
 
 export function Home() {
   const { t, language } = useLanguage();
