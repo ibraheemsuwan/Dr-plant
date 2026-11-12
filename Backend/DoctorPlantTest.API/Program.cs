@@ -38,6 +38,25 @@ builder.Services.AddSwaggerGen(options =>
 
 builder.Services.AddHttpClient();
 
+// Fail fast if required secrets are missing (set via user-secrets in dev, environment variables in production)
+string RequireSetting(string key)
+{
+    var value = builder.Configuration[key];
+    if (string.IsNullOrWhiteSpace(value))
+        throw new InvalidOperationException(
+            $"Missing required setting '{key}'. In development: dotnet user-secrets set \"{key}\" \"<value>\". " +
+            $"In production: set environment variable '{key.Replace(":", "__")}'.");
+    return value;
+}
+
+var jwtKey = RequireSetting("Jwt:Key");
+if (Encoding.UTF8.GetByteCount(jwtKey) < 32)
+    throw new InvalidOperationException("Jwt:Key must be at least 32 bytes long.");
+RequireSetting("ConnectionStrings:DefaultConnection");
+RequireSetting("Cloudinary:CloudName");
+RequireSetting("Cloudinary:ApiKey");
+RequireSetting("Cloudinary:ApiSecret");
+
 // JWT Authentication
 builder.Services.AddAuthentication("Bearer")
     .AddJwtBearer("Bearer", options =>
@@ -50,8 +69,7 @@ builder.Services.AddAuthentication("Bearer")
             ValidateIssuerSigningKey = true,
             ValidIssuer = builder.Configuration["Jwt:Issuer"],
             ValidAudience = builder.Configuration["Jwt:Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
         };
     });
 

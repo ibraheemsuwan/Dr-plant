@@ -1,0 +1,51 @@
+# ============ Secrets ============
+.env
+.env.*
+!.env.example
+*.local
+appsettings.*.local.json
+secrets.json
+
+# ============ .NET build output ============
+[Bb]in/
+[Oo]bj/
+*.user
+*.suo
+.vs/
+
+# ============ IDE / tooling ============
+.idea/
+.vscode/*
+!.vscode/extensions.json
+.claude/settings.local.json
+.DS_Store
+Thumbs.db
+
+# ============ Node / Frontend ============
+node_modules/
+dist/
+dist-ssr/
+*.log
+
+# ============ AI model ============
+# Model weights and datasets are large: store them outside git (Releases / cloud storage)
+*.keras
+*.h5
+AI-model/outputs/
+AI-model/Plant_d_test/
+AI-model/Plant_d_train/
+AI-model/Plant_d_val/
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# ============ User uploads ============
+Backend/DoctorPlantTest.API/wwwroot/images/diagnoses/
+
+# ============ Database dumps (contain real user data) ============
+*.sql
+!**/Migrations/**/*.sql
+
+# Old model versions kept locally only
+AI-model/_archive/
