@@ -55,3 +55,6 @@ AI-model/_archive/
 AI-model/real_world_test/
 AI-model/*.json
 !AI-model/class_names.json
+
+# Backups of the database and downloaded images (real user data)
+backups/

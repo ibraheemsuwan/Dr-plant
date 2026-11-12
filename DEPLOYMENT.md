@@ -87,9 +87,17 @@ Local storage re-encodes every upload as a JPEG (strips GPS/EXIF, refuses files 
 It suits a single VPS or the `docker-compose.yml` setup, which already mounts a volume. Other S3-compatible storage
 (Cloudflare R2, Backblaze B2) would need one more provider class behind the same interface.
 
-Existing images keep their stored URLs: switching the provider does not move old photos. The 24 crop pictures in the seed data
-point to a Cloudinary account that is not this project's (`dbwncwexj`). Re-upload them from the admin dashboard
-(edit crop, choose a picture) so they live in your own storage.
+Existing images keep their stored URLs: switching the provider does not move old photos.
+
+`Backend/tools/cloudinary_images.py` backs up and moves images (run from the repository root; reads the Cloudinary
+credentials from the API's user-secrets):
+
+- `backup`: downloads every image referenced by the database into `backups/images/` (git-ignored), verifies each one and
+  writes a checksum manifest. Read-only. Run it regularly, together with a database dump.
+- `migrate`: copies images that live on a different Cloudinary account into the project's own, checks every copy byte for
+  byte, and only then updates the database row. Nothing is deleted. (It was used once to move the 24 crop pictures that
+  originally lived on someone else's account.)
+- `seed`: rewrites the crop picture URLs in `Seed/reference_data.sql` after a migration.
 
 ## 4. Database
 
