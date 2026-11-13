@@ -1,0 +1,615 @@
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --font-size: 16px;
+  --background: #f5f5f0;
+  --foreground: #1a1a1a;
+  --card: #ffffff;
+  --card-foreground: #1a1a1a;
+  --popover: #ffffff;
+  --popover-foreground: #1a1a1a;
+  --primary: #2d6a2d;
+  --primary-foreground: #ffffff;
+  --secondary: #f0f5f0;
+  --secondary-foreground: #2d6a2d;
+  --muted: #ebebeb;
+  --muted-foreground: #6b6b6b;
+  --accent: #eef4ee;
+  --accent-foreground: #2d6a2d;
+  --destructive: #d4183d;
+  --destructive-foreground: #ffffff;
+  --border: rgba(0, 0, 0, 0.1);
+  --input: transparent;
+  --input-background: #f3f3f3;
+  --switch-background: #cbced4;
+  --font-weight-medium: 500;
+  --font-weight-normal: 400;
+  --ring: #2d6a2d;
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --radius: 0.625rem;
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: #2d6a2d;
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+}
+
+.dark {
+  --background: #111a11;
+  --foreground: #f0f5f0;
+  --card: #1a2a1a;
+  --card-foreground: #f0f5f0;
+  --popover: #1a2a1a;
+  --popover-foreground: #f0f5f0;
+  --primary: #4caf50;
+  --primary-foreground: #ffffff;
+  --secondary: #1e321e;
+  --secondary-foreground: #f0f5f0;
+  --muted: #1e321e;
+  --muted-foreground: #9ab09a;
+  --accent: #1e321e;
+  --accent-foreground: #f0f5f0;
+  --destructive: oklch(0.396 0.141 25.723);
+  --destructive-foreground: oklch(0.637 0.237 25.331);
+  --border: rgba(255, 255, 255, 0.1);
+  --input: rgba(255, 255, 255, 0.05);
+  --ring: #4caf50;
+  --font-weight-medium: 500;
+  --font-weight-normal: 400;
+  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --sidebar: #1a2a1a;
+  --sidebar-foreground: #f0f5f0;
+  --sidebar-primary: #4caf50;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #1e321e;
+  --sidebar-accent-foreground: #f0f5f0;
+  --sidebar-border: rgba(255, 255, 255, 0.1);
+  --sidebar-ring: #4caf50;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-input-background: var(--input-background);
+  --color-switch-background: var(--switch-background);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  --dr-spring: cubic-bezier(0.16, 1, 0.3, 1);
+  --dr-bounce: cubic-bezier(0.34, 1.35, 0.64, 1);
+}
+
+@keyframes dr-shiny-text {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
+@keyframes dr-nav-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -1.25rem, 0) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes dr-scroll-top-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 12px, 0) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes dr-modal-backdrop-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes dr-modal-panel-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 2rem, 0) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+/* Hero: دخول قوي من الجانبين (يتبدل مع RTL) */
+@keyframes dr-hero-from-start {
+  from {
+    opacity: 0;
+    transform: translate3d(-3.5rem, 1.25rem, 0) scale(0.92) rotate(-1.5deg);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
+  }
+}
+
+@keyframes dr-hero-from-end {
+  from {
+    opacity: 0;
+    transform: translate3d(3.5rem, 1.25rem, 0) scale(0.92) rotate(1.5deg);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
+  }
+}
+
+/* بطاقات الهيرو — حركة طفو خفيفة ومسار مختلف لكل واحدة */
+@keyframes dr-float-badge-a {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+  }
+  25% {
+    transform: translate3d(10px, -12px, 0) rotate(1.2deg) scale(1.03);
+  }
+  50% {
+    transform: translate3d(-8px, 8px, 0) rotate(-0.8deg) scale(0.98);
+  }
+  75% {
+    transform: translate3d(12px, 6px, 0) rotate(0.6deg) scale(1.02);
+  }
+}
+
+@keyframes dr-float-badge-b {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+  }
+  20% {
+    transform: translate3d(-12px, -10px, 0) rotate(-1deg) scale(1.04);
+  }
+  45% {
+    transform: translate3d(9px, 14px, 0) rotate(0.9deg) scale(0.97);
+  }
+  70% {
+    transform: translate3d(-10px, 4px, 0) rotate(-0.5deg) scale(1.02);
+  }
+}
+
+@layer components {
+  /* Shiny gradient headline word (e.g. "blossom" / "تتفتح") — infinite sweep */
+  .dr-shiny-text {
+    display: inline-block;
+    background-image: linear-gradient(
+      105deg,
+      var(--primary) 0%,
+      color-mix(in oklch, var(--primary) 70%, white) 18%,
+      #ecfdf5 32%,
+      #86efac 42%,
+      color-mix(in oklch, var(--primary) 75%, white) 52%,
+      var(--color-emerald-600, #059669) 68%,
+      var(--primary) 100%
+    );
+    background-size: 200% auto;
+    background-repeat: repeat;
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+    animation: dr-shiny-text 3s linear infinite;
+    animation-iteration-count: infinite;
+    will-change: background-position;
+    filter: drop-shadow(
+      0 0 12px color-mix(in oklch, var(--primary) 25%, transparent)
+    );
+  }
+
+  :is(.dark *) .dr-shiny-text {
+    background-image: linear-gradient(
+      105deg,
+      #2d8a3e 0%,
+      var(--primary) 14%,
+      #5eead4 28%,
+      #6ee7b7 40%,
+      #34d399 52%,
+      #4ade80 64%,
+      #22c55e 78%,
+      var(--primary) 92%,
+      #2d8a3e 100%
+    );
+    filter: drop-shadow(
+      0 0 16px color-mix(in oklch, var(--primary) 50%, transparent)
+    );
+  }
+
+  /* ——— Scroll reveal (Reveal.tsx) ——— */
+  .dr-reveal {
+    will-change: opacity, transform;
+  }
+
+  .dr-reveal--rise {
+    opacity: 0;
+    transform: translate3d(0, 3.25rem, 0) scale(0.86);
+  }
+
+  .dr-reveal--pop {
+    opacity: 0;
+    transform: translate3d(0, 2.75rem, 0) scale(0.72);
+  }
+
+  .dr-reveal--slide {
+    opacity: 0;
+    transform: translate3d(-3rem, 1.75rem, 0) scale(0.9) rotate(-2deg);
+  }
+
+  [dir="rtl"] .dr-reveal--slide {
+    transform: translate3d(3rem, 1.75rem, 0) scale(0.9) rotate(2deg);
+  }
+
+  .dr-reveal--slide-end {
+    opacity: 0;
+    transform: translate3d(3rem, 1.25rem, 0) scale(0.92) rotate(1.5deg);
+  }
+
+  [dir="rtl"] .dr-reveal--slide-end {
+    transform: translate3d(-3rem, 1.25rem, 0) scale(0.92) rotate(-1.5deg);
+  }
+
+  .dr-reveal--zoom {
+    opacity: 0;
+    transform: scale(0.78) rotate(-3deg);
+  }
+
+  .dr-reveal--fade {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+
+  .dr-reveal--rise.dr-reveal--visible,
+  .dr-reveal--pop.dr-reveal--visible,
+  .dr-reveal--slide.dr-reveal--visible,
+  .dr-reveal--slide-end.dr-reveal--visible,
+  .dr-reveal--zoom.dr-reveal--visible,
+  .dr-reveal--fade.dr-reveal--visible {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
+  }
+
+  .dr-reveal--rise.dr-reveal--visible {
+    transition:
+      opacity 0.82s var(--dr-spring),
+      transform 0.82s var(--dr-spring);
+  }
+
+  .dr-reveal--pop.dr-reveal--visible {
+    transition:
+      opacity 0.7s var(--dr-bounce),
+      transform 0.7s var(--dr-bounce);
+  }
+
+  .dr-reveal--slide.dr-reveal--visible,
+  .dr-reveal--slide-end.dr-reveal--visible {
+    transition:
+      opacity 0.88s var(--dr-spring),
+      transform 0.88s var(--dr-spring);
+  }
+
+  .dr-reveal--zoom.dr-reveal--visible {
+    transition:
+      opacity 0.75s var(--dr-bounce),
+      transform 0.75s var(--dr-bounce);
+  }
+
+  .dr-reveal--fade.dr-reveal--visible {
+    transition:
+      opacity 0.55s ease-out,
+      transform 0.55s var(--dr-spring);
+  }
+
+  .dr-reveal--instant {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .animate-dr-hero-text {
+    animation: dr-hero-from-start 1.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  [dir="rtl"] .animate-dr-hero-text {
+    animation-name: dr-hero-from-end;
+  }
+  .animate-dr-hero-image {
+    animation: dr-hero-from-end 1.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  [dir="rtl"] .animate-dr-hero-image {
+    animation-name: dr-hero-from-start;
+  }
+
+  .animate-dr-float-a {
+    animation: dr-float-badge-a 4.8s ease-in-out infinite;
+    will-change: transform;
+  }
+  .animate-dr-float-b {
+    animation: dr-float-badge-b 5.6s ease-in-out infinite;
+    animation-delay: -1.2s;
+    will-change: transform;
+  }
+
+  .animate-dr-modal-backdrop {
+    animation: dr-modal-backdrop-in 280ms ease-out both;
+  }
+
+  .animate-dr-modal-panel {
+    animation: dr-modal-panel-in 0.52s cubic-bezier(0.16, 1, 0.3, 1) both;
+    will-change: opacity, transform;
+  }
+
+  .animate-dr-nav-in {
+    animation: dr-nav-in 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .animate-dr-scroll-top-in {
+    animation: dr-scroll-top-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  /* Global motion — stronger hover / press */
+  .dr-motion a,
+  .dr-motion button,
+  .dr-motion [role="button"],
+  .dr-motion input,
+  .dr-motion textarea,
+  .dr-motion select {
+    transition-property:
+      color, background-color, border-color, box-shadow, transform, opacity;
+    transition-duration: 220ms;
+    transition-timing-function: var(--dr-spring);
+  }
+
+  .dr-motion .rounded-2xl,
+  .dr-motion .rounded-3xl {
+    transition-property:
+      color, background-color, border-color, box-shadow, transform, opacity;
+    transition-duration: 320ms;
+    transition-timing-function: var(--dr-spring);
+  }
+
+  .dr-motion button:hover:not(:disabled),
+  .dr-motion [role="button"]:hover,
+  .dr-motion a:hover {
+    transform: translateY(-1px);
+  }
+
+  .dr-motion .rounded-2xl:hover,
+  .dr-motion .rounded-3xl:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 28px color-mix(in oklch, var(--primary) 10%, transparent);
+  }
+
+  .dr-motion button:active:not(:disabled),
+  .dr-motion [role="button"]:active,
+  .dr-motion a:active {
+    transform: translateY(0) scale(0.98);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: "Inter", "Noto Kufi Arabic", sans-serif;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: "Playfair Display", "Noto Kufi Arabic", serif;
+  }
+
+  html[dir="rtl"] h1,
+  html[dir="rtl"] h2,
+  html[dir="rtl"] h3,
+  html[dir="rtl"] h4,
+  [dir="rtl"] h1,
+  [dir="rtl"] h2,
+  [dir="rtl"] h3,
+  [dir="rtl"] h4 {
+    font-family: "Noto Kufi Arabic", serif;
+  }
+
+  /**
+  * Default typography styles for HTML elements (h1-h4, p, label, button, input).
+  * These are in @layer base, so Tailwind utility classes (like text-sm, text-lg) automatically override them.
+  */
+
+  html {
+    font-size: var(--font-size);
+    scroll-behavior: smooth;
+    scroll-padding-top: 5.5rem;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
+  section[id] {
+    scroll-margin-top: 5.5rem;
+  }
+
+  h1 {
+    font-size: var(--text-2xl);
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  h2 {
+    font-size: var(--text-xl);
+    font-weight: 700;
+    line-height: 1.3;
+  }
+
+  h3 {
+    font-size: var(--text-lg);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+  }
+
+  h4 {
+    font-size: var(--text-base);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+  }
+
+  label {
+    font-size: var(--text-base);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+  }
+
+  button {
+    font-size: var(--text-base);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+  }
+
+  input {
+    font-size: var(--text-base);
+    font-weight: var(--font-weight-normal);
+    line-height: 1.5;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    .dr-motion * {
+      transition: none !important;
+    }
+    .animate-dr-nav-in {
+      animation: none !important;
+      opacity: 1 !important;
+      transform: none !important;
+    }
+    .animate-dr-hero-text,
+    .animate-dr-hero-image {
+      animation: none !important;
+      opacity: 1 !important;
+      transform: none !important;
+    }
+    .animate-dr-float-a,
+    .animate-dr-float-b {
+      animation: none !important;
+      transform: none !important;
+    }
+
+    .dr-reveal,
+    .dr-reveal--visible {
+      opacity: 1 !important;
+      transform: none !important;
+      transition: none !important;
+    }
+
+    .dr-shiny-text {
+      animation: none !important;
+      background-position: 0% 50% !important;
+    }
+  }
+}
+
+/* Scrollbar يتماشى مع الثيم (مودال البلوج وغيره) */
+.scrollbar-themed {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in oklch, var(--muted-foreground) 50%, transparent)
+    color-mix(in oklch, var(--card) 70%, transparent);
+}
+
+.scrollbar-themed::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.scrollbar-themed::-webkit-scrollbar-track {
+  margin-block: 6px;
+  border-radius: 9999px;
+  background: color-mix(in oklch, var(--muted) 35%, transparent);
+}
+
+.scrollbar-themed::-webkit-scrollbar-thumb {
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  background-color: color-mix(
+    in oklch,
+    var(--muted-foreground) 45%,
+    var(--primary) 20%
+  );
+}
+
+.scrollbar-themed::-webkit-scrollbar-thumb:hover {
+  background-color: color-mix(
+    in oklch,
+    var(--primary) 50%,
+    var(--muted-foreground) 30%
+  );
+}

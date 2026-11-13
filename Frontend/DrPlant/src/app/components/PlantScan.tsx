@@ -1,0 +1,524 @@
+import { useContext, useState, type ChangeEvent } from "react";
+import { getErrorMessage } from "../api/errors";
+import {
+  buildHealthyScanResult,
+  buildScanResultFromPredictOnly,
+  isHealthyPrediction,
+  mapDiseaseRowToScanResult,
+  parsePredictResponse,
+  type ScanResultUi,
+} from "../api/diagnoseResult";
+import {
+  fetchDiseaseDetails,
+  predictPlantDisease,
+} from "../api/services/diagnoseService";
+import {
+  Upload,
+  CheckCircle,
+  AlertCircle,
+  Leaf,
+  Scan,
+  Sparkles,
+} from "lucide-react";
+import { LanguageContext } from "../contexts/LanguageContext";
+import { Reveal } from "./animations/Reveal";
+import { PageLabel } from "./PageLabel";
+
+function pickBilingual(
+  language: "ar" | "en",
+  en: string,
+  ar: string | null | undefined,
+): string {
+  if (language === "ar") {
+    const a = ar?.trim();
+    return a ? a : en;
+  }
+  return en;
+}
+
+function displayStatusLabel(
+  language: "ar" | "en",
+  statusKey: string | undefined,
+  fallback: string,
+): string {
+  const raw = (statusKey ?? fallback).trim();
+  const key = raw.toLowerCase();
+  if (language === "ar") {
+    const arMap: Record<string, string> = {
+      healthy: "سليم",
+      diseased: "مصاب",
+      completed: "مكتمل",
+      unknown: "غير معروف",
+      unconfirmed: "غير مؤكد",
+      unrecognized: "غير معروف",
+    };
+    return arMap[key] ?? raw;
+  }
+  const enMap: Record<string, string> = {
+    healthy: "Healthy",
+    diseased: "Diseased",
+    completed: "Completed",
+    unknown: "Unknown",
+    unconfirmed: "Unconfirmed",
+    unrecognized: "Unrecognized",
+  };
+  return enMap[key] ?? raw;
+}
+
+export function PlantScan() {
+  const languageContext = useContext(LanguageContext);
+  if (!languageContext) {
+    throw new Error("useLanguage must be used within LanguageProvider");
+  }
+  const { t, language } = languageContext;
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [isScanning, setIsScanning] = useState(false);
+  const [scanResult, setScanResult] = useState<ScanResultUi | null>(null);
+  const [scanError, setScanError] = useState<string | null>(null);
+
+  const setSelectedFromFile = (file: File) => {
+    setSelectedFile(file);
+    setScanError(null);
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      setSelectedImage(ev.target?.result as string);
+      setScanResult(null);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleImageUpload = (e: ChangeEvent<HTMLInputElement>) => {
+    if (isScanning) return;
+    const file = e.target.files?.[0];
+    if (file) {
+      setSelectedFromFile(file);
+    }
+    e.target.value = "";
+  };
+
+  const handleScan = async () => {
+    if (!selectedFile) return;
+    const lang = language === "ar" ? "ar" : "en";
+    setIsScanning(true);
+    setScanError(null);
+    try {
+      const raw = await predictPlantDisease(selectedFile);
+      const o =
+        raw && typeof raw === "object" ? (raw as Record<string, unknown>) : {};
+      const parsed = parsePredictResponse(raw);
+
+      if (isHealthyPrediction(o)) {
+        setScanResult(buildHealthyScanResult(parsed.confidencePct, lang));
+        return;
+      }
+
+      if (parsed.diseaseId != null && parsed.diseaseId > 0) {
+        const diseaseRow = await fetchDiseaseDetails(parsed.diseaseId);
+        setScanResult(mapDiseaseRowToScanResult(diseaseRow, parsed, lang));
+        return;
+      }
+
+      setScanResult(buildScanResultFromPredictOnly(parsed, lang));
+    } catch (err) {
+      setScanError(getErrorMessage(err));
+      setScanResult(null);
+    } finally {
+      setIsScanning(false);
+    }
+  };
+
+  const r = scanResult;
+  const displayName =
+    r && r.nameEn !== undefined
+      ? pickBilingual(language, r.nameEn ?? "", r.nameAr) || r.plantName
+      : (r?.plantName ?? "");
+  const displayDescription =
+    r && r.descriptionEn !== undefined
+      ? pickBilingual(language, r.descriptionEn ?? "", r.descriptionAr) ||
+        r.description
+      : (r?.description ?? "");
+  const displaySymptoms =
+    r && r.symptomsEn !== undefined
+      ? pickBilingual(language, r.symptomsEn ?? "", r.symptomsAr) || r.symptoms
+      : (r?.symptoms ?? "");
+  const displayTreatment =
+    r && r.treatmentEn !== undefined
+      ? pickBilingual(language, r.treatmentEn ?? "", r.treatmentAr) ||
+        r.treatment
+      : (r?.treatment ?? "");
+  const statusRaw = r ? (r.statusKey ?? r.status).trim() : "";
+  const normalize = (s: string) => s.trim().toLowerCase();
+  const nameRaw = r
+    ? (r.nameEn ?? r.plantName ?? r.disease ?? "").toString()
+    : "";
+  const isHealthyResult =
+    r != null
+      ? r.disease == null ||
+        normalize(statusRaw) === "healthy" ||
+        normalize(nameRaw) === "healthy" ||
+        normalize(nameRaw) === "سليم"
+      : false;
+  const isUnknownResult =
+    r != null
+      ? normalize(statusRaw) === "unknown" ||
+        normalize(statusRaw) === "unconfirmed" ||
+        normalize(statusRaw) === "unrecognized" ||
+        normalize(nameRaw).includes("not recognize") ||
+        normalize(nameRaw).includes("unknown")
+      : false;
+  const displayStatus =
+    r != null
+      ? displayStatusLabel(
+          language,
+          isHealthyResult
+            ? "Healthy"
+            : isUnknownResult
+              ? "Unknown"
+              : r.statusKey,
+          isHealthyResult ? "Healthy" : isUnknownResult ? "Unknown" : r.status,
+        )
+      : "";
+
+  const tips = [
+    {
+      icon: "📷",
+      title: language === "ar" ? "جودة الصورة" : "Image Quality",
+      desc:
+        language === "ar"
+          ? "التقط الصورة في ضوء جيد"
+          : "Take the photo in good light",
+    },
+    {
+      icon: "🎯",
+      title: language === "ar" ? "تركيز الصورة" : "Focus",
+      desc:
+        language === "ar"
+          ? "ركز على أوراق النبات"
+          : "Focus on the plant leaves",
+    },
+    {
+      icon: "📐",
+      title: language === "ar" ? "زاوية الصورة" : "Angle",
+      desc:
+        language === "ar"
+          ? "خذ الصورة من مسافة قريبة"
+          : "Take the photo from close up",
+    },
+  ];
+
+  return (
+    <div className="relative min-h-screen overflow-hidden bg-background py-12 px-4">
+      <div className="pointer-events-none absolute inset-0 z-0" aria-hidden>
+        <div className="absolute -top-28 -start-[10%] h-80 w-80 rounded-full bg-primary/25 blur-[110px]" />
+        <div className="absolute top-1/3 -end-[12%] h-72 w-72 rounded-full bg-emerald-400/20 blur-[95px]" />
+        <div className="absolute -bottom-20 start-[15%] h-72 w-72 rounded-full bg-lime-400/12 blur-[85px] dark:bg-primary/12" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_75%_45%_at_50%_-8%,color-mix(in_oklch,var(--color-primary)_16%,transparent),transparent_62%)]" />
+        <div
+          className="absolute inset-0 opacity-[0.22] mix-blend-multiply dark:opacity-[0.10] dark:mix-blend-soft-light"
+          style={{
+            backgroundImage: `linear-gradient(to right, var(--color-border) 1px, transparent 1px),
+              linear-gradient(to bottom, var(--color-border) 1px, transparent 1px)`,
+            backgroundSize: "44px 44px",
+          }}
+        />
+        <div className="absolute inset-0 [mask-image:radial-gradient(ellipse_70%_55%_at_50%_20%,#000_45%,transparent_78%)] bg-primary/5 dark:bg-primary/10" />
+        <div className="absolute inset-0 bg-linear-to-b from-transparent via-transparent to-background" />
+      </div>
+
+      <Reveal variant="zoom">
+        <div className="relative z-10 mx-auto max-w-6xl">
+          {/* Header */}
+          <div className="mb-16 text-center">
+            <PageLabel icon={Sparkles}>
+              {language === "ar" ? "مدعوم بالذكاء الاصطناعي" : "AI Powered"}
+            </PageLabel>
+            <h1
+              className="mb-4 text-5xl font-bold text-brand-dark dark:text-foreground"
+              style={{
+                fontFamily: "'Playfair Display', 'Noto Kufi Arabic', serif",
+              }}
+            >
+              {t("scan")}
+            </h1>
+            <p className="mx-auto max-w-xl text-lg text-muted-foreground">
+              {t("scanDescription")}
+            </p>
+          </div>
+
+          <div className="grid gap-8 lg:grid-cols-2">
+            {/* Upload Section */}
+            <div className="space-y-6">
+              <div
+                className={`relative overflow-hidden rounded-3xl border-2 border-dashed text-center shadow-sm transition-colors ${
+                  selectedImage
+                    ? "border-primary bg-card"
+                    : "border-primary/25 bg-linear-to-br from-primary/[0.07] via-card to-emerald-500/[0.06] hover:border-primary/50 dark:from-primary/10 dark:via-card dark:to-emerald-950/20"
+                }`}
+              >
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  className="sr-only"
+                  id="image-upload"
+                  tabIndex={-1}
+                  disabled={isScanning}
+                />
+                {selectedImage ? (
+                  <div className="relative p-10">
+                    <img
+                      src={selectedImage}
+                      alt="Selected plant"
+                      className="mb-4 h-64 w-full rounded-2xl object-cover shadow-md ring-1 ring-primary/10"
+                    />
+                    {selectedFile ? (
+                      <p className="mb-3 truncate text-center text-xs text-muted-foreground px-2">
+                        {selectedFile.name}
+                      </p>
+                    ) : null}
+                    <button
+                      type="button"
+                      onClick={() =>
+                        document.getElementById("image-upload")?.click()
+                      }
+                      disabled={isScanning}
+                      className="absolute top-2 end-2 px-3 py-1.5 bg-card/90 backdrop-blur-sm border border-border rounded-full text-xs font-medium hover:bg-card transition-colors disabled:pointer-events-none disabled:opacity-50"
+                    >
+                      {language === "ar" ? "تغيير الصورة" : "Change Image"}
+                    </button>
+                  </div>
+                ) : (
+                  <div
+                    className={`group flex flex-col items-center justify-center p-10 ${
+                      isScanning ? "cursor-not-allowed opacity-60" : ""
+                    }`}
+                    role="button"
+                    tabIndex={isScanning ? -1 : 0}
+                    onClick={() => {
+                      if (isScanning) return;
+                      document.getElementById("image-upload")?.click();
+                    }}
+                    onKeyDown={(e) => {
+                      if (isScanning) return;
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        document.getElementById("image-upload")?.click();
+                      }
+                    }}
+                  >
+                    <div className="mb-4 flex h-20 w-20 items-center justify-center rounded-2xl bg-primary/15 shadow-inner transition-colors group-hover:bg-primary/25 group-hover:shadow-md">
+                      <Upload className="h-8 w-8 text-primary" />
+                    </div>
+                    <p className="mb-2 text-lg font-semibold">
+                      {t("uploadImage")}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      {language === "ar"
+                        ? "اسحب وأفلت أو انقر للاختيار"
+                        : "Drag & drop or click to select"}
+                    </p>
+                    <p className="mt-1 text-xs text-muted-foreground">
+                      PNG, JPG, WEBP up to 10MB
+                    </p>
+
+                    <p className="mt-4 text-xs text-primary/80 font-medium">
+                      {language === "ar" ? "انقر للرفع" : "Tap to upload"}
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              {scanError ? (
+                <p className="rounded-2xl border border-destructive/40 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+                  {scanError}
+                </p>
+              ) : null}
+
+              {selectedImage && !scanResult && (
+                <button
+                  type="button"
+                  onClick={() => void handleScan()}
+                  disabled={isScanning || !selectedFile}
+                  className="w-full py-4 bg-primary text-primary-foreground rounded-full hover:bg-primary/90 transition-all disabled:opacity-50 flex items-center justify-center gap-3 font-semibold shadow-lg shadow-primary/25"
+                >
+                  {isScanning ? (
+                    <>
+                      <div className="w-5 h-5 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" />
+                      {language === "ar" ? "جارٍ الفحص..." : "Scanning..."}
+                    </>
+                  ) : (
+                    <>
+                      <Scan className="w-5 h-5" />
+                      {t("scanNow")}
+                    </>
+                  )}
+                </button>
+              )}
+
+              {/* Tips */}
+              <div className="rounded-2xl border border-primary/10 bg-linear-to-br from-primary/[0.06] via-muted/30 to-transparent p-6 shadow-sm dark:from-primary/10 dark:via-card/40">
+                <h3 className="mb-4 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+                  {language === "ar"
+                    ? "نصائح للحصول على أفضل النتائج"
+                    : "Tips for Best Results"}
+                </h3>
+                <div className="space-y-3">
+                  {tips.map((tip, i) => (
+                    <div
+                      key={i}
+                      className="flex items-center gap-3 rounded-xl bg-card/60 px-3 py-2.5 dark:bg-background/30"
+                    >
+                      <span className="text-xl">{tip.icon}</span>
+                      <div>
+                        <p className="text-sm font-medium">{tip.title}</p>
+                        <p className="text-xs text-muted-foreground">
+                          {tip.desc}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Results Section */}
+            <div className="space-y-4">
+              {scanResult ? (
+                <div className="space-y-6 rounded-3xl border border-border bg-card/95 p-8 shadow-lg shadow-primary/5 backdrop-blur-sm dark:bg-card/90">
+                  <p className="text-center text-sm font-medium text-emerald-600 dark:text-emerald-400">
+                    {language === "ar"
+                      ? "اكتمل التحليل بنجاح"
+                      : "Analysis completed successfully"}
+                  </p>
+                  {/* Status */}
+                  <div
+                    className={
+                      isUnknownResult
+                        ? "flex items-center gap-4 rounded-2xl border border-amber-300/60 bg-amber-100/60 p-4 dark:border-amber-800/50 dark:bg-amber-900/20"
+                        : !isHealthyResult
+                          ? "flex items-center gap-4 rounded-2xl border border-destructive/25 bg-destructive/5 p-4 dark:bg-destructive/10"
+                          : "flex items-center gap-4 rounded-2xl border border-green-200 bg-green-50 p-4 dark:border-green-800 dark:bg-green-950/30"
+                    }
+                  >
+                    {isUnknownResult ? (
+                      <AlertCircle className="h-10 w-10 shrink-0 text-amber-600 dark:text-amber-400" />
+                    ) : !isHealthyResult ? (
+                      <AlertCircle className="h-10 w-10 shrink-0 text-destructive" />
+                    ) : (
+                      <CheckCircle className="h-10 w-10 shrink-0 text-green-600" />
+                    )}
+                    <div>
+                      <h3
+                        className="text-xl font-bold"
+                        style={{
+                          fontFamily:
+                            "'Playfair Display', 'Noto Kufi Arabic', serif",
+                        }}
+                      >
+                        {displayName}
+                      </h3>
+                      <p
+                        className={`text-sm font-medium ${
+                          isUnknownResult
+                            ? "text-amber-700 dark:text-amber-300"
+                            : !isHealthyResult
+                              ? "text-destructive"
+                              : "text-green-600 dark:text-green-400"
+                        }`}
+                      >
+                        {language === "ar" ? "الحالة: " : "Status: "}
+                        {displayStatus}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Confidence */}
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-muted-foreground">
+                        {language === "ar" ? "نسبة الثقة" : "Confidence"}
+                      </span>
+                      <span className="font-bold text-primary text-lg">
+                        {scanResult.confidence}%
+                      </span>
+                    </div>
+                    <div className="w-full h-2.5 bg-muted rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-primary rounded-full transition-all duration-1000"
+                        style={{ width: `${scanResult.confidence}%` }}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Disease details */}
+                  <div className="space-y-4">
+                    <h4 className="mb-1 flex items-center gap-2 font-semibold">
+                      <Leaf className="h-4 w-4 text-primary" />
+                      {language === "ar"
+                        ? "تفاصيل التشخيص"
+                        : "Diagnosis details"}
+                    </h4>
+                    <div className="space-y-3 rounded-2xl border border-border/60 bg-muted/30 p-4">
+                      <div>
+                        <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                          {language === "ar" ? "الوصف" : "Description"}
+                        </p>
+                        <p className="mt-1 text-sm leading-relaxed">
+                          {displayDescription}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                          {language === "ar" ? "الأعراض" : "Symptoms"}
+                        </p>
+                        <p className="mt-1 text-sm leading-relaxed">
+                          {displaySymptoms}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                          {language === "ar" ? "العلاج" : "Treatment"}
+                        </p>
+                        <p className="mt-1 text-sm leading-relaxed">
+                          {displayTreatment}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSelectedImage(null);
+                      setSelectedFile(null);
+                      setScanResult(null);
+                      setScanError(null);
+                    }}
+                    className="w-full py-3 border-2 border-border rounded-full hover:border-primary hover:text-primary transition-all text-sm font-medium"
+                  >
+                    {language === "ar" ? "فحص نبتة أخرى" : "Scan Another Plant"}
+                  </button>
+                </div>
+              ) : (
+                <div className="flex h-full min-h-[400px] flex-col items-center justify-center rounded-3xl border-2 border-dashed border-primary/20 bg-linear-to-b from-primary/[0.05] via-card to-emerald-500/[0.04] p-12 text-center shadow-inner dark:from-primary/10 dark:via-card dark:to-emerald-950/15">
+                  <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-primary/10 ring-4 ring-primary/5">
+                    <Upload className="h-8 w-8 text-primary/80" />
+                  </div>
+                  <h3 className="font-semibold text-lg mb-2">
+                    {language === "ar" ? "نتائج الفحص" : "Scan Results"}
+                  </h3>
+                  <p className="text-muted-foreground text-sm max-w-xs">
+                    {language === "ar"
+                      ? "ارفع صورة نبات للحصول على تشخيص دقيق وتوصيات مخصصة"
+                      : "Upload a plant image to get accurate diagnosis and personalized recommendations"}
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </Reveal>
+    </div>
+  );
+}
